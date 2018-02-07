@@ -1,5 +1,3 @@
-# AutoConvert Greeklish Permalinks
-
 This plugin converts Greek characters to Latin (better known as greeklish) in all post, pages, term slugs and custom post types. The plugin makes sure that every new permalink is in greeklish and offers the option to convert all the old links with greeek characters to greeklish.
 
 ## Features

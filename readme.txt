@@ -4,7 +4,7 @@ Author link: http://www.dimitrismavroudis.gr
 Tags: greek, greeklish permalink, latin, greeklish, slugs, permalinks, gr, convertion, convert, translate 
 Requires at least: 3.0
 Tested up to: 4.9.1
-Stable tag: 1.0
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,6 +27,10 @@ This plugin converts Greek characters to Latin (better known as greeklish) in al
 3. That's it!
 
 == Changelog ==
+
+= 1.1 =
+* Added options page
+* Fixed minnor issues
 
 = 1.0 =
 * Initial release
