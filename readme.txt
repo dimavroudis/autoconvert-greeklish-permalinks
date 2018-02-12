@@ -3,8 +3,8 @@ Contributors: Dimitris Mavroudis, d1m1tr1s_mav
 Author link: http://www.dimitrismavroudis.gr
 Tags: greek, greeklish permalink, latin, greeklish, slugs, permalinks, gr, convertion, convert, translate 
 Requires at least: 3.0
-Tested up to: 4.9.1
-Stable tag: 1.1.2
+Tested up to: 4.9.4
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,6 +18,7 @@ This plugin converts Greek characters to Latin (better known as greeklish) in al
 * Converts every new post, page and custom post types slugs automaticly
 * Option to convert all old posts, pages and custom post types slugs
 * Ignores posts with no-greek characters
+* Option on how to convert dipthongs
 
 
 == Installation ==
@@ -27,6 +28,9 @@ This plugin converts Greek characters to Latin (better known as greeklish) in al
 3. That's it!
 
 == Changelog ==
+
+= 1.2 =
+* Added options for dipthongs conversion or not
 
 = 1.1 =
 * Added options page
