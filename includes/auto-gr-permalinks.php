@@ -43,7 +43,7 @@ function auto_gr_permalinks_is_valid_slug( $current_post_name ) {
 
 function auto_gr_permalinks_sanitize_title( $current_post_title ) {
 
-	$dipthongs = array(
+	$diphthongs = array(
 		'/[αΑ][ιίΙΊ]/u' => 'e',
 		'/[οΟΕε][ιίΙΊ]/u' => 'i',
 		'/[αΑ][υύΥΎ]([θΘκΚξΞπΠσςΣτTφΡχΧψΨ]|\s|$)/u' => 'af$1',
@@ -90,10 +90,10 @@ function auto_gr_permalinks_sanitize_title( $current_post_title ) {
 		'/[ωώ]/iu' => 'o',
 	);
 
-	$dipthongs_status = get_option( 'auto_gr_permalinks_dipthongs') === 'enabled';
+	$diphthongs_status = get_option( 'auto_gr_permalinks_diphthongs') === 'enabled';
 
-	if ( $dipthongs_status ) {
-		$expressions = array_merge( $dipthongs, $expressions );
+	if ( $diphthongs_status ) {
+		$expressions = array_merge( $diphthongs, $expressions );
 	}
 
 	$current_post_title = preg_replace( array_keys( $expressions ), array_values( $expressions ), $current_post_title );
@@ -101,4 +101,8 @@ function auto_gr_permalinks_sanitize_title( $current_post_title ) {
 
 }
 
-add_filter( 'sanitize_title', 'auto_gr_permalinks_sanitize_title',  1 );
+if( get_option( 'auto_gr_permalinks_automatic' ) === 'enabled') {
+	add_filter( 'sanitize_title', 'auto_gr_permalinks_sanitize_title', 1 );
+}else{
+	remove_filter( 'sanitize_title', 'auto_gr_permalinks_sanitize_title', 1 );
+}

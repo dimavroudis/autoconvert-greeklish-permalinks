@@ -1,40 +1,61 @@
 === AutoConvert Greeklish Permalinks ===
 Contributors: Dimitris Mavroudis, d1m1tr1s_mav
 Author link: http://www.dimitrismavroudis.gr
-Tags: greek, greeklish permalink, latin, greeklish, slugs, permalinks, gr, convertion, convert, translate 
+Tags: greek, greeklish permalink, latin, greeklish, slugs, permalinks, gr, autoconvert
 Requires at least: 3.0
 Tested up to: 4.9.4
-Stable tag: 1.2.1
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin converts Greek characters to Latin (better known as greeklish) in all post, pages, term slugs and custom post types. The plugin makes sure that every new permalink is in greeklish and offers the option to convert all the old links with greeek characters to greeklish.
+Convert Greek characters to Latin on all your site's permalinks instantly. Supports: Custom Post Types and Taxonomies, WooCommerce
 
 == Description ==
 
-This plugin converts Greek characters to Latin (better known as greeklish) in all post, pages, term slugs and custom post types. The plugin makes sure that every new permalink is in greeklish and offers the option to convert all the old links with greeek characters to greeklish.
+AutoConvert Greeklish Permalinks converts Greek characters to Latin (better known as greeklish) in all post, pages and custom post types permalinks. The plugin makes sure that every new permalink is in greeklish and offers the option to convert all the old links with greek characters to latin.
 
-= Features =
-* Converts every new post, page and custom post types slugs automaticly
-* Option to convert all old posts, pages and custom post types slugs
-* Ignores posts with no-greek characters
-* Option on how to convert dipthongs
+The plugin is very easy to use. After installation the plugin is already set to go. Every new post will be now converted to greeklish. 
+
+If tou want to convert all your older posts, go to "Settings" > "AutoConvert Greeklish Permalinks" > "Convert old posts/taxonomies" , select the post types you want to convert and click the button "Convert Permalinks".
+
+On Settings > AutoConvert Greeklish Permalinks > Settings, you can, also, modify how the plugin converts the permalinks. For example, you can add the option to convert diphthongs.
+
+**Features**
+
+* Converts every new post, page, custom post types and taxonomies permalinks automatically
+* Convert all old posts, pages, custom post types  and taxonomies permalinks
+* Option to disable automatic conversion of new permalinks
+* Option on how to convert diphthongs
+* More coming soon...
+
+== Screenshots ==
+1. As simple as that. Write your title, draft, schedule or publish your post and the permalink is set.
+2. Need to convert your old posts permalinks? We have you covered! Go to "Settings" > "AutoConvert Greeklish Permalinks" > "Convert old posts/taxonomies" and change all your permalinks at once.
+3. Now you have the option to choose how diphthongs are converted.
 
 
 == Installation ==
 
-1. Upload `auto-gr-permalink` folder to the `/wp-content/plugins/` directory.
+1. Upload `auto-gr-permalink` folder to the `/wp-content/plugins/` directory,
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. That's it!
 
 == Changelog ==
 
+= 1.3 =
+* Added conversion of old terms
+* Option to disable automatic transliteration of new posts and terms
+* Improved UI with select2 for selects with multiple options and switches instead of checkboxes
+* Improved UI by using post types' and taxonomies' labels
+
+= 1.2.1 =
+* Fixed minor bug on previous update
+
 = 1.2 =
-* Added options for dipthongs conversion or not
+* Added options for diphthongs conversion or not
 
 = 1.1 =
 * Added options page
-* Fixed minnor issues
+* Fixed minor issues
 
 = 1.0 =
 * Initial release
