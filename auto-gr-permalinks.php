@@ -3,8 +3,8 @@
 /*
 Plugin Name: AutoConvert Greeklish Permalinks
 Plugin URI: https://www.dimitrismavroudis.gr/plugins/auto_gr_permalinks
-Description: Convert Greek characters to Latin on all your site's permalinks instantly.
-Version: 1.3.1
+Description: Convert Greek characters to Latin on all your site's permalinks instantly. Supports: Custom Post Types and Taxonomies, WooCommerce
+Version: 1.3.3
 Author: Dimitris Mavroudis
 Author URI: https://www.dimitrismavroudis.gr
 */
@@ -28,8 +28,8 @@ function auto_gr_permalinks_action_links( $actions, $plugin_file ) {
 	}
 	if ( $plugin == $plugin_file ) {
 
-		$settings = array(
-			'settings' => '<a href="' . esc_url( get_admin_url( null, 'options-general.php?page=auto_gr_permalinks' ) ) . '">' . _('Settings') . '</a>',
+		$settings  = array(
+			'settings' => '<a href="' . esc_url( get_admin_url( null, 'options-general.php?page=auto_gr_permalinks' ) ) . '">' . _( 'Settings' ) . '</a>',
 		);
 		$site_link = array(
 			'support' => '<a href="https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink" target="_blank">GitHub</a>',
@@ -39,6 +39,7 @@ function auto_gr_permalinks_action_links( $actions, $plugin_file ) {
 		$actions = array_merge( $settings, $actions );
 
 	}
+
 	return $actions;
 
 }
@@ -52,15 +53,18 @@ function auto_gr_permalinks_set_options_on_activation() {
 		update_option( 'auto_gr_permalinks_diphthongs', 'enabled' );
 	}
 }
+
 register_activation_hook( __FILE__, 'auto_gr_permalinks_set_options_on_activation' );
 
 // Update CSS within in Admin
-function auto_gr_permalinks_admin_css_js($hook) {
-	if($hook != 'settings_page_auto_gr_permalinks') {
+function auto_gr_permalinks_admin_css_js( $hook ) {
+	if ( $hook != 'settings_page_auto_gr_permalinks' ) {
 		return;
 	}
-	wp_enqueue_style('auto_gr_permalinks_admin_styles', plugins_url('includes/auto-gr-permalinks-admin.css', __FILE__) );
-	wp_enqueue_style('auto_gr_permalinks_select2_styles', plugins_url('select2/select2.min.css', __FILE__) );
-	wp_enqueue_script('auto_gr_permalinks_select2_js', plugins_url('select2/select2.min.js', __FILE__));
+	wp_enqueue_style( 'auto_gr_permalinks_select2_styles', plugins_url( 'select2/select2.min.css', __FILE__ ) );
+	wp_enqueue_style( 'auto_gr_permalinks_admin_styles', plugins_url( 'includes/auto-gr-permalinks-admin.css', __FILE__ ) );
+
+	wp_enqueue_script( 'auto_gr_permalinks_select2_js', plugins_url( 'select2/select2.min.js', __FILE__ ) );
 }
-add_action('admin_enqueue_scripts', 'auto_gr_permalinks_admin_css_js');
+
+add_action( 'admin_enqueue_scripts', 'auto_gr_permalinks_admin_css_js' );
