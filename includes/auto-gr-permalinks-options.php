@@ -4,11 +4,11 @@ function auto_gr_permalinks_settings_init() {
 	register_setting( 'auto_gr_permalinks', 'auto_gr_permalinks_automatic' );
 	register_setting( 'auto_gr_permalinks', 'auto_gr_permalinks_diphthongs' );
 
-	add_settings_section( 'auto_gr_permalinks_main', __( 'Automatic Conversion', 'auto_gr_permalinks' ), 'auto_gr_permalinks_main_cb', 'auto_gr_permalinks' );
-	add_settings_field( 'auto_gr_permalinks_automatic', __( 'Automatic conversion of new posts/terms to greeklish', 'auto_gr_permalinks' ), 'auto_gr_permalinks_automatic_cb', 'auto_gr_permalinks', 'auto_gr_permalinks_main' );
+	add_settings_section( 'auto_gr_permalinks_main', __( 'Automatic Conversion', 'autoconvert-greeklish-permalinks' ), 'auto_gr_permalinks_main_cb', 'auto_gr_permalinks' );
+	add_settings_field( 'auto_gr_permalinks_automatic', __( 'Automatic conversion of new posts/terms to greeklish', 'autoconvert-greeklish-permalinks' ), 'auto_gr_permalinks_automatic_cb', 'auto_gr_permalinks', 'auto_gr_permalinks_main' );
 
-	add_settings_section( 'auto_gr_permalinks_custom', __( 'Customizations', 'auto_gr_permalinks' ), 'auto_gr_permalinks_custom_cb', 'auto_gr_permalinks' );
-	add_settings_field( 'auto_gr_permalinks_diphthongs', __( 'Do you want diphthongs to be converted?', 'auto_gr_permalinks' ), 'auto_gr_permalinks_diphthongs_cb', 'auto_gr_permalinks', 'auto_gr_permalinks_custom' );
+	add_settings_section( 'auto_gr_permalinks_custom', __( 'Customization', 'autoconvert-greeklish-permalinks' ), 'auto_gr_permalinks_custom_cb', 'auto_gr_permalinks' );
+	add_settings_field( 'auto_gr_permalinks_diphthongs', __( 'Do you want diphthongs to be converted?', 'autoconvert-greeklish-permalinks' ), 'auto_gr_permalinks_diphthongs_cb', 'auto_gr_permalinks', 'auto_gr_permalinks_custom' );
 }
 
 add_action( 'admin_init', 'auto_gr_permalinks_settings_init' );
@@ -41,7 +41,7 @@ function auto_gr_permalinks_diphthongs_cb() {
 		<span class="slider round"></span>
 	</label>
 
-	<span><?php _e( 'For example "ει", "οι" becomes "i", "μπ" becomes "b" etc' ); ?></span>
+	<span style="margin-left: 10px;"><?php _e( 'For example "ει", "οι" becomes "i", "μπ" becomes "b" etc' , 'autoconvert-greeklish-permalinks'); ?></span>
 	<?php
 }
 
@@ -49,7 +49,7 @@ add_action( 'admin_menu', 'auto_gr_permalinks_settings_page' );
 
 
 function auto_gr_permalinks_settings_page() {
-	add_options_page( __( 'AutoConvert Greeklish Permalinks', 'auto_gr_permalinks' ), __( 'AutoConvert Greeklish Permalinks', 'auto_gr_permalinks' ), 'manage_options', 'auto_gr_permalinks', 'auto_gr_permalinks_admin_page' );
+	add_options_page( __( 'AutoConvert Greeklish Permalinks', 'autoconvert-greeklish-permalinks' ), __( 'AutoConvert Greeklish Permalinks', 'autoconvert-greeklish-permalinks' ), 'manage_options', 'auto_gr_permalinks', 'auto_gr_permalinks_admin_page' );
 }
 
 function auto_gr_permalinks_admin_page() {
@@ -64,9 +64,9 @@ function auto_gr_permalinks_admin_page() {
 		?>
 		<h2 class="nav-tab-wrapper">
 			<a href="?page=auto_gr_permalinks&tab=permalink_settings"
-			   class="nav-tab <?php echo $active_tab == 'permalink_settings' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Settings', 'auto_gr_permalinks' ); ?></a>
+			   class="nav-tab <?php echo $active_tab == 'permalink_settings' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Settings', 'autoconvert-greeklish-permalinks' ); ?></a>
 			<a href="?page=auto_gr_permalinks&tab=generate_permalinks"
-			   class="nav-tab <?php echo $active_tab == 'generate_permalinks' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Convert old posts/terms', 'auto_gr_permalinks' ); ?></a>
+			   class="nav-tab <?php echo $active_tab == 'generate_permalinks' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Convert old posts/terms', 'autoconvert-greeklish-permalinks' ); ?></a>
 		</h2>
 		<?php
 		if ( $active_tab == 'permalink_settings' ) { ?>
@@ -74,7 +74,7 @@ function auto_gr_permalinks_admin_page() {
 				<form action="options.php" method="post">
 					<?php settings_fields( 'auto_gr_permalinks' ); ?>
 					<?php do_settings_sections( 'auto_gr_permalinks' ); ?>
-					<?php submit_button( __( 'Save Settings', 'auto_gr_permalinks' ) ); ?>
+					<?php submit_button( __( 'Save Settings', 'autoconvert-greeklish-permalinks' ) ); ?>
 				</form>
 			</div>
 		<?php } else { ?>
@@ -84,12 +84,12 @@ function auto_gr_permalinks_admin_page() {
 						<tbody>
 						<tr>
 							<th>
-								<label for="post-type[]"><?php _e( 'Post types to convert', 'auto_gr_permalinks' ); ?></label>
+								<label for="post-type[]"><?php _e( 'Post types to convert', 'autoconvert-greeklish-permalinks' ); ?></label>
 							</th>
 							<td>
-								<select title="<?php _e( 'Post types to convert', 'auto_gr_permalinks' ); ?>"
+								<select title="<?php _e( 'Post types to convert', 'autoconvert-greeklish-permalinks' ); ?>"
 										name="post-type[]" class="select2"
-										data-placeholder="<?php _e( 'Select one or more post types', 'auto_gr_permalinks' ); ?>"
+										data-placeholder="<?php _e( 'Select one or more post types', 'autoconvert-greeklish-permalinks' ); ?>"
 										multiple>
 									<?php
 									$args       = array(
@@ -110,12 +110,12 @@ function auto_gr_permalinks_admin_page() {
 						</tr>
 						<tr>
 							<th>
-								<label for="taxonomy[]"><?php _e( 'Taxonomies to convert', 'auto_gr_permalinks' ); ?></label>
+								<label for="taxonomy[]"><?php _e( 'Taxonomies to convert', 'autoconvert-greeklish-permalinks' ); ?></label>
 							</th>
 							<td>
-								<select title="<?php _e( 'Taxonomies to convert', 'auto_gr_permalinks' ); ?>"
+								<select title="<?php _e( 'Taxonomies to convert', 'autoconvert-greeklish-permalinks' ); ?>"
 										name="taxonomy[]" class="select2"
-										data-placeholder="<?php _e( 'Select one or more taxonomies', 'auto_gr_permalinks' ); ?>"
+										data-placeholder="<?php _e( 'Select one or more taxonomies', 'autoconvert-greeklish-permalinks' ); ?>"
 										multiple>
 									<?php
 									$args       = array(
@@ -135,7 +135,7 @@ function auto_gr_permalinks_admin_page() {
 					<input name="convert-button" type="hidden" value="1"/>
 					<p class="submit">
 						<input type="submit" name="submit" id="submit" class="button button-primary"
-							   value="<?php _e( 'Convert Permalinks', 'auto_gr_permalinks' ); ?>">
+							   value="<?php _e( 'Convert Permalinks', 'autoconvert-greeklish-permalinks' ); ?>">
 					</p>
 				</form>
 			</div>
@@ -161,7 +161,7 @@ function auto_gr_permalinks_admin_page() {
 				$current_post_name = urldecode( $post->post_name );
 				if ( ! auto_gr_permalinks_is_valid_slug( $current_post_name ) ) {
 					if ( ! $update_count_posts ) {
-						echo '<h4>' . __( 'Permalinks updated', 'auto_gr_permalinks' ) . ':</h4><pre style="width:100%;max-width:800px;max-height:250px;overflow-y:scroll;background: white;border: 1px solid #e0e0e0;padding:  8px 14px;">';
+						echo '<h4>' . __( 'Permalinks updated', 'autoconvert-greeklish-permalinks' ) . ':</h4><pre style="width:100%;max-width:800px;max-height:250px;overflow-y:scroll;background: white;border: 1px solid #e0e0e0;padding:  8px 14px;">';
 					}
 					$post_to_update              = array();
 					$post_to_update['ID']        = $post->ID;
@@ -183,7 +183,7 @@ function auto_gr_permalinks_admin_page() {
 					$current_term_slug = urldecode( $term->slug );
 					if ( ! auto_gr_permalinks_is_valid_slug( $current_term_slug ) ) {
 						if ( ! $update_count_posts && ! $update_count_terms ) {
-							echo '<h4>' . __( 'Permalinks updated', 'auto_gr_permalinks' ) . ':</h4><pre style="width:100%;max-width:800px;max-height:250px;overflow-y:scroll;background: white;border: 1px solid #e0e0e0;padding:  8px 14px;">';
+							echo '<h4>' . __( 'Permalinks updated', 'autoconvert-greeklish-permalinks' ) . ':</h4><pre style="width:100%;max-width:800px;max-height:250px;overflow-y:scroll;background: white;border: 1px solid #e0e0e0;padding:  8px 14px;">';
 						}
 						$new_term_slug = auto_gr_permalinks_sanitize_title( $term->name );
 						$args          = array(
@@ -197,9 +197,10 @@ function auto_gr_permalinks_admin_page() {
 			}
 
 		}
-		$posts_txt = $update_count_posts == 1 ? __( 'post' ) : __( 'posts' );
-		$terms_txt = $update_count_terms == 1 ? __( 'term' ) : __( 'terms' );
-		echo '</pre><p><strong>Post slugs successfully generated for ' . $update_count_posts . ' ' . $posts_txt . ' and ' . $update_count_terms . ' ' . $terms_txt . '.</strong></p>';
+		$posts_txt = $update_count_posts == 1 ? __( 'post' , 'autoconvert-greeklish-permalinks') : __( 'posts' , 'autoconvert-greeklish-permalinks');
+		$terms_txt = $update_count_terms == 1 ? __( 'term' , 'autoconvert-greeklish-permalinks') : __( 'terms' , 'autoconvert-greeklish-permalinks');
+		$text_format = __( 'Permalinks successfully generated for %s %s and %s %s', 'autoconvert-greeklish-permalinks');
+		echo '</pre><p><strong>' . sprintf($text_format , $update_count_posts, $posts_txt, $update_count_terms,  $terms_txt) . '</strong></p>';
 	}
 }
 
