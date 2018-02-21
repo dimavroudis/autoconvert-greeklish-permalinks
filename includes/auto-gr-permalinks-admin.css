@@ -2,23 +2,6 @@
     width: 300px;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: #008ec2;
-    border: 1px solid #006799;
-    color: #fff;
-    padding: 0 4px 3px;
-    line-height: 1;
-    margin-top: 7px;
-}
-
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-    color: #fff;
-}
-
-.select2-results__option {
-    margin: 0;
-}
-
 .switch {
     position: relative;
     display: inline-block;

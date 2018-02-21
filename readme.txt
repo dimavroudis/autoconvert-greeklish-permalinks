@@ -4,7 +4,7 @@ Author link: http://www.dimitrismavroudis.gr
 Tags: greek, greeklish permalink, latin, greeklish, slugs, permalinks, gr, autoconvert
 Requires at least: 3.0
 Tested up to: 4.9.4
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,9 @@ On Settings > AutoConvert Greeklish Permalinks > Settings, you can, also, modify
 
 == Changelog ==
 
+= 1.3.6 =
+* Removed estimated slug on conversion
+* Minor UI improvements
 
 = 1.3.5 =
 * Added Greek translation

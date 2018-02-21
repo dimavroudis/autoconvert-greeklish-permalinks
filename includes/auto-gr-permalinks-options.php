@@ -168,7 +168,7 @@ function auto_gr_permalinks_admin_page() {
 					$post_to_update['post_name'] = auto_gr_permalinks_sanitize_title( $post->post_title );
 					wp_update_post( $post_to_update );
 					$update_count_posts ++;
-					echo $current_post_name . '->' . urldecode( $post_to_update['post_name'] ) . '<br/>';
+					echo $current_post_name . '<br/>';
 				}
 			}
 		}
@@ -191,7 +191,7 @@ function auto_gr_permalinks_admin_page() {
 						);
 						wp_update_term( $term->term_id, $term->taxonomy, $args );
 						$update_count_terms ++;
-						echo $current_term_slug . '->' . urldecode( $new_term_slug ) . '<br/>';
+						echo $current_term_slug . '<br/>';
 					}
 				}
 			}
