@@ -1,45 +1,55 @@
 === AutoConvert Greeklish Permalinks ===
 Contributors: Dimitris Mavroudis, d1m1tr1s_mav
-Author link: http://www.dimitrismavroudis.gr
-Tags: greek, greeklish permalink, latin, greeklish, slugs, permalinks, gr, autoconvert
+Author link: https://mavrou.gr
+Tags: greek, greeklish permalink, greeklish, slugs, permalinks, links, autoconvert, convert greek, agp
 Requires at least: 3.0
-Tested up to: 4.9.4
-Stable tag: 1.3.6
+Tested up to: 5.0
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Convert Greek characters to Latin on all your site's permalinks instantly. Supports: Custom Post Types and Taxonomies, WooCommerce
+Convert Greek characters to Latin on all your site's permalinks instantly.
 
 == Description ==
 
-AutoConvert Greeklish Permalinks converts Greek characters to Latin (better known as greeklish) in all permalinks of posts, pages, custom post types and taxonomies. The plugin makes sure that every new permalink is in greeklish and offers the option to convert all the old links with greek characters to latin.
+AutoConvert Greeklish Permalinks converts greek characters to latin in all permalinks. The plugin makes sure that every new permalink is in greeklish and offers the option to convert all the old links with greek characters to latin.
 
 The plugin is very easy to use. After installation the plugin is already set to go. Every new post will be now converted to greeklish. 
 
-If tou want to convert all your older at once, go to Settings > AutoConvert Greeklish Permalinks > Convert old posts/terms , select the post types and taxonomies you want to convert and click the button "Convert Permalinks".
+If you want to convert all your older permalinks, go to Settings > Convert Greek Permalinks > Convert old posts/terms , select the post types and taxonomies you want to convert and click the "Convert Permalinks" button.
 
-On Settings > AutoConvert Greeklish Permalinks > Settings, you can, also, modify how the plugin converts the permalinks. For example, you can add the option to convert diphthongs or disable automatic conversion.
+On Settings > Convert Greek Permalinks > Settings, you can also modify how the plugin converts the permalinks. For example, you can add the option to convert diphthongs or disable automatic conversion.
 
-**Features**
-
-* Converts every new post, page, custom post types and taxonomies permalinks automatically
-* Option to convert permalinks of older posts, pages, custom post types and taxonomies all at once
-* Option to disable automatic conversion of new permalinks
-* Option on how to convert diphthongs
-* More coming soon...
+==Features==
+* Automatic permalink conversion for every new post, page and term.
+* Tool that converts permalinks of older posts and terms all at once.
+* Option to disable automatic permalink conversion.
+* Option on how to convert diphthongs.
 
 == Screenshots ==
 1. As simple as that. Write your title, draft, schedule or publish your post and the permalink is set.
-2. Need to convert your old posts permalinks? We have you covered! Go to "Settings" > "AutoConvert Greeklish Permalinks" > "Convert old posts/taxonomies" and change all your permalinks at once.
+2. Need to convert your old permalinks? We have you covered! Go to Settings > Convert Greek Permalinks > Convert old posts/terms and change all your permalinks at once.
 3. Now you have the option to choose how diphthongs are converted.
-
 
 == Installation ==
 
-1. Upload `auto-gr-permalink` folder to the `/wp-content/plugins/` directory,
-2. Activate the plugin through the 'Plugins' menu in WordPress.
+1. After you install and activate your plugin like every other WordPress plugin, go to Settings > Convert Greek Permalinks
+2. On 'Settings', choose if you want automatic conversion on every new post and term and choose how you want the to be converted
+3. On  Convert old posts/terms, select the post types and taxonomies you want to convert and click the "Convert Permalinks" button, t convert old posts and terms to greeklish
+
 
 == Changelog ==
+
+= 2.0.0 =
+* Rewrite of plugin as object-oriented
+* Improved the UI of the dipthongs option at settings
+* Fixed issue when passing slug that already exists
+* Added notices for success and failure of conversion
+* Added uninstall function that deletes plugin's options stored in your database
+* Better copywriting
+
+= 1.3.8 =
+* Added support for two more letters, ΐ and ΰ. (Thanks to @princeofabyss)
 
 = 1.3.6 =
 * Removed estimated slug on conversion

@@ -1,53 +1,58 @@
-.select2 {
+.agp-plugin .select2 {
     width: 300px;
 }
 
-.switch {
+.agp-switch {
     position: relative;
     display: inline-block;
     width: 48px;
     height: 26px;
 }
 
-.switch input {
+.agp-switch input {
     display: none;
 }
 
-.slider {
+.agp-slider {
     position: absolute;
     cursor: pointer;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    -webkit-border-radius: 26px;
     border-radius: 26px;
     background-color: #ccc;
     -webkit-transition: .4s;
+    -o-transition: .4s;
     transition: .4s;
 }
 
-.slider:before {
+.agp-slider:before {
     position: absolute;
     content: "";
     height: 18px;
     width: 18px;
     left: 4px;
     bottom: 4px;
+    -webkit-border-radius: 50%;
     border-radius: 50%;
     background-color: white;
     -webkit-transition: .4s;
+    -o-transition: .4s;
     transition: .4s;
 }
 
-input:checked + .slider {
+input:checked + .agp-slider {
     background-color: #008ec2;
 }
 
-input:focus + .slider {
+input:focus + .agp-slider {
+    -webkit-box-shadow: 0 0 1px #008ec2;
     box-shadow: 0 0 1px #008ec2;
 }
 
-input:checked + .slider:before {
+input:checked + .agp-slider:before {
     -webkit-transform: translateX(22px);
     -ms-transform: translateX(22px);
     transform: translateX(22px);
