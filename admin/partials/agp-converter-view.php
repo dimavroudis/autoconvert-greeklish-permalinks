@@ -3,12 +3,12 @@
 ?>
 <div>
 	<div class="card">
-		<h3 class="title"><?php _e( 'Thing to know before you start the conversion', 'agp' ); ?></h3>
+		<h3 class="title"><?php _e( 'Things to know before you start the conversion', 'agp' ); ?></h3>
 		<p><?php _e( 'Depending on your server and the amount of permalinks that needs to be converted, the conversion might take a few minutes to complete.', 'agp' ) ?>
-			<b><?php _e( 'During that time do not close this window.', 'agp'  ) ?></b></p>
-		<p><?php _e( 'When all your permalinks are converted a success message will appear at the top of your page.', 'agp'  ) ?></p>
-		<p><?php _e( 'If the process take to long, your server will probably stop the process midway*. If this happens, do not worry. Just re-run the process to finish the rest of the conversion.', 'agp'  ) ?></p>
-		<p><i><?php _e( '*Working on a fix for this issue on a future version of the plugin.', 'agp'  ) ?></i></p>
+			<b><?php _e( 'During that time do not close this window.', 'agp' ) ?></b></p>
+		<p><?php _e( 'When all your permalinks are converted, a success message will appear at the top of your page.', 'agp' ) ?></p>
+		<p><?php _e( 'If the process takes too long, your server will probably stop the process*. If this happens, do not worry. Just re-run the process to finish the rest of the conversion.', 'agp' ) ?></p>
+		<p><i><?php _e( '*Working on a fix for this issue for a future version.', 'agp' ) ?></i></p>
 
 	</div>
 	<div class="card">

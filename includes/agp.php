@@ -77,12 +77,13 @@ class Agp {
 	 * @param    string $plugin_path
 	 */
 	public function __construct( $plugin_path ) {
-		$this->version     = get_option('agp_version');
+		$this->version     = defined( 'AGP_VERSION' ) ? AGP_VERSION : '2.0.0';
 		$this->plugin_name = 'auto-gr-permalinks';
 		$this->plugin_path = $plugin_path;
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
+		$this->upgrade_hook();
 
 	}
 
@@ -124,6 +125,11 @@ class Agp {
 		 * The class responsible for main functionality of the plugin
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-converter.php';
+
+		/**
+		 * The class responsible for updating your plugin options.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-upgrade.php';
 
 		$this->loader = new Agp_Loader();
 	}
@@ -195,6 +201,17 @@ class Agp {
 	 */
 	public function get_plugin_path() {
 		return $this->plugin_path;
+	}
+
+	/**
+	 * The code that runs on updating your plugin options.
+	 *
+	 * @since     2.0.2
+	 * @access   private
+	 */
+	private function upgrade_hook() {
+		$plugin_upgrade = new Agp_Upgrade();
+		$this->loader->add_action( 'admin_init', $plugin_upgrade, 'upgrade' );
 	}
 
 	/**

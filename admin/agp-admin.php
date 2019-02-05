@@ -90,8 +90,10 @@ class Agp_Admin {
 
 			$this->converter->convertAll( $posts_type, $taxonomy );
 
-			$posts_count = $this->converter->getPostCount();
-			$terms_count = $this->converter->getTermCount();
+			$posts_count  = $this->converter->getPostCount();
+			$terms_count  = $this->converter->getTermCount();
+			$post_errors  = $this->converter->getPostErrors();
+			$terms_errors = $this->converter->getTermErrors();
 
 			if ( $posts_count || $terms_count ) {
 				$posts_txt   = $posts_count == 1 ? __( 'post', 'agp' ) : __( 'posts', 'agp' );
@@ -109,8 +111,9 @@ class Agp_Admin {
 				</div>
 				<?php
 			}
-			if ( ! empty( $this->converter->getPostErrors() ) ) {
-				foreach ( $this->converter->getPostErrors() as $error ) {
+
+			if ( ! empty( $post_errors ) ) {
+				foreach ( $post_errors as $error ) {
 					$text_format = __( 'The post "<a href="%s">%s</a>" was not converted. %s', 'agp' );
 					$post_id     = $error['post_id'];
 					?>
@@ -120,8 +123,9 @@ class Agp_Admin {
 					<?php
 				}
 			}
-			if ( ! empty( $this->converter->getTermErrors() ) ) {
-				foreach ( $this->converter->getTermErrors() as $error ) {
+
+			if ( ! empty( $terms_errors ) ) {
+				foreach ( $terms_errors as $error ) {
 					$text_format = __( 'The term "<a href="%s">%s</a>" was not converted. %s', 'agp' );
 					$term        = get_term( $error['term_id'], $error['taxonomy'] );
 					?>
@@ -247,8 +251,10 @@ class Agp_Admin {
 	 *
 	 * @param   string      The hook
 	 */
-	public function enqueue_styles() {
-
+	public function enqueue_styles( $hook ) {
+		if ( $hook != 'settings_page_agp' ) {
+			return;
+		}
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/agp-admin.css', array(), $this->version, 'all' );
 		wp_enqueue_style( 'select2', plugin_dir_url( __FILE__ ) . 'css/select2.min.css', array(), $this->version, 'all' );
 
@@ -261,8 +267,10 @@ class Agp_Admin {
 	 *
 	 * @param   string      The hook
 	 */
-	public function enqueue_scripts() {
-
+	public function enqueue_scripts( $hook ) {
+		if ( $hook != 'settings_page_agp' ) {
+			return;
+		}
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), $this->version, false );
 
 	}

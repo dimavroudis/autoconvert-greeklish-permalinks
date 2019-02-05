@@ -1,5 +1,6 @@
 # Copyright (C) 2019 agp
 # This file is distributed under the same license as the agp package.
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: agp\n"
@@ -8,135 +9,146 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: trunk/admin/agp-admin.php:72
+#: admin/agp-admin.php:72
 msgid "AutoConvert Greeklish Permalinks"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:72
+#: admin/agp-admin.php:72
 msgid "Convert Greek Permalinks"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:97
+#: admin/agp-admin.php:99
 msgid "post"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:97
+#: admin/agp-admin.php:99
 msgid "posts"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:98
+#: admin/agp-admin.php:100
 msgid "term"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:98
+#: admin/agp-admin.php:100
 msgid "terms"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:99
+#: admin/agp-admin.php:101
+#, php-format
 msgid "Permalinks successfully generated for <b>%d %s</b> and <b>%d %s</b>"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:108
+#: admin/agp-admin.php:110
 msgid "<b>No permalink was converted.</b> All your permalinks were already in latin characters."
 msgstr ""
 
-#: trunk/admin/agp-admin.php:114
+#: admin/agp-admin.php:117
+#, php-format
 msgid "The post \"<a href=\"%s\">%s</a>\" was not converted. %s"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:125
+#: admin/agp-admin.php:129
+#, php-format
 msgid "The term \"<a href=\"%s\">%s</a>\" was not converted. %s"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:151
+#: admin/agp-admin.php:155
 msgid "Do you want all new permalinks to be converted to greeklish?"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:155
+#: admin/agp-admin.php:159
 msgid "How do you want diphthongs to be converted?"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:208
+#: admin/agp-admin.php:212
 msgid "Simple conversion"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:208
+#: admin/agp-admin.php:212
 msgid "For example \"ει\" becomes \"ei\", \"οι\" becomes \"οi\", \"μπ\" becomes \"mp\" etc"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:216
+#: admin/agp-admin.php:220
 msgid "Advanced conversion"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:216
+#: admin/agp-admin.php:220
 msgid "For example \"ει\", \"οι\" becomes \"i\", \"μπ\" becomes \"b\" etc"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:284, trunk/admin/partials/agp-admin-view.php:15
+#: admin/agp-admin.php:292 admin/partials/agp-admin-view.php:15
 msgid "Settings"
 msgstr ""
 
-#: trunk/admin/agp-admin.php:287
+#: admin/agp-admin.php:295
 msgid "Convert old permalinks"
 msgstr ""
 
-#: trunk/admin/partials/agp-admin-view.php:12
+#: admin/partials/agp-admin-view.php:12
 msgid "Convert Permalinks to Greeklish"
 msgstr ""
 
-#: trunk/admin/partials/agp-admin-view.php:17, trunk/admin/partials/agp-converter-view.php:15
+#: admin/partials/agp-admin-view.php:17
+#: admin/partials/agp-converter-view.php:15
 msgid "Convert old posts/terms"
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:6
-msgid "Thing to know before you start the conversion"
+#: admin/partials/agp-converter-view.php:6
+msgid "Things to know before you start the conversion"
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:7
+#: admin/partials/agp-converter-view.php:7
 msgid "Depending on your server and the amount of permalinks that needs to be converted, the conversion might take a few minutes to complete."
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:8
+#: admin/partials/agp-converter-view.php:8
 msgid "During that time do not close this window."
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:9
-msgid "When all your permalinks are converted a success message will appear at the top of your page."
+#: admin/partials/agp-converter-view.php:9
+msgid "When all your permalinks are converted, a success message will appear at the top of your page."
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:10
-msgid "If the process take to long, your server will probably stop the process midway*. If this happens, do not worry. Just re-run the process to finish the rest of the conversion."
+#: admin/partials/agp-converter-view.php:10
+msgid "If the process takes too long, your server will probably stop the process*. If this happens, do not worry. Just re-run the process to finish the rest of the conversion."
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:11
-msgid "*Working on a fix for this issue on a future version of the plugin."
+#: admin/partials/agp-converter-view.php:11
+msgid "*Working on a fix for this issue for a future version."
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:21, trunk/admin/partials/agp-converter-view.php:24
+#: admin/partials/agp-converter-view.php:21
+#: admin/partials/agp-converter-view.php:24
 msgid "Post types to convert"
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:26
+#: admin/partials/agp-converter-view.php:26
 msgid "Select one or more post types"
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:47, trunk/admin/partials/agp-converter-view.php:50
+#: admin/partials/agp-converter-view.php:47
+#: admin/partials/agp-converter-view.php:50
 msgid "Taxonomies to convert"
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:52
+#: admin/partials/agp-converter-view.php:52
 msgid "Select one or more taxonomies"
 msgstr ""
 
-#: trunk/admin/partials/agp-converter-view.php:73
+#: admin/partials/agp-converter-view.php:73
 msgid "Convert Permalinks"
 msgstr ""
 
-#: trunk/admin/partials/agp-settings-view.php:8
+#: admin/partials/agp-settings-view.php:8
 msgid "Save Settings"
 msgstr ""

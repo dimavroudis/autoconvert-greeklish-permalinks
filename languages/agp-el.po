@@ -1,26 +1,27 @@
-# Copyright (C) 2019 agp
-# This file is distributed under the same license as the agp package.
 msgid ""
 msgstr ""
-"Project-Id-Version: agp\n"
-"POT-Creation-Date: 2019-01-24 14:09+0200\n"
-"PO-Revision-Date: \n"
+"Project-Id-Version: AutoConvert Greeklish Permalinks\n"
+"POT-Creation-Date: 2019-01-28 17:50+0200\n"
+"PO-Revision-Date: 2019-01-28 17:50+0200\n"
 "Last-Translator: Dimitris Mavroudis <info@dimitrismavroudis.gr>\n"
-"Language-Team: \n"
+"Language-Team: Dimitris Mavroudis <info@dimitrismavroudis.gr>\n"
 "Language: el_GR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
-"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
-"esc_html_e;esc_html_x:1,2c\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: auto-gr-permalinks.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
+#. Plugin Name of the plugin/theme
 #: admin/agp-admin.php:72
 msgid "AutoConvert Greeklish Permalinks"
 msgstr "AutoConvert Greeklish Permalinks"
@@ -29,29 +30,29 @@ msgstr "AutoConvert Greeklish Permalinks"
 msgid "Convert Greek Permalinks"
 msgstr "Μετατροπή ελληνικών συνδέσμων"
 
-#: admin/agp-admin.php:97
+#: admin/agp-admin.php:99
 msgid "post"
 msgstr "δημοσιεύση"
 
-#: admin/agp-admin.php:97
+#: admin/agp-admin.php:99
 msgid "posts"
 msgstr "δημοσιεύσεις"
 
-#: admin/agp-admin.php:98
+#: admin/agp-admin.php:100
 msgid "term"
 msgstr "όρο"
 
-#: admin/agp-admin.php:98
+#: admin/agp-admin.php:100
 msgid "terms"
 msgstr "όρους"
 
-#: admin/agp-admin.php:99
+#: admin/agp-admin.php:101
 #, php-format
 msgid "Permalinks successfully generated for <b>%d %s</b> and <b>%d %s</b>"
 msgstr ""
 "Μετατράπηκαν επιτυχημένα οι σύνδεσμοι για <b>%d %s</b> και <b>%d %s</b>"
 
-#: admin/agp-admin.php:108
+#: admin/agp-admin.php:110
 msgid ""
 "<b>No permalink was converted.</b> All your permalinks were already in latin "
 "characters."
@@ -59,29 +60,29 @@ msgstr ""
 "<b>Κανένας σύνδεσμος δεν μετατράπηκε.</b>Όλοι οι σύνδεσμοί σας ήταν ήδη με  "
 "λατινικούς χαρακτήρες."
 
-#: admin/agp-admin.php:114
+#: admin/agp-admin.php:117
 #, php-format
 msgid "The post \"<a href=\"%s\">%s</a>\" was not converted. %s"
 msgstr "Η δημοσίευση \"< a href =\" %s \"\" %s </a> \"  δεν μετατράπηκε. %s"
 
-#: admin/agp-admin.php:125
+#: admin/agp-admin.php:129
 #, php-format
 msgid "The term \"<a href=\"%s\">%s</a>\" was not converted. %s"
 msgstr "Ο όρος \"< a href =\" %s \" %s </a>\" δεν μετατράπηκε. %s"
 
-#: admin/agp-admin.php:151
+#: admin/agp-admin.php:155
 msgid "Do you want all new permalinks to be converted to greeklish?"
 msgstr "Θέλετε όλα οι νέοι σύνδεσμοι  να μετατρέπονται σε greeklish;"
 
-#: admin/agp-admin.php:155
+#: admin/agp-admin.php:159
 msgid "How do you want diphthongs to be converted?"
 msgstr "Πώς θέλετε να μετατραπούν οι δίφθογγοι;"
 
-#: admin/agp-admin.php:208
+#: admin/agp-admin.php:212
 msgid "Simple conversion"
 msgstr "Απλή μετατροπή"
 
-#: admin/agp-admin.php:208
+#: admin/agp-admin.php:212
 msgid ""
 "For example \"ει\" becomes \"ei\", \"οι\" becomes \"οi\", \"μπ\" becomes \"mp"
 "\" etc"
@@ -89,19 +90,19 @@ msgstr ""
 "Για παράδειγμα \"ει\" γίνεται \"ei\", \"οι\" γίνεται \"oi\", \"μπ\" γίνεται "
 "\"mp\""
 
-#: admin/agp-admin.php:216
+#: admin/agp-admin.php:220
 msgid "Advanced conversion"
 msgstr "Προηγμένη μετατροπή"
 
-#: admin/agp-admin.php:216
+#: admin/agp-admin.php:220
 msgid "For example \"ει\", \"οι\" becomes \"i\", \"μπ\" becomes \"b\" etc"
 msgstr "Για παράδειγμα \"ει\", \"οι\" γίνεται  \"i\", \"μπ\" γίνεται  \"b\""
 
-#: admin/agp-admin.php:284 admin/partials/agp-admin-view.php:15
+#: admin/agp-admin.php:292 admin/partials/agp-admin-view.php:15
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
-#: admin/agp-admin.php:287
+#: admin/agp-admin.php:295
 msgid "Convert old permalinks"
 msgstr "Μετατροπή παλιών συνδέσμων"
 
@@ -115,8 +116,8 @@ msgid "Convert old posts/terms"
 msgstr "Μετατροπή παλιών δημοσιεύσεων/όρων"
 
 #: admin/partials/agp-converter-view.php:6
-msgid "Thing to know before you start the conversion"
-msgstr "Πράγμα που πρέπει να γνωρίζετε πριν ξεκινήσετε"
+msgid "Things to know before you start the conversion"
+msgstr "Πράγματα που πρέπει να γνωρίζετε πριν ξεκινήσετε"
 
 #: admin/partials/agp-converter-view.php:7
 msgid ""
@@ -133,25 +134,25 @@ msgstr "Κατά τη διάρκεια αυτής, μην κλείσετε αυ�
 
 #: admin/partials/agp-converter-view.php:9
 msgid ""
-"When all your permalinks are converted a success message will appear at the "
+"When all your permalinks are converted, a success message will appear at the "
 "top of your page."
 msgstr ""
-"Όταν όλοι οι σύνδεσμοι έχουν μετατραπεί, θα εμφανιστεί στο πάνω μέρος της "
-"σελίδας σας ένα μήνυμα επιτυχίας."
+"Όταν όλοι οι σύνδεσμοι έχουν μετατραπεί,  ένα μήνυμα επιτυχημένης "
+"μετατροπήςθα εμφανιστεί στο πάνω μέρος της σελίδας σας."
 
 #: admin/partials/agp-converter-view.php:10
 msgid ""
-"If the process take to long, your server will probably stop the process "
-"midway*. If this happens, do not worry. Just re-run the process to finish "
-"the rest of the conversion."
+"If the process takes too long, your server will probably stop the process*. "
+"If this happens, do not worry. Just re-run the process to finish the rest of "
+"the conversion."
 msgstr ""
 "Εάν η διαδικασία διαρκέσει για μεγάλο χρονικό διάστημα, ο server σας θα "
-"σταματήσει κατά πάσα πιθανότητα τη διαδικασία στη μέση αυτής*. Αν συμβεί "
-"αυτό, μην ανησυχείτε. Απλά εκτελέστε ξανά τη διαδικασία για να ολοκληρώσετε "
-"το υπόλοιπο της μετατροπής."
+"σταματήσει κατά πάσα πιθανότητα τη διαδικασία*. Αν συμβεί αυτό, μην "
+"ανησυχείτε. Απλά εκτελέστε ξανά τη διαδικασία για να ολοκληρώσετε το "
+"υπόλοιπο της μετατροπής."
 
 #: admin/partials/agp-converter-view.php:11
-msgid "*Working on a fix for this issue on a future version of the plugin."
+msgid "*Working on a fix for this issue for a future version."
 msgstr "* Το θέμα αυτό θα λυθεί σε μελλοντική έκδοση."
 
 #: admin/partials/agp-converter-view.php:21
@@ -180,11 +181,21 @@ msgstr "Μετατροπή Συνδέσμων"
 msgid "Save Settings"
 msgstr "Αποθήκευση Αλλαγών"
 
-#~ msgid "Permalinks updated"
-#~ msgstr "Μόνιμοι σύνδεσμοι που ενημερώθηκαν"
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink"
+msgstr "https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink"
 
-#~ msgid "No permalinks were converted"
-#~ msgstr "Κανένας σύνδεσμος δεν μετατράπηκε"
+#. Description of the plugin/theme
+msgid ""
+"Convert Greek characters to Latin on all your site's permalinks instantly."
+msgstr ""
+"Μετατρέψτε τους ελληνικούς χαρακτήρες σε λατινικούς σε όλες τους συνδέσμους "
+"του ιστότοπού σας αμέσως."
 
-#~ msgid "Convert"
-#~ msgstr "Μετατροπή"
+#. Author of the plugin/theme
+msgid "Dimitris Mavroudis"
+msgstr "Δημήτρης Μαυρουδης"
+
+#. Author URI of the plugin/theme
+msgid "http://mavrou.gr/"
+msgstr "http://mavrou.gr/"

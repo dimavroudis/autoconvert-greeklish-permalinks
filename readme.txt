@@ -4,7 +4,7 @@ Author link: https://mavrou.gr
 Tags: greek, greeklish permalink, greeklish, slugs, permalinks, links, autoconvert, convert greek, agp
 Requires at least: 3.0
 Tested up to: 5.0
-Stable tag: 2.0.0
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,6 +39,18 @@ On Settings > Convert Greek Permalinks > Settings, you can also modify how the p
 
 
 == Changelog ==
+
+= 2.0.4 =
+* Limited loading of styles and javascript only to AutoConvert's admin pages (Fixes to select2 issue)
+
+= 2.0.3 =
+* Copywriting review - Fixed grammar and syntax errors
+
+= 2.0.2 =
+* New installations' options were not initialized properly
+
+= 2.0.1 =
+* Fixed fatal error
 
 = 2.0.0 =
 * Rewrite of plugin as object-oriented
