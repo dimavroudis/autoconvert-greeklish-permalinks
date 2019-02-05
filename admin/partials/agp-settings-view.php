@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * The template for options tab content
+ *
+ * @since    2.0.0
+ *
+ */
 ?>
 <div>
 	<form action="options.php" method="post">

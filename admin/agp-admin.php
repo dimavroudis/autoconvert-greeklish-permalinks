@@ -20,6 +20,14 @@ class Agp_Admin {
 	 */
 	protected $plugin_path;
 	/**
+	 * An instance of the converter class
+	 *
+	 * @since    2.0.0
+	 * @access   protected
+	 * @var Agp_Converter
+	 */
+	protected $converter;
+	/**
 	 * The ID of this plugin.
 	 *
 	 * @since    2.0.0
@@ -35,14 +43,6 @@ class Agp_Admin {
 	 * @var      string $version The current version of this plugin.
 	 */
 	private $version;
-	/**
-	 * Instance of Converter to be used in admin
-	 *
-	 * @since    2.0.0
-	 * @access   private
-	 * @var      object $converter Instance of Converter to be used in admin
-	 */
-	private $converter;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -83,60 +83,6 @@ class Agp_Admin {
 	 */
 	public function options_page_content() {
 
-		if ( isset( $_POST['convert-button'] ) ) {
-
-			$posts_type = isset( $_POST['post-type'] ) ? $_POST['post-type'] : false;
-			$taxonomy   = isset( $_POST['taxonomy'] ) ? $_POST['taxonomy'] : false;
-
-			$this->converter->convertAll( $posts_type, $taxonomy );
-
-			$posts_count  = $this->converter->getPostCount();
-			$terms_count  = $this->converter->getTermCount();
-			$post_errors  = $this->converter->getPostErrors();
-			$terms_errors = $this->converter->getTermErrors();
-
-			if ( $posts_count || $terms_count ) {
-				$posts_txt   = $posts_count == 1 ? __( 'post', 'agp' ) : __( 'posts', 'agp' );
-				$terms_txt   = $terms_count == 1 ? __( 'term', 'agp' ) : __( 'terms', 'agp' );
-				$text_format = __( 'Permalinks successfully generated for <b>%d %s</b> and <b>%d %s</b>', 'agp' );
-				?>
-				<div class="notice notice-success is-dismissible">
-					<p><?php echo sprintf( $text_format, $posts_count, $posts_txt, $terms_count, $terms_txt ); ?></p>
-				</div>
-				<?php
-			} else {
-				?>
-				<div class="notice notice-info is-dismissible">
-					<p><?php _e( '<b>No permalink was converted.</b> All your permalinks were already in latin characters.', 'agp' ) ?></p>
-				</div>
-				<?php
-			}
-
-			if ( ! empty( $post_errors ) ) {
-				foreach ( $post_errors as $error ) {
-					$text_format = __( 'The post "<a href="%s">%s</a>" was not converted. %s', 'agp' );
-					$post_id     = $error['post_id'];
-					?>
-					<div class="notice notice-error is-dismissible">
-						<p><?php echo sprintf( $text_format, get_edit_post_link( $post_id ), get_the_title( $post_id ), $error['message'] ); ?></p>
-					</div>
-					<?php
-				}
-			}
-
-			if ( ! empty( $terms_errors ) ) {
-				foreach ( $terms_errors as $error ) {
-					$text_format = __( 'The term "<a href="%s">%s</a>" was not converted. %s', 'agp' );
-					$term        = get_term( $error['term_id'], $error['taxonomy'] );
-					?>
-					<div class="notice notice-error is-dismissible">
-						<p><?php echo sprintf( $text_format, get_edit_term_link( $error['term_id'], $error['taxonomy'] ), $term->name, $error['message'] ); ?></p>
-					</div>
-					<?php
-				}
-			}
-		}
-
 		include_once( 'partials/agp-admin-view.php' );
 
 	}
@@ -169,7 +115,6 @@ class Agp_Admin {
 	 * @access   public
 	 */
 	public function custom_section_content() {
-		//TODO: Add some intro text or not. Still thinking about it...
 	}
 
 	/**
@@ -226,6 +171,50 @@ class Agp_Admin {
 	}
 
 	/**
+	 * Manages conversion progress notices
+	 *
+	 * @since    3.0.0
+	 * @access   public
+	 */
+	public function admin_notices() {
+
+		if ( isset( $_GET['agp_notice_dismiss'] ) ) {
+			delete_transient( 'agp_notice_dismiss' );
+		}
+
+		$log = get_option( 'agp_conversion' );
+
+		//In progress
+		if ( $log && $log['status'] === 'started' ) {
+
+			$count_complete = $log['converted']['posts'] + $log['converted']['terms'];
+			$count_estimate = $log['estimated']['posts'] + $log['estimated']['terms'];
+
+			$percentage     = round( $count_complete / $count_estimate * 100 );
+			$percentage_txt = $percentage . '%';
+			?>
+			<div class="notice notice-info">
+				<p><?php echo sprintf( __( 'Permalinks conversion is at %s', 'agp' ), $percentage_txt ); ?></p>
+			</div>
+			<?php
+		}
+
+		//Done
+		$is_active = get_transient( 'agp_notice_dismiss' );
+		if ( $log['status'] === 'done' && $is_active ) {
+			$params  = array_merge( $_GET, array( 'agp_notice_dismiss' => false ) );
+			$queries = http_build_query( $params );
+			$url     = ( empty( $_SERVER['HTTPS'] ) ? 'http://' : 'https://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '?' . $queries;
+			?>
+			<div class="notice notice-success">
+				<p><?php echo '<b>' . __( 'Permalinks conversion is done!', 'agp' ) . '</b> <a style="float:right;" href="' . esc_url( $url ) . '">' . __( 'Dismiss', 'agp' ) . '</a>'; ?></p>
+			</div>
+			<?php
+		}
+
+	}
+
+	/**
 	 * Callback for sanitize_title hook
 	 * Checks if automatic conversion is enabled and then calls convertSlug function
 	 *
@@ -238,11 +227,84 @@ class Agp_Admin {
 	 */
 	public function sanitize_title_hook( $current_post_title ) {
 		if ( get_option( 'agp_automatic' ) === 'enabled' ) {
-			$current_post_title = $this->converter->convertSlug( $current_post_title );
+			$current_post_title = Agp_Converter::convertSlug( $current_post_title );
 		}
 
 		return $current_post_title;
 	}
+
+	/**
+	 *  Converts all post types and taxonomies
+	 *
+	 * @since    2.0.0
+	 * @access   public
+	 *
+	 * @param    array $post_types
+	 * @param    array $taxonomies
+	 *
+	 * @return   boolean
+	 */
+	public function convert( $post_types, $taxonomies ) {
+
+		$post_count = $term_count = 0;
+		$items      = array();
+
+		if ( ! empty( $post_types ) ) {
+			$query = new WP_Query( array(
+				'post_type'      => $post_types,
+				'posts_per_page' => - 1,
+			) );
+			foreach ( $query->posts as $post ) {
+				setlocale( LC_ALL, 'el_GR' );
+				$current_post_name = urldecode( $post->post_name );
+				if ( ! Agp_Converter::isValidSlug( $current_post_name ) ) {
+					$items[] = $post;
+					$post_count ++;
+				}
+			}
+		}
+
+		if ( ! empty( $taxonomies ) ) {
+			$terms = get_terms( array(
+				'taxonomy'   => $taxonomies,
+				'hide_empty' => 0,
+			) );
+			if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					setlocale( LC_ALL, 'el_GR' );
+					$current_term_slug = urldecode( $term->slug );
+					if ( ! Agp_Converter::isValidSlug( $current_term_slug ) ) {
+						$items[] = $term;
+						$term_count ++;
+					}
+				}
+			}
+		}
+
+		if ( ! empty( $items ) ) {
+			$now = new DateTime();
+			update_option( 'agp_conversion', array(
+				'status'    => 'started',
+				'started'   => $now->getTimestamp(),
+				'ended'     => '',
+				'converted' => array( 'posts' => 0, 'terms' => 0 ),
+				'estimated' => array( 'posts' => $post_count, 'terms' => $term_count ),
+				'errors'    => array(),
+
+			) );
+			set_transient( 'agp_notice_active', true );
+			foreach ( $items as $item ) {
+				$this->converter->push_to_queue( $item );
+			}
+			$this->converter->save()->dispatch();
+
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
 
 	/**
 	 * Register the stylesheets for the admin area.
@@ -271,7 +333,7 @@ class Agp_Admin {
 		if ( $hook != 'settings_page_agp' ) {
 			return;
 		}
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( 'select2', plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), $this->version, false );
 
 	}
 

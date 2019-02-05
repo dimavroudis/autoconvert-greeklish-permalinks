@@ -37,8 +37,16 @@ On Settings > Convert Greek Permalinks > Settings, you can also modify how the p
 2. On 'Settings', choose if you want automatic conversion on every new post and term and choose how you want the to be converted
 3. On  Convert old posts/terms, select the post types and taxonomies you want to convert and click the "Convert Permalinks" button, t convert old posts and terms to greeklish
 
+== Upgrade Notice ==
+Fixes the error of exceeding memory on old permalinks converter with async background conversion
 
 == Changelog ==
+
+= 3.0.0 =
+* Implemented asynchronous background conversion
+* Added select all option
+* Added panel for report of last conversion (duration, conversion percentage, errors)
+* Added conversion progress notice
 
 = 2.0.4 =
 * Limited loading of styles and javascript only to AutoConvert's admin pages (Fixes to select2 issue)

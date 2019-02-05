@@ -111,6 +111,11 @@ class Agp {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-loader.php';
 
 		/**
+		 * The class responsible for updating your plugin options.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-upgrade.php';
+
+		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
@@ -122,14 +127,14 @@ class Agp {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/agp-admin.php';
 
 		/**
-		 * The class responsible for main functionality of the plugin
+		 * The plugin responsible for background processing
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-converter.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'vendor/wp-background-processing/wp-background-processing.php';
 
 		/**
-		 * The class responsible for updating your plugin options.
+		 * The conversion functions
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-upgrade.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-converter.php';
 
 		$this->loader = new Agp_Loader();
 	}
@@ -170,6 +175,8 @@ class Agp {
 
 		$this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'action_links', 10, 5 );
 		$this->loader->add_filter( 'sanitize_title', $plugin_admin, 'sanitize_title_hook', 1 );
+
+		$this->loader->add_action( 'admin_notices', $plugin_admin, 'admin_notices' );
 	}
 
 	/**
