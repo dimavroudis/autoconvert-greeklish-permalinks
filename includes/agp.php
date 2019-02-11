@@ -176,7 +176,7 @@ class Agp {
 		$this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'action_links', 10, 5 );
 		$this->loader->add_filter( 'sanitize_title', $plugin_admin, 'sanitize_title_hook', 1 );
 
-		$this->loader->add_action( 'admin_notices', $plugin_admin, 'admin_notices' );
+		$this->loader->add_action( 'admin_notices', $plugin_admin, 'conversion_progress_notice' );
 	}
 
 	/**
@@ -216,9 +216,22 @@ class Agp {
 	 * @since     2.0.2
 	 * @access   private
 	 */
-	private function upgrade_hook() {
+	public function upgrade_hook() {
 		$plugin_upgrade = new Agp_Upgrade();
 		$this->loader->add_action( 'admin_init', $plugin_upgrade, 'upgrade' );
+	}
+
+	/**
+	 * The code that runs on updating your plugin options.
+	 *
+	 * @since     2.0.2
+	 * @access   private
+	 */
+	public static function clean() {
+		delete_option( 'agp_automatic' );
+		delete_option( 'agp_diphthongs' );
+		delete_option( 'agp_conversion' );
+		delete_transient( 'agp_notice_dismiss' );
 	}
 
 	/**

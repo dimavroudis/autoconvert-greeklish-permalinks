@@ -90,6 +90,8 @@ class Agp_Converter extends WP_Background_Process {
 	 * @return   boolean
 	 */
 	public static function isValidSlug( $current_post_title ) {
+		setlocale( LC_ALL, 'el_GR' );
+		$current_post_title = urldecode( $current_post_title );
 
 		$is_valid_slug = true;
 
@@ -105,62 +107,6 @@ class Agp_Converter extends WP_Background_Process {
 	}
 
 	/**
-	 * Background Conversion Process
-	 *
-	 *
-	 * @since    3.0.0
-	 * @access   protected
-	 *
-	 * @param    WP_Post|WP_Term $item Post or term to convert
-	 *
-	 * @return mixed
-	 */
-	protected function task( $item ) {
-
-		$log = get_option( 'agp_conversion' );
-
-		if ( $item instanceof WP_Post ) {
-			$post_to_update              = array();
-			$post_to_update['ID']        = $item->ID;
-			$post_to_update['post_name'] = self::convertSlug( $item->post_title );
-			$is_converted                = wp_update_post( $post_to_update, true );
-
-			if ( ! is_wp_error( $is_converted ) ) {
-				$log['converted']['posts'] ++;
-			} else {
-				$error_message   = $is_converted->get_error_message();
-				$error           = [
-					'type'    => 'post',
-					'id'      => $item->ID,
-					'message' => $error_message,
-				];
-				$log['errors'][] = $error;
-			}
-		}
-
-		if ( $item instanceof WP_Term ) {
-			$new_term_slug = self::convertSlug( $item->name );
-			$is_converted  = $this->updateTerm( $item->term_id, $item->taxonomy, $new_term_slug );
-
-			if ( ! is_wp_error( $is_converted ) ) {
-				$log['converted']['terms'] ++;
-			} else {
-				$error_message   = $is_converted->get_error_message();
-				$error           = [
-					'type'    => 'term',
-					'id'      => $item->term_id,
-					'message' => $error_message,
-				];
-				$log['errors'][] = $error;
-			}
-		}
-
-		update_option( 'agp_conversion', $log );
-
-		return false;
-	}
-
-	/**
 	 *  Converts the slug to greeklish
 	 *
 	 * @since    1.0.0
@@ -171,6 +117,9 @@ class Agp_Converter extends WP_Background_Process {
 	 * @return   string        The converted slug in greeklish
 	 */
 	public static function convertSlug( $current_slug ) {
+
+		setlocale( LC_ALL, 'el_GR' );
+		$current_slug = urldecode( $current_slug );
 
 		$diphthongs_status = get_option( 'agp_diphthongs' ) === 'enabled';
 
@@ -200,7 +149,7 @@ class Agp_Converter extends WP_Background_Process {
 	 *
 	 * @return   boolean|WP_Error
 	 */
-	private function updateTerm( $term_id, $taxonomy, $new_slug ) {
+	public static function updateTerm( $term_id, $taxonomy, $new_slug ) {
 		$args     = array(
 			'slug' => $new_slug,
 		);
@@ -210,10 +159,177 @@ class Agp_Converter extends WP_Background_Process {
 		} elseif ( $termData->get_error_code() === 'duplicate_term_slug' ) {
 			$new_slug = $new_slug . '-2';
 
-			return $this->updateTerm( $term_id, $taxonomy, $new_slug );
+			return self::updateTerm( $term_id, $taxonomy, $new_slug );
 		} else {
 			return $termData;
 		}
+	}
+
+	/**
+	 * Queries the database for the items to convert, adds them on the queue, saves and initializes logger
+	 *
+	 * @since    2.0.0
+	 * @access   public
+	 *
+	 * @param    array $post_types
+	 * @param    array $taxonomies
+	 *
+	 * @return   boolean
+	 */
+	public function prepareData( $post_types, $taxonomies ) {
+
+		global $wpdb;
+		$post_count = $term_count = 0;
+
+		if ( ! empty( $post_types ) ) {
+			$sql_post_types = '';
+			foreach ( $post_types as $index => $post_type ) {
+				if ( $index != 0 ) {
+					$sql_post_types .= 'OR ';
+				}
+				$sql_post_types .= "p.post_type =  '$post_type' ";
+			}
+
+			$sql = "SELECT ID, post_name
+				FROM $wpdb->posts as p
+				WHERE 1=1 AND ($sql_post_types)
+				AND (p.post_status = 'publish'
+				OR p.post_status = 'future'
+				OR p.post_status = 'draft'
+				OR p.post_status = 'pending'
+				OR p.post_status = 'private')";
+
+			$post_query = $wpdb->get_results( $sql );
+
+			if ( $post_query ) {
+				foreach ( $post_query as $post ) {
+					if ( ! self::isValidSlug( $post->post_name ) ) {
+						$post = (object) array_merge( array( 'type' => 'post' ), (array) $post );
+						$this->push_to_queue( $post );
+						$post_count ++;
+					}
+				}
+			}
+		}
+
+		if ( ! empty( $taxonomies ) ) {
+			$sql_taxonomies = '';
+			foreach ( $taxonomies as $index => $taxonomy ) {
+				if ( $index != 0 ) {
+					$sql_taxonomies .= ', ';
+				}
+				$sql_taxonomies .= "'$taxonomy'";
+			}
+
+			$sql = "SELECT t.term_id, t.slug, tt.taxonomy
+				FROM $wpdb->terms AS t 
+				INNER JOIN $wpdb->term_taxonomy AS tt
+				ON t.term_id = tt.term_id
+				WHERE tt.taxonomy IN ($sql_taxonomies)";
+
+			// The Term Query
+			$term_query = $wpdb->get_results( $sql );
+
+			foreach ( $term_query as $term ) {
+				if ( ! self::isValidSlug( $term->slug ) ) {
+					$term = (object) array_merge( array( 'type' => 'term' ), (array) $term );
+					$this->push_to_queue( $term );
+					$term_count ++;
+				}
+			}
+		}
+
+		if ( $post_count !== 0 || $term_count !== 0 ) {
+			$now = time();
+			update_option( 'agp_conversion', array(
+				'status'    => 'started',
+				'started'   => $now,
+				'ended'     => '',
+				'converted' => array( 'posts' => 0, 'terms' => 0 ),
+				'estimated' => array( 'posts' => $post_count, 'terms' => $term_count ),
+				'errors'    => array(),
+			) );
+			set_transient( 'agp_notice_active', true );
+			$this->save();
+
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	/**
+	 * Save queue
+	 *
+	 * @return $this
+	 */
+	public function save() {
+
+		if ( ! empty( $this->data ) ) {
+			$chuncks = array_chunk( $this->data, 1000, true );
+			foreach ( $chuncks as $chunck ) {
+				$key = $this->generate_key();
+				update_site_option( $key, $chunck );
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Background Conversion Process
+	 *
+	 * @since    3.0.0
+	 * @access   protected
+	 *
+	 * @param    stdClass $item Post or term to convert
+	 *
+	 * @return mixed
+	 */
+	protected function task( $item ) {
+
+		$log = get_option( 'agp_conversion' );
+		error_log( print_r( $item, true ) );
+		if ( $item->type === 'post' ) {
+			$post_to_update              = array();
+			$post_to_update['ID']        = $item->ID;
+			$post_to_update['post_name'] = self::convertSlug( $item->post_name );
+			$is_converted                = wp_update_post( $post_to_update, true );
+			error_log( $is_converted );
+			if ( ! is_wp_error( $is_converted ) ) {
+				$log['converted']['posts'] ++;
+			} else {
+				$error_message   = $is_converted->get_error_message();
+				$error           = [
+					'type'    => 'post',
+					'id'      => $item->ID,
+					'message' => $error_message,
+				];
+				$log['errors'][] = $error;
+			}
+		}
+
+		if ( $item->type === 'term' ) {
+			$new_term_slug = self::convertSlug( $item->slug );
+			$is_converted  = self::updateTerm( $item->term_id, $item->taxonomy, $new_term_slug );
+
+			if ( ! is_wp_error( $is_converted ) ) {
+				$log['converted']['terms'] ++;
+			} else {
+				$error_message   = $is_converted->get_error_message();
+				$error           = [
+					'type'    => 'term',
+					'id'      => $item->term_id,
+					'message' => $error_message,
+				];
+				$log['errors'][] = $error;
+			}
+		}
+
+		update_option( 'agp_conversion', $log );
+
+		return false;
 	}
 
 	/**
@@ -227,9 +343,9 @@ class Agp_Converter extends WP_Background_Process {
 
 		$log = get_option( 'agp_conversion' );
 
-		$now           = new DateTime();
+		$now           = time();
 		$log['status'] = 'done';
-		$log['ended']  = $now->getTimestamp();
+		$log['ended']  = $now;
 
 		update_option( 'agp_conversion', $log );
 

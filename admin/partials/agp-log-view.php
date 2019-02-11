@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for conversion reports
+ * The view for conversion reports
  *
  * @since    3.0.0
  *
@@ -24,8 +24,7 @@ if ( $log && $log['status'] === 'done' ) {
 	$mins    = floor( $seconds / 60 % 60 );
 	$secs    = floor( $seconds % 60 );
 
-	$started  = date( 'd/m/Y H:i:s', $log['started'] );
-	$ended    = date( 'd/m/Y H:i:s', $log['ended'] );
+	$started  = date_i18n( 'l d M Y', $log['started'] );
 	$duration = sprintf( '%02d:%02d:%02d', $hours, $mins, $secs );
 
 	$has_errors = ! empty( $errors );
@@ -48,16 +47,15 @@ if ( $log && $log['status'] === 'done' ) {
 
 	?>
 	<div class="card" id="report">
-		<h2><?php echo __( 'Report of last conversion', 'agp' ) ?></h2>
-		<p>
-			<?php echo sprintf( __( 'Started at %s and finished at %s.', 'agp' ), $started, $ended ); ?>
-			<br>
-			<?php echo sprintf( __( 'Duration: %s', 'agp' ), $duration ); ?>
-		</p>
-		<p>
-			<?php echo sprintf( __( 'Permalinks successfully converted %d/%d %s and %d/%d %s.', 'agp' ), $posts_count_complete, $posts_count_estimate, $posts_txt, $terms_count_complete, $terms_count_estimate, $terms_txt ); ?>
-		</p>
 
+		<h3><?php echo __( 'Last conversion report', 'agp' ) ?></h3>
+
+		<p>
+			<b><?php echo $started; ?></b> ( <?php echo sprintf( __( 'Duration: %s', 'agp' ), $duration ); ?> )
+		</p>
+		<p>
+			<?php echo sprintf( __( 'Permalinks successfully converted for %d/%d %s and %d/%d %s.', 'agp' ), $posts_count_complete, $posts_count_estimate, $posts_txt, $terms_count_complete, $terms_count_estimate, $terms_txt ); ?>
+		</p>
 		<?php if ( $has_errors ) { ?>
 			<p>
 				<b><?php echo __( 'The following errors occurred:', 'agp' ); ?></b>
@@ -67,6 +65,10 @@ if ( $log && $log['status'] === 'done' ) {
 					echo '<li>' . $error . '</li>';
 				} ?>
 			</ul>
+		<?php } else { ?>
+			<p>
+				<?php echo __( 'No errors reported.', 'agp' ); ?>
+			</p>
 		<?php } ?>
 	</div>
 	<?php

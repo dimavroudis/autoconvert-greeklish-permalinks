@@ -76,25 +76,12 @@ class Agp_Admin {
 	}
 
 	/**
-	 * Adds the admin page content
-	 *
-	 * @since    1.0.0
-	 * @access   public
-	 */
-	public function options_page_content() {
-
-		include_once( 'partials/agp-admin-view.php' );
-
-	}
-
-	/**
 	 * Initialize the settings page
 	 *
 	 * @since    1.0.0
 	 * @access   public
 	 */
 	public function settings_init() {
-
 		register_setting( 'agp', 'agp_automatic' );
 		register_setting( 'agp', 'agp_diphthongs' );
 		add_settings_section( 'agp_custom', '', array( $this, 'custom_section_content' ), 'agp' );
@@ -106,6 +93,20 @@ class Agp_Admin {
 			$this,
 			'diphthongs_option',
 		), 'agp', 'agp_custom' );
+	}
+
+	/**
+	 * Adds the admin page content
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function options_page_content() {
+
+		$this->on_convert();
+
+		include_once( 'partials/agp-admin-view.php' );
+
 	}
 
 	/**
@@ -125,17 +126,7 @@ class Agp_Admin {
 	 */
 	public function automatic_option() {
 
-		$options   = get_option( 'agp_automatic' );
-		$automatic = $options === 'enabled' ? 'checked' : '';
-
-		?>
-		<label class="agp-switch">
-			<input type="hidden" id="agpAutomatic" name="agp_automatic" value="disabled">
-			<input type="checkbox" id="agpAutomatic" name="agp_automatic"
-				   value="enabled" <?php echo $automatic; ?>>
-			<span class="agp-slider round"></span>
-		</label>
-		<?php
+		include_once( 'partials/agp-automatic-option-view.php' );
 
 	}
 
@@ -147,27 +138,33 @@ class Agp_Admin {
 	 */
 	public function diphthongs_option() {
 
-		$options = get_option( 'agp_diphthongs' );
+		include_once( 'partials/agp-diphthongs-option-view.php' );
 
-		?>
-		<p>
-			<label for="agp_diphthongs_disable">
-				<input type="radio" id="agp_diphthongs_disable"
-					   name="agp_diphthongs" <?php echo $options !== 'enabled' ? 'checked' : ''; ?>
-					   value="disabled"><b><?php _e( 'Simple conversion', 'agp' ) ?></b> <?php _e( 'For example "ει" becomes "ei", "οι" becomes "οi", "μπ" becomes "mp" etc', 'agp' ); ?>
-			</label>
-		</p>
-		<p>
-			<label for="agp_diphthongs_enable">
-				<input type="radio" id="agp_diphthongs_enable"
-					   name="agp_diphthongs" <?php echo $options === 'enabled' ? 'checked' : ''; ?>
-					   value="enabled"><label
-						for="agp_diphthongs_enable"><b><?php _e( 'Advanced conversion', 'agp' ) ?></b> <?php _e( 'For example "ει", "οι" becomes "i", "μπ" becomes "b" etc', 'agp' ); ?>
-				</label>
-		</p>
+	}
 
-		<?php
+	/**
+	 * Initializes conversion on POST
+	 *
+	 * @since    3.0.0
+	 * @access   private
+	 */
+	private function on_convert() {
+		if ( isset( $_POST['convert-button'] ) ) {
 
+			$posts_type = isset( $_POST['post-types'] ) ? $_POST['post-types'] : array();
+			$taxonomy   = isset( $_POST['taxonomies'] ) ? $_POST['taxonomies'] : array();
+
+			$has_posts = $this->converter->prepareData( $posts_type, $taxonomy );
+
+			if ( ! $has_posts ) {
+				$message = '<b>' . __( 'All your permalinks were already in greeklish.', 'agp' ) . '</b>';
+				echo $this->admin_notice( 'info', $message, true );
+			} else {
+				$this->converter->dispatch();
+				$message = '<b>' . __( 'Permalinks conversion has started in the background.', 'agp' ) . '</b>';
+				echo $this->admin_notice( 'success', $message, true );
+			}
+		}
 	}
 
 	/**
@@ -176,7 +173,7 @@ class Agp_Admin {
 	 * @since    3.0.0
 	 * @access   public
 	 */
-	public function admin_notices() {
+	public function conversion_progress_notice() {
 
 		if ( isset( $_GET['agp_notice_dismiss'] ) ) {
 			delete_transient( 'agp_notice_dismiss' );
@@ -192,11 +189,9 @@ class Agp_Admin {
 
 			$percentage     = round( $count_complete / $count_estimate * 100 );
 			$percentage_txt = $percentage . '%';
-			?>
-			<div class="notice notice-info">
-				<p><?php echo sprintf( __( 'Permalinks conversion is at %s', 'agp' ), $percentage_txt ); ?></p>
-			</div>
-			<?php
+
+			$message = sprintf( __( 'Permalinks conversion is at %s', 'agp' ), $percentage_txt );
+			echo $this->admin_notice( 'info', $message );
 		}
 
 		//Done
@@ -205,12 +200,31 @@ class Agp_Admin {
 			$params  = array_merge( $_GET, array( 'agp_notice_dismiss' => false ) );
 			$queries = http_build_query( $params );
 			$url     = ( empty( $_SERVER['HTTPS'] ) ? 'http://' : 'https://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '?' . $queries;
-			?>
-			<div class="notice notice-success">
-				<p><?php echo '<b>' . __( 'Permalinks conversion is done!', 'agp' ) . '</b> <a style="float:right;" href="' . esc_url( $url ) . '">' . __( 'Dismiss', 'agp' ) . '</a>'; ?></p>
-			</div>
-			<?php
+			$message = '<b>' . __( 'Permalinks conversion is done!', 'agp' ) . '</b> <a style="float:right;" href="' . esc_url( $url ) . '">' . __( 'Dismiss', 'agp' ) . '</a>';
+			echo $this->admin_notice( 'success', $message );
 		}
+
+	}
+
+	/**
+	 * Template for admin notices
+	 *
+	 * @since    3.0.0
+	 * @access   public
+	 *
+	 * @param string $severity
+	 * @param string $content
+	 * @param bool $is_dismissible
+	 *
+	 * @return string
+	 */
+	public function admin_notice( $severity, $content, $is_dismissible = false ) {
+
+		$is_dismissible = $is_dismissible ? 'is-dismissible' : '';
+
+		$html = '<div class="notice notice-' . $severity . ' ' . $is_dismissible . '"><p>' . $content . '</p></div>';
+
+		return $html;
 
 	}
 
@@ -232,79 +246,6 @@ class Agp_Admin {
 
 		return $current_post_title;
 	}
-
-	/**
-	 *  Converts all post types and taxonomies
-	 *
-	 * @since    2.0.0
-	 * @access   public
-	 *
-	 * @param    array $post_types
-	 * @param    array $taxonomies
-	 *
-	 * @return   boolean
-	 */
-	public function convert( $post_types, $taxonomies ) {
-
-		$post_count = $term_count = 0;
-		$items      = array();
-
-		if ( ! empty( $post_types ) ) {
-			$query = new WP_Query( array(
-				'post_type'      => $post_types,
-				'posts_per_page' => - 1,
-			) );
-			foreach ( $query->posts as $post ) {
-				setlocale( LC_ALL, 'el_GR' );
-				$current_post_name = urldecode( $post->post_name );
-				if ( ! Agp_Converter::isValidSlug( $current_post_name ) ) {
-					$items[] = $post;
-					$post_count ++;
-				}
-			}
-		}
-
-		if ( ! empty( $taxonomies ) ) {
-			$terms = get_terms( array(
-				'taxonomy'   => $taxonomies,
-				'hide_empty' => 0,
-			) );
-			if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
-				foreach ( $terms as $term ) {
-					setlocale( LC_ALL, 'el_GR' );
-					$current_term_slug = urldecode( $term->slug );
-					if ( ! Agp_Converter::isValidSlug( $current_term_slug ) ) {
-						$items[] = $term;
-						$term_count ++;
-					}
-				}
-			}
-		}
-
-		if ( ! empty( $items ) ) {
-			$now = new DateTime();
-			update_option( 'agp_conversion', array(
-				'status'    => 'started',
-				'started'   => $now->getTimestamp(),
-				'ended'     => '',
-				'converted' => array( 'posts' => 0, 'terms' => 0 ),
-				'estimated' => array( 'posts' => $post_count, 'terms' => $term_count ),
-				'errors'    => array(),
-
-			) );
-			set_transient( 'agp_notice_active', true );
-			foreach ( $items as $item ) {
-				$this->converter->push_to_queue( $item );
-			}
-			$this->converter->save()->dispatch();
-
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
 
 	/**
 	 * Register the stylesheets for the admin area.

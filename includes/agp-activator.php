@@ -22,7 +22,7 @@ class Agp_Activator {
 			update_option( 'agp_automatic', 'enabled' );
 		}
 		if ( ! get_option( 'agp_diphthongs' ) ) {
-			update_option( 'agp_diphthongs', 'disabled' );
+			update_option( 'agp_diphthongs', 'enabled' );
 		}
 	}
 

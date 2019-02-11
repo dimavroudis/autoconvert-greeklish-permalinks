@@ -2,9 +2,10 @@
 Contributors: Dimitris Mavroudis, d1m1tr1s_mav
 Author link: https://mavrou.gr
 Tags: greek, greeklish permalink, greeklish, slugs, permalinks, links, autoconvert, convert greek, agp
-Requires at least: 3.0
-Tested up to: 5.0
-Stable tag: 2.0.4
+Requires at least: 3.8
+Requires PHP: 5.2
+Tested up to: 5.1
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,9 +21,9 @@ If you want to convert all your older permalinks, go to Settings > Convert Greek
 
 On Settings > Convert Greek Permalinks > Settings, you can also modify how the plugin converts the permalinks. For example, you can add the option to convert diphthongs or disable automatic conversion.
 
-==Features==
-* Automatic permalink conversion for every new post, page and term.
-* Tool that converts permalinks of older posts and terms all at once.
+== Features ==
+* Automatic permalink conversion for every new post and term.
+* Conversion tool for older posts and terms.
 * Option to disable automatic permalink conversion.
 * Option on how to convert diphthongs.
 
@@ -33,20 +34,23 @@ On Settings > Convert Greek Permalinks > Settings, you can also modify how the p
 
 == Installation ==
 
-1. After you install and activate your plugin like every other WordPress plugin, go to Settings > Convert Greek Permalinks
-2. On 'Settings', choose if you want automatic conversion on every new post and term and choose how you want the to be converted
-3. On  Convert old posts/terms, select the post types and taxonomies you want to convert and click the "Convert Permalinks" button, t convert old posts and terms to greeklish
+1. Install and activate your plugin like every other WordPress plugin.
+2. After installation the permalink of every new post will be converted to greeklish.
+3. You can adjust conversion and disable automatic conversion on 'Settings' > 'Convert Greek Permalinks'.
+4. To convert old posts/terms, go to 'Settings' > 'Convert Greek Permalinks' > 'Convert old posts/terms', select the post types and taxonomies you want to convert and click the "Convert Permalinks" button.
 
 == Upgrade Notice ==
-Fixes the error of exceeding memory on old permalinks converter with async background conversion
+
+Now you can convert as many old permalinks as you want, no matter the server restrictions!
 
 == Changelog ==
 
 = 3.0.0 =
-* Implemented asynchronous background conversion
+* **Implemented asynchronous background conversion.**
 * Added select all option
 * Added panel for report of last conversion (duration, conversion percentage, errors)
 * Added conversion progress notice
+* Set default diphthongs option on advanced (affects only on new installations)
 
 = 2.0.4 =
 * Limited loading of styles and javascript only to AutoConvert's admin pages (Fixes to select2 issue)
@@ -61,7 +65,7 @@ Fixes the error of exceeding memory on old permalinks converter with async backg
 * Fixed fatal error
 
 = 2.0.0 =
-* Rewrite of plugin as object-oriented
+* **Rewrite of plugin as object-oriented**
 * Improved the UI of the dipthongs option at settings
 * Fixed issue when passing slug that already exists
 * Added notices for success and failure of conversion
@@ -88,7 +92,7 @@ Fixes the error of exceeding memory on old permalinks converter with async backg
 * Fixed bug that didn't allow taxonomies to be converted
 
 = 1.3 =
-* Added conversion of old terms
+* **Added conversion of old terms**
 * Option to disable automatic transliteration of new posts and terms
 * Improved UI with select2 for selects with multiple options and switches instead of checkboxes
 * Improved UI by using post types' and taxonomies' labels
@@ -97,10 +101,10 @@ Fixes the error of exceeding memory on old permalinks converter with async backg
 * Fixed minor bug on previous update
 
 = 1.2 =
-* Added options for diphthongs conversion or not
+* **Added options for diphthongs conversion or not**
 
 = 1.1 =
-* Added options page
+* **Added options page**
 * Fixed minor issues
 
 = 1.0 =

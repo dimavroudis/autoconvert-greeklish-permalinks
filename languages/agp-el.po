@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Project-Id-Version: AutoConvert Greeklish Permalinks\n"
-"POT-Creation-Date: 2019-02-04 20:32+0200\n"
-"PO-Revision-Date: 2019-02-04 20:32+0200\n"
+"POT-Creation-Date: 2019-02-09 19:08+0200\n"
+"PO-Revision-Date: 2019-02-09 19:09+0200\n"
 "Language-Team: Dimitris Mavroudis <info@dimitrismavroudis.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,52 +30,40 @@ msgstr "AutoConvert Greeklish Permalinks"
 msgid "Convert Greek Permalinks"
 msgstr "Μετατροπή ελληνικών συνδέσμων"
 
-#: admin/agp-admin.php:101
+#: admin/agp-admin.php:88
 msgid "Do you want all new permalinks to be converted to greeklish?"
 msgstr "Θέλετε όλα οι νέοι σύνδεσμοι  να μετατρέπονται σε greeklish;"
 
-#: admin/agp-admin.php:105
+#: admin/agp-admin.php:92
 msgid "How do you want diphthongs to be converted?"
 msgstr "Πώς θέλετε να μετατραπούν οι δίφθογγοι;"
 
-#: admin/agp-admin.php:157
-msgid "Simple conversion"
-msgstr "Απλή μετατροπή"
+#: admin/agp-admin.php:160
+msgid "All your permalinks were already in greeklish."
+msgstr "Όλοι οι σύνδεσμοί σας ήταν ήδη σε greeklish."
 
-#: admin/agp-admin.php:157
-msgid ""
-"For example \"ει\" becomes \"ei\", \"οι\" becomes \"οi\", \"μπ\" becomes \"mp"
-"\" etc"
-msgstr ""
-"Για παράδειγμα \"ει\" γίνεται \"ei\", \"οι\" γίνεται \"oi\", \"μπ\" γίνεται "
-"\"mp\""
+#: admin/agp-admin.php:164
+msgid "Permalinks conversion has started in the background."
+msgstr "Η μετατροπή των συνδέσμων ξεκίνησε στο παρασκήνιο."
 
-#: admin/agp-admin.php:165
-msgid "Advanced conversion"
-msgstr "Προηγμένη μετατροπή"
-
-#: admin/agp-admin.php:165
-msgid "For example \"ει\", \"οι\" becomes \"i\", \"μπ\" becomes \"b\" etc"
-msgstr "Για παράδειγμα \"ει\", \"οι\" γίνεται  \"i\", \"μπ\" γίνεται  \"b\""
-
-#: admin/agp-admin.php:197
+#: admin/agp-admin.php:193
 #, php-format
 msgid "Permalinks conversion is at %s"
 msgstr "Η μετατροπή των συνδέσμων είναι στο %s"
 
-#: admin/agp-admin.php:210
+#: admin/agp-admin.php:203
 msgid "Permalinks conversion is done!"
 msgstr "Η μετατροπή των συνδέσμων ολοκληρώθηκε!"
 
-#: admin/agp-admin.php:210
+#: admin/agp-admin.php:203
 msgid "Dismiss"
 msgstr "Κλείσιμο"
 
-#: admin/agp-admin.php:354 admin/partials/agp-admin-view.php:20
+#: admin/agp-admin.php:295 admin/partials/agp-admin-view.php:20
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
-#: admin/agp-admin.php:357
+#: admin/agp-admin.php:298
 msgid "Convert old permalinks"
 msgstr "Μετατροπή παλιών συνδέσμων"
 
@@ -84,19 +72,11 @@ msgid "Convert Permalinks to Greeklish"
 msgstr "Μετατροπή συνδέσμων σε greeklish"
 
 #: admin/partials/agp-admin-view.php:22
-#: admin/partials/agp-converter-view.php:66
+#: admin/partials/agp-converter-view.php:39
 msgid "Convert old posts/terms"
 msgstr "Μετατροπή παλιών δημοσιεύσεων/όρων"
 
-#: admin/partials/agp-converter-view.php:26
-msgid "All your permalinks were already in greeklish."
-msgstr "Όλοι οι σύνδεσμοί σας ήταν ήδη σε greeklish."
-
-#: admin/partials/agp-converter-view.php:34
-msgid "Permalinks conversion has started in the background."
-msgstr "Η μετατροπή των συνδέσμων ξεκίνησε στο παρασκήνιο."
-
-#: admin/partials/agp-converter-view.php:67
+#: admin/partials/agp-converter-view.php:40
 msgid ""
 "Depending on your server and the amount of permalinks that needs to be "
 "converted, the conversion might take a few minutes to complete."
@@ -105,32 +85,52 @@ msgstr ""
 "μετατραπούν, μπορεί να χρειαστούν μερικά λεπτά για να ολοκληρωθεί η "
 "μετατροπή."
 
-#: admin/partials/agp-converter-view.php:73
-#: admin/partials/agp-converter-view.php:76
+#: admin/partials/agp-converter-view.php:46
+#: admin/partials/agp-converter-view.php:49
 msgid "Post types to convert"
 msgstr "Τύποι δημοσιεύσεων για μετατροπή"
 
-#: admin/partials/agp-converter-view.php:78
+#: admin/partials/agp-converter-view.php:51
 msgid "Select one or more post types"
 msgstr "Επιλέξτε ένα ή περισσότερα είδη δημοσιεύσεων"
 
-#: admin/partials/agp-converter-view.php:86
-#: admin/partials/agp-converter-view.php:104
+#: admin/partials/agp-converter-view.php:60
+#: admin/partials/agp-converter-view.php:81
 msgid "Select All"
 msgstr "Επιλογή όλων"
 
-#: admin/partials/agp-converter-view.php:91
-#: admin/partials/agp-converter-view.php:94
+#: admin/partials/agp-converter-view.php:66
+#: admin/partials/agp-converter-view.php:69
 msgid "Taxonomies to convert"
 msgstr "Ταξινομήσεις για μετατροπή"
 
-#: admin/partials/agp-converter-view.php:96
+#: admin/partials/agp-converter-view.php:71
 msgid "Select one or more taxonomies"
 msgstr "Επιλέξτε ένα ή περισσότερα είδη ταξινομήσεων"
 
-#: admin/partials/agp-converter-view.php:114
+#: admin/partials/agp-converter-view.php:92
 msgid "Convert Permalinks"
 msgstr "Μετατροπή Συνδέσμων"
+
+#: admin/partials/agp-diphthongs-option-view.php:16
+msgid "Simple conversion"
+msgstr "Απλή μετατροπή"
+
+#: admin/partials/agp-diphthongs-option-view.php:16
+msgid ""
+"For example \"ει\" becomes \"ei\", \"οι\" becomes \"οi\", \"μπ\" becomes \"mp"
+"\" etc"
+msgstr ""
+"Για παράδειγμα \"ει\" γίνεται \"ei\", \"οι\" γίνεται \"oi\", \"μπ\" γίνεται "
+"\"mp\""
+
+#: admin/partials/agp-diphthongs-option-view.php:24
+msgid "Advanced conversion"
+msgstr "Προηγμένη μετατροπή"
+
+#: admin/partials/agp-diphthongs-option-view.php:24
+msgid "For example \"ει\", \"οι\" becomes \"i\", \"μπ\" becomes \"b\" etc"
+msgstr "Για παράδειγμα \"ει\", \"οι\" γίνεται  \"i\", \"μπ\" γίνεται  \"b\""
 
 #: admin/partials/agp-log-view.php:19
 msgid "post"
@@ -148,38 +148,37 @@ msgstr "όρο"
 msgid "terms"
 msgstr "όρους"
 
-#: admin/partials/agp-log-view.php:39
+#: admin/partials/agp-log-view.php:38
 #, php-format
 msgid "The post %s was not converted. %s"
 msgstr "Η δημοσίευση %s δεν μετατράπηκε. %s"
 
-#: admin/partials/agp-log-view.php:43
+#: admin/partials/agp-log-view.php:42
 #, php-format
 msgid "The term %s was not converted. %s"
 msgstr "Ο όρος %s δεν μετατράπηκε. %s"
 
 #: admin/partials/agp-log-view.php:51
-msgid "Report of last conversion"
+msgid "Last conversion report"
 msgstr "Αναφορά τελευταίας μετατροπής"
 
-#: admin/partials/agp-log-view.php:53
-#, php-format
-msgid "Started at %s and finished at %s."
-msgstr "Ξεκίνησε στις %s και ολοκληρώθηκε στις %s."
-
-#: admin/partials/agp-log-view.php:55
+#: admin/partials/agp-log-view.php:54
 #, php-format
 msgid "Duration: %s"
 msgstr "Διάρκεια: %s"
 
-#: admin/partials/agp-log-view.php:58
+#: admin/partials/agp-log-view.php:57
 #, php-format
-msgid "Permalinks successfully converted %d/%d %s and %d/%d %s."
+msgid "Permalinks successfully converted for %d/%d %s and %d/%d %s."
 msgstr "Μετατράπηκαν επιτυχημένα οι σύνδεσμοι για %d/%d %s και %d/%d %s."
 
-#: admin/partials/agp-log-view.php:63
+#: admin/partials/agp-log-view.php:61
 msgid "The following errors occurred:"
 msgstr "Παρουσιάστηκαν τα ακόλουθα σφάλματα:"
+
+#: admin/partials/agp-log-view.php:69
+msgid "No errors reported."
+msgstr "Δεν παρουσιάστηκαν σφάλματα."
 
 #: admin/partials/agp-settings-view.php:13
 msgid "Save Settings"

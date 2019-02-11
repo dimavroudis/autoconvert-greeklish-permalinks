@@ -2,6 +2,13 @@
     width: 300px;
 }
 
+.light-btn {
+    background: transparent;
+    border: 0;
+    color: #0073aa;
+    text-decoration: underline;
+}
+
 .agp-switch {
     position: relative;
     display: inline-block;

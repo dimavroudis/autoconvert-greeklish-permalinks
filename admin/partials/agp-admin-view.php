@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for admin page
+ * The view for admin page
  *
  * @since    2.0.0
  *
