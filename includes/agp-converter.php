@@ -90,8 +90,6 @@ class Agp_Converter extends WP_Background_Process {
 	 * @return   boolean
 	 */
 	public static function isValidSlug( $current_post_title ) {
-		setlocale( LC_ALL, 'el_GR' );
-		$current_post_title = urldecode( $current_post_title );
 
 		$is_valid_slug = true;
 
@@ -117,9 +115,6 @@ class Agp_Converter extends WP_Background_Process {
 	 * @return   string        The converted slug in greeklish
 	 */
 	public static function convertSlug( $current_slug ) {
-
-		setlocale( LC_ALL, 'el_GR' );
-		$current_slug = urldecode( $current_slug );
 
 		$diphthongs_status = get_option( 'agp_diphthongs' ) === 'enabled';
 
@@ -203,7 +198,8 @@ class Agp_Converter extends WP_Background_Process {
 
 			if ( $post_query ) {
 				foreach ( $post_query as $post ) {
-					if ( ! self::isValidSlug( $post->post_name ) ) {
+					$slug = urldecode( $post->post_name );
+					if ( ! self::isValidSlug( $slug ) ) {
 						$post = (object) array_merge( array( 'type' => 'post' ), (array) $post );
 						$this->push_to_queue( $post );
 						$post_count ++;
@@ -231,7 +227,8 @@ class Agp_Converter extends WP_Background_Process {
 			$term_query = $wpdb->get_results( $sql );
 
 			foreach ( $term_query as $term ) {
-				if ( ! self::isValidSlug( $term->slug ) ) {
+				$slug = urldecode( $term->slug );
+				if ( ! self::isValidSlug( $slug ) ) {
 					$term = (object) array_merge( array( 'type' => 'term' ), (array) $term );
 					$this->push_to_queue( $term );
 					$term_count ++;
@@ -290,13 +287,14 @@ class Agp_Converter extends WP_Background_Process {
 	protected function task( $item ) {
 
 		$log = get_option( 'agp_conversion' );
-		error_log( print_r( $item, true ) );
+
 		if ( $item->type === 'post' ) {
+			$slug                        = urldecode($item->post_name);
 			$post_to_update              = array();
 			$post_to_update['ID']        = $item->ID;
-			$post_to_update['post_name'] = self::convertSlug( $item->post_name );
+			$post_to_update['post_name'] = self::convertSlug( $slug );
 			$is_converted                = wp_update_post( $post_to_update, true );
-			error_log( $is_converted );
+
 			if ( ! is_wp_error( $is_converted ) ) {
 				$log['converted']['posts'] ++;
 			} else {
@@ -311,7 +309,8 @@ class Agp_Converter extends WP_Background_Process {
 		}
 
 		if ( $item->type === 'term' ) {
-			$new_term_slug = self::convertSlug( $item->slug );
+			$slug          = urldecode($item->slug);
+			$new_term_slug = self::convertSlug( $slug );
 			$is_converted  = self::updateTerm( $item->term_id, $item->taxonomy, $new_term_slug );
 
 			if ( ! is_wp_error( $is_converted ) ) {

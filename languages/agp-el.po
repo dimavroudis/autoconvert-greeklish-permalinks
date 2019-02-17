@@ -2,9 +2,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Project-Id-Version: AutoConvert Greeklish Permalinks\n"
-"POT-Creation-Date: 2019-02-09 19:08+0200\n"
-"PO-Revision-Date: 2019-02-09 19:09+0200\n"
-"Language-Team: Dimitris Mavroudis <info@dimitrismavroudis.gr>\n"
+"POT-Creation-Date: 2019-02-13 19:08+0200\n"
+"PO-Revision-Date: 2019-02-13 19:08+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,7 +15,6 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
-"Last-Translator: Dimitris Mavroudis <info@dimitrismavroudis.gr>\n"
 "Language: el_GR\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
@@ -74,7 +72,7 @@ msgstr "Μετατροπή συνδέσμων σε greeklish"
 #: admin/partials/agp-admin-view.php:22
 #: admin/partials/agp-converter-view.php:39
 msgid "Convert old posts/terms"
-msgstr "Μετατροπή παλιών δημοσιεύσεων/όρων"
+msgstr "Μετατροπή παλιών άρθρων/όρων"
 
 #: admin/partials/agp-converter-view.php:40
 msgid ""
@@ -88,11 +86,11 @@ msgstr ""
 #: admin/partials/agp-converter-view.php:46
 #: admin/partials/agp-converter-view.php:49
 msgid "Post types to convert"
-msgstr "Τύποι δημοσιεύσεων για μετατροπή"
+msgstr "Τύποι άρθρων  για μετατροπή"
 
 #: admin/partials/agp-converter-view.php:51
 msgid "Select one or more post types"
-msgstr "Επιλέξτε ένα ή περισσότερα είδη δημοσιεύσεων"
+msgstr "Επιλέξτε ένα ή περισσότερα τύπο άρθρου"
 
 #: admin/partials/agp-converter-view.php:60
 #: admin/partials/agp-converter-view.php:81
@@ -102,11 +100,11 @@ msgstr "Επιλογή όλων"
 #: admin/partials/agp-converter-view.php:66
 #: admin/partials/agp-converter-view.php:69
 msgid "Taxonomies to convert"
-msgstr "Ταξινομήσεις για μετατροπή"
+msgstr "Ταξονομίες για μετατροπή"
 
 #: admin/partials/agp-converter-view.php:71
 msgid "Select one or more taxonomies"
-msgstr "Επιλέξτε ένα ή περισσότερα είδη ταξινομήσεων"
+msgstr "Επιλέξτε ένα ή περισσότερα είδη ταξονομιών"
 
 #: admin/partials/agp-converter-view.php:92
 msgid "Convert Permalinks"
@@ -130,23 +128,24 @@ msgstr "Προηγμένη μετατροπή"
 
 #: admin/partials/agp-diphthongs-option-view.php:24
 msgid "For example \"ει\", \"οι\" becomes \"i\", \"μπ\" becomes \"b\" etc"
-msgstr "Για παράδειγμα \"ει\", \"οι\" γίνεται  \"i\", \"μπ\" γίνεται  \"b\""
+msgstr ""
+"Για παράδειγμα \"ει\", \"οι\" γίνεται  \"i\", \"μπ\" γίνεται  \"b\" κτλ"
 
 #: admin/partials/agp-log-view.php:19
 msgid "post"
-msgstr "δημοσιεύση"
+msgstr "άρθρου"
 
 #: admin/partials/agp-log-view.php:19
 msgid "posts"
-msgstr "δημοσιεύσεις"
+msgstr "άρθρων"
 
 #: admin/partials/agp-log-view.php:20
 msgid "term"
-msgstr "όρο"
+msgstr "όρου"
 
 #: admin/partials/agp-log-view.php:20
 msgid "terms"
-msgstr "όρους"
+msgstr "όρων"
 
 #: admin/partials/agp-log-view.php:38
 #, php-format
@@ -176,7 +175,7 @@ msgstr "Μετατράπηκαν επιτυχημένα οι σύνδεσμοι 
 msgid "The following errors occurred:"
 msgstr "Παρουσιάστηκαν τα ακόλουθα σφάλματα:"
 
-#: admin/partials/agp-log-view.php:69
+#: admin/partials/agp-log-view.php:70
 msgid "No errors reported."
 msgstr "Δεν παρουσιάστηκαν σφάλματα."
 
@@ -202,7 +201,7 @@ msgstr ""
 
 #. Author of the plugin/theme
 msgid "Dimitris Mavroudis"
-msgstr "Δημήτρης Μαυρουδης"
+msgstr "Δημήτρης Μαυρουδής"
 
 #. Author URI of the plugin/theme
 msgid "http://mavrou.gr/"

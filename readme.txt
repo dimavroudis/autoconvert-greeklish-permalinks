@@ -5,7 +5,7 @@ Tags: greek, greeklish permalink, greeklish, slugs, permalinks, links, autoconve
 Requires at least: 3.8
 Requires PHP: 5.2
 Tested up to: 5.1
-Stable tag: 3.0.0
+Stable tag: 3.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,9 @@ On Settings > Convert Greek Permalinks > Settings, you can also modify how the p
 Now you can convert as many old permalinks as you want, no matter the server restrictions!
 
 == Changelog ==
+
+= 3.0.1 =
+* Fixes 404 error on archive pages
 
 = 3.0.0 =
 * **Implemented asynchronous background conversion.**

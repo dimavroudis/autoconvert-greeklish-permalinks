@@ -3,10 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: AutoConvert Greeklish Permalinks\n"
-"POT-Creation-Date: 2019-02-09 19:08+0200\n"
+"POT-Creation-Date: 2019-02-13 19:08+0200\n"
 "PO-Revision-Date: 2019-02-01 20:35+0200\n"
-"Last-Translator: Dimitris Mavroudis <info@dimitrismavroudis.gr>\n"
-"Language-Team: Dimitris Mavroudis <info@dimitrismavroudis.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -171,7 +169,7 @@ msgstr ""
 msgid "The following errors occurred:"
 msgstr ""
 
-#: admin/partials/agp-log-view.php:69
+#: admin/partials/agp-log-view.php:70
 msgid "No errors reported."
 msgstr ""
 
