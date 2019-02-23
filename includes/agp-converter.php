@@ -80,6 +80,110 @@ class Agp_Converter extends WP_Background_Process {
 	protected $action = 'agp_convert';
 
 	/**
+	 * Queries the database for the items to convert, adds them on the queue, saves and initializes logger
+	 *
+	 * @since    3.1.0
+	 * @access   public
+	 *
+	 * @param    array $post_types
+	 * @param    array $taxonomies
+	 *
+	 * @return   boolean
+	 */
+	public function prepareData( $post_types, $taxonomies ) {
+
+		$post_count = $this->postQuery( $post_types, 'queue' );
+		$term_count = $this->termQuery( $taxonomies, 'queue' );
+
+		if ( $post_count || $term_count ) {
+			$now = time();
+			update_option( 'agp_conversion', array(
+				'status'    => 'started',
+				'started'   => $now,
+				'ended'     => '',
+				'converted' => array( 'posts' => 0, 'terms' => 0 ),
+				'estimated' => array( 'posts' => $post_count, 'terms' => $term_count ),
+				'errors'    => array(),
+			) );
+			set_transient( 'agp_notice_active', true );
+			$this->save();
+
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	/**
+	 * Queries the database for posts related to specified post types
+	 *
+	 * @since    3.1.0
+	 * @access   public
+	 *
+	 * @param array $post_types
+	 * @param string $callback
+	 *
+	 * @return array|int|boolean
+	 */
+	public function postQuery( $post_types, $callback = 'count' ) {
+		global $wpdb;
+		$count           = 0;
+		$posts_to_update = array();
+
+		if ( ! empty( $post_types ) ) {
+			$sql_post_types = '';
+			$isFirst        = true;
+			foreach ( $post_types as $post_type ) {
+				if ( $isFirst ) {
+					$isFirst = false;
+				} else {
+					$sql_post_types .= 'OR ';
+				}
+				$sql_post_types .= "p.post_type =  '$post_type' ";
+			}
+
+			$sql = "SELECT ID, post_name
+				FROM $wpdb->posts as p
+				WHERE 1=1 AND ($sql_post_types)
+				AND (p.post_status = 'publish'
+				OR p.post_status = 'future'
+				OR p.post_status = 'draft'
+				OR p.post_status = 'pending'
+				OR p.post_status = 'private')";
+
+			$query = $wpdb->get_results( $sql );
+
+			if ( $query ) {
+				foreach ( $query as $post ) {
+					$slug = urldecode( $post->post_name );
+					if ( ! self::isValidSlug( $slug ) ) {
+						if ( $callback === 'queue' ) {
+							$this->pushToQueue( 'post', $post );
+						}
+						if ( $callback === 'convert' ) {
+							$new_slug          = Agp_Converter::convertSlug( $slug );
+							$posts_to_update[] = array(
+								'ID'        => $post->ID,
+								'post_name' => $new_slug,
+							);
+						} else {
+							$count ++;
+						}
+					}
+				}
+			}
+			if ( $callback === 'convert' ) {
+				return $posts_to_update;
+			}
+
+			return $count;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Check if the slug provided is valid (greeklish) or needs conversion
 	 *
 	 * @since    1.0.0
@@ -102,6 +206,24 @@ class Agp_Converter extends WP_Background_Process {
 
 		return $is_valid_slug;
 
+	}
+
+	/**
+	 * Pushes items to queue
+	 *
+	 * @since    3.1.0
+	 * @access   public
+	 *
+	 * @param string $type
+	 * @param object $item
+	 *
+	 * @return int
+	 */
+	private function pushToQueue( $type, $item ) {
+		$item = (object) array_merge( array( 'type' => $type ), (array) $item );
+		$this->push_to_queue( $item );
+
+		return true;
 	}
 
 	/**
@@ -131,87 +253,27 @@ class Agp_Converter extends WP_Background_Process {
 	}
 
 	/**
-	 *  Updates terms/taxonomies
+	 * Queries the database for terms related to specified taxonomies
 	 *
-	 *  Manages WpError response
-	 *
-	 * @since    2.0.0
-	 * @access   private
-	 *
-	 * @param    string $term_id
-	 * @param    string $taxonomy
-	 * @param    string $new_slug
-	 *
-	 * @return   boolean|WP_Error
-	 */
-	public static function updateTerm( $term_id, $taxonomy, $new_slug ) {
-		$args     = array(
-			'slug' => $new_slug,
-		);
-		$termData = wp_update_term( $term_id, $taxonomy, $args );
-		if ( ! is_wp_error( $termData ) ) {
-			return true;
-		} elseif ( $termData->get_error_code() === 'duplicate_term_slug' ) {
-			$new_slug = $new_slug . '-2';
-
-			return self::updateTerm( $term_id, $taxonomy, $new_slug );
-		} else {
-			return $termData;
-		}
-	}
-
-	/**
-	 * Queries the database for the items to convert, adds them on the queue, saves and initializes logger
-	 *
-	 * @since    2.0.0
+	 * @since    3.1.0
 	 * @access   public
 	 *
-	 * @param    array $post_types
-	 * @param    array $taxonomies
+	 * @param array $taxonomies
+	 * @param string $callback
 	 *
-	 * @return   boolean
+	 * @return array|int|boolean
 	 */
-	public function prepareData( $post_types, $taxonomies ) {
-
+	public function termQuery( $taxonomies, $callback = 'count' ) {
 		global $wpdb;
-		$post_count = $term_count = 0;
-
-		if ( ! empty( $post_types ) ) {
-			$sql_post_types = '';
-			foreach ( $post_types as $index => $post_type ) {
-				if ( $index != 0 ) {
-					$sql_post_types .= 'OR ';
-				}
-				$sql_post_types .= "p.post_type =  '$post_type' ";
-			}
-
-			$sql = "SELECT ID, post_name
-				FROM $wpdb->posts as p
-				WHERE 1=1 AND ($sql_post_types)
-				AND (p.post_status = 'publish'
-				OR p.post_status = 'future'
-				OR p.post_status = 'draft'
-				OR p.post_status = 'pending'
-				OR p.post_status = 'private')";
-
-			$post_query = $wpdb->get_results( $sql );
-
-			if ( $post_query ) {
-				foreach ( $post_query as $post ) {
-					$slug = urldecode( $post->post_name );
-					if ( ! self::isValidSlug( $slug ) ) {
-						$post = (object) array_merge( array( 'type' => 'post' ), (array) $post );
-						$this->push_to_queue( $post );
-						$post_count ++;
-					}
-				}
-			}
-		}
-
+		$count           = 0;
+		$terms_to_update = array();
 		if ( ! empty( $taxonomies ) ) {
 			$sql_taxonomies = '';
+			$isFirst        = true;
 			foreach ( $taxonomies as $index => $taxonomy ) {
-				if ( $index != 0 ) {
+				if ( $isFirst ) {
+					$isFirst = false;
+				} else {
 					$sql_taxonomies .= ', ';
 				}
 				$sql_taxonomies .= "'$taxonomy'";
@@ -223,41 +285,44 @@ class Agp_Converter extends WP_Background_Process {
 				ON t.term_id = tt.term_id
 				WHERE tt.taxonomy IN ($sql_taxonomies)";
 
-			// The Term Query
-			$term_query = $wpdb->get_results( $sql );
+			$query = $wpdb->get_results( $sql );
 
-			foreach ( $term_query as $term ) {
-				$slug = urldecode( $term->slug );
-				if ( ! self::isValidSlug( $slug ) ) {
-					$term = (object) array_merge( array( 'type' => 'term' ), (array) $term );
-					$this->push_to_queue( $term );
-					$term_count ++;
+			if ( $query ) {
+				foreach ( $query as $term ) {
+					$slug = urldecode( $term->slug );
+					if ( ! self::isValidSlug( $slug ) ) {
+						if ( $callback === 'queue' ) {
+							$this->pushToQueue( 'term', $term );
+						}
+						if ( $callback === 'convert' ) {
+							$new_slug          = Agp_Converter::convertSlug( $slug );
+							$terms_to_update[] = array(
+								'id'       => $term->term_id,
+								'taxonomy' => $term->taxonomy,
+								'slug'     => $new_slug,
+							);
+						} else {
+							$count ++;
+						}
+
+					}
 				}
 			}
-		}
+			if ( $callback === 'convert' ) {
+				return $terms_to_update;
+			}
 
-		if ( $post_count !== 0 || $term_count !== 0 ) {
-			$now = time();
-			update_option( 'agp_conversion', array(
-				'status'    => 'started',
-				'started'   => $now,
-				'ended'     => '',
-				'converted' => array( 'posts' => 0, 'terms' => 0 ),
-				'estimated' => array( 'posts' => $post_count, 'terms' => $term_count ),
-				'errors'    => array(),
-			) );
-			set_transient( 'agp_notice_active', true );
-			$this->save();
-
-			return true;
+			return $count;
 		} else {
 			return false;
 		}
-
 	}
 
 	/**
 	 * Save queue
+	 *
+	 * @since 3.0.0
+	 * @access   public
 	 *
 	 * @return $this
 	 */
@@ -289,11 +354,13 @@ class Agp_Converter extends WP_Background_Process {
 		$log = get_option( 'agp_conversion' );
 
 		if ( $item->type === 'post' ) {
-			$slug                        = urldecode($item->post_name);
-			$post_to_update              = array();
-			$post_to_update['ID']        = $item->ID;
-			$post_to_update['post_name'] = self::convertSlug( $slug );
-			$is_converted                = wp_update_post( $post_to_update, true );
+			$slug         = urldecode( $item->post_name );
+			$new_slug     = self::convertSlug( $slug );
+			$post         = array(
+				'ID'        => $item->ID,
+				'post_name' => $new_slug,
+			);
+			$is_converted = wp_update_post( $post, true );
 
 			if ( ! is_wp_error( $is_converted ) ) {
 				$log['converted']['posts'] ++;
@@ -309,9 +376,9 @@ class Agp_Converter extends WP_Background_Process {
 		}
 
 		if ( $item->type === 'term' ) {
-			$slug          = urldecode($item->slug);
-			$new_term_slug = self::convertSlug( $slug );
-			$is_converted  = self::updateTerm( $item->term_id, $item->taxonomy, $new_term_slug );
+			$slug         = urldecode( $item->slug );
+			$new_slug     = self::convertSlug( $slug );
+			$is_converted = self::updateTerm( $item->term_id, $item->taxonomy, $new_slug );
 
 			if ( ! is_wp_error( $is_converted ) ) {
 				$log['converted']['terms'] ++;
@@ -329,6 +396,47 @@ class Agp_Converter extends WP_Background_Process {
 		update_option( 'agp_conversion', $log );
 
 		return false;
+	}
+
+	/**
+	 *  Updates terms/taxonomies
+	 *
+	 *  Manages WpError response
+	 *
+	 * @since    3.1.0
+	 * @access   private
+	 *
+	 * @param    string $term_id
+	 * @param    string $taxonomy
+	 * @param    string $slug
+	 *
+	 * @return   array|WP_Error
+	 */
+	public static function updateTerm( $term_id, $taxonomy, $slug ) {
+		global $wpdb;
+
+		$needs_suffix = true;
+
+		// As of 4.1, duplicate slugs are allowed as long as they're in different taxonomies.
+		if ( ! term_exists( $slug ) || get_option( 'db_version' ) >= 30133 && ! get_term_by( 'slug', $slug, $taxonomy ) ) {
+			$needs_suffix = false;
+		}
+
+		if ( $needs_suffix ) {
+			$query = $wpdb->prepare( "SELECT slug FROM $wpdb->terms WHERE slug = %s AND term_id != %d", $slug, $term_id );
+
+			if ( $wpdb->get_var( $query ) ) {
+				$num = 2;
+				do {
+					$alt_slug = $slug . "-$num";
+					$num ++;
+					$slug_check = $wpdb->get_var( $wpdb->prepare( "SELECT slug FROM $wpdb->terms WHERE slug = %s", $alt_slug ) );
+				} while ( $slug_check );
+				$slug = $alt_slug;
+			}
+		}
+
+		return wp_update_term( $term_id, $taxonomy, array( 'slug' => $slug ) );
 	}
 
 	/**

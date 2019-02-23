@@ -12,18 +12,17 @@ $disabled = $status ? 'disabled' : '';
 
 
 //Populate select fields
-$args_post = array( 'public' => true, );
-$args_tax  = array( 'public' => true, );
+$args_post = array( 'public' => true );
+$args_tax  = array( 'public' => true );
 
 $tax  = get_taxonomies( $args_tax, 'objects' );
-$post = get_post_types( $args_post, 'names' );
+$post = get_post_types( $args_post, 'objects' );
 
 $post_types = $taxonomies = array();
 
 foreach ( $post as $post_type ) {
-	$obj          = get_post_type_object( $post_type );
-	$value        = $post_type;
-	$name         = $obj->labels->name;
+	$value        = $post_type->name;
+	$name         = $post_type->labels->name;
 	$post_types[] = array( 'value' => $value, 'name' => $name );
 }
 

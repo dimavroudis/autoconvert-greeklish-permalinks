@@ -136,6 +136,10 @@ class Agp {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-converter.php';
 
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-cli.php';
+		}
+
 		$this->loader = new Agp_Loader();
 	}
 
