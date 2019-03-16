@@ -5,7 +5,7 @@ Tags: greek, greeklish, slugs, permalinks, links, autoconvert, convert, agp
 Requires at least: 3.8
 Requires PHP: 5.2
 Tested up to: 5.1.1
-Stable tag: 3.1.0
+Stable tag: 3.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,9 +37,9 @@ After you [install and activate](https://codex.wordpress.org/Managing_Plugins#Au
 
 On Settings > Convert Greek Permalinks > Settings, you can also modify how the plugin converts the permalinks. Currently you can:
 
-1. Enable or disable automatic conversion
-2. Choose which post types and taxonomies you want to be affected by automatic conversion
-3. Choose how the dipthongs will be converted
+* Enable or disable automatic conversion
+* Choose which post types and taxonomies you want to be affected by automatic conversion
+* Choose how the dipthongs will be converted
 
 = How do I convert old permalinks? =
 

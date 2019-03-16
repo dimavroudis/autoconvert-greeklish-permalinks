@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: AutoConvert Greeklish Permalinks\n"
-"POT-Creation-Date: 2019-03-15 16:21+0200\n"
-"PO-Revision-Date: 2019-03-15 16:21+0200\n"
+"POT-Creation-Date: 2019-03-16 11:37+0200\n"
+"PO-Revision-Date: 2019-03-16 11:37+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,78 +46,85 @@ msgstr ""
 msgid "How do you want diphthongs to be converted?"
 msgstr ""
 
-#: admin/agp-admin.php:141
+#: admin/agp-admin.php:125 admin/agp-admin.php:419
+msgid "Settings"
+msgstr ""
+
+#: admin/agp-admin.php:130 admin/partials/agp-converter-view.php:38
+msgid "Convert old posts/terms"
+msgstr ""
+
+#: admin/agp-admin.php:154
 msgid "All your permalinks were already in greeklish."
 msgstr ""
 
-#: admin/agp-admin.php:145
+#: admin/agp-admin.php:158
 msgid "Permalinks conversion has started in the background."
 msgstr ""
 
-#: admin/agp-admin.php:181
+#: admin/agp-admin.php:194
 msgid "Automatic Conversion"
 msgstr ""
 
-#: admin/agp-admin.php:193
+#: admin/agp-admin.php:206
 msgid "Diphthongs Conversion"
 msgstr ""
 
-#: admin/agp-admin.php:268
+#: admin/agp-admin.php:281
 #, php-format
 msgid "Permalinks conversion is at %s"
 msgstr ""
 
-#: admin/agp-admin.php:278
+#: admin/agp-admin.php:291
 msgid "Permalinks conversion is done!"
 msgstr ""
 
-#: admin/agp-admin.php:278
+#: admin/agp-admin.php:291
 msgid "Dismiss"
 msgstr ""
 
-#: admin/agp-admin.php:406 admin/partials/agp-admin-view.php:15
-msgid "Settings"
-msgstr ""
-
-#: admin/agp-admin.php:409
+#: admin/agp-admin.php:422
 msgid "Convert old permalinks"
 msgstr ""
 
-#: admin/partials/agp-admin-view.php:20
-#: admin/partials/agp-converter-view.php:38
-msgid "Convert old posts/terms"
-msgstr ""
-
-#: admin/partials/agp-admin-view.php:28
+#: admin/partials/agp-admin-view.php:16
 msgid "Convert Permalinks to Greeklish"
 msgstr ""
 
-#: admin/partials/agp-automatic-posts-option-view.php:21
+#: admin/partials/agp-automatic-posts-option-view.php:26
 msgid "All post types"
 msgstr ""
 
-#: admin/partials/agp-automatic-posts-option-view.php:41
+#: admin/partials/agp-automatic-posts-option-view.php:46
+msgid "No post types"
+msgstr ""
+
+#: admin/partials/agp-automatic-posts-option-view.php:49
 #: admin/partials/agp-converter-view.php:45
 #: admin/partials/agp-converter-view.php:48
 msgid "Post types to convert"
 msgstr ""
 
-#: admin/partials/agp-automatic-posts-option-view.php:43
+#: admin/partials/agp-automatic-posts-option-view.php:51
 #: admin/partials/agp-converter-view.php:50
 msgid "Select one or more post types"
 msgstr ""
 
-#: admin/partials/agp-automatic-taxonomies-option-view.php:22
+#: admin/partials/agp-automatic-taxonomies-option-view.php:27
 msgid "All taxonomies"
 msgstr ""
 
-#: admin/partials/agp-automatic-taxonomies-option-view.php:45
+#: admin/partials/agp-automatic-taxonomies-option-view.php:47
+msgid "No taxonomies"
+msgstr ""
+
+#: admin/partials/agp-automatic-taxonomies-option-view.php:52
 #: admin/partials/agp-converter-view.php:65
 #: admin/partials/agp-converter-view.php:68
 msgid "Taxonomies to convert"
 msgstr ""
 
-#: admin/partials/agp-automatic-taxonomies-option-view.php:47
+#: admin/partials/agp-automatic-taxonomies-option-view.php:54
 #: admin/partials/agp-converter-view.php:70
 msgid "Select one or more taxonomies"
 msgstr ""

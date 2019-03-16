@@ -119,6 +119,19 @@ class Agp_Admin {
 
 		$this->on_convert();
 
+		$tabs = array(
+			[
+				'id'       => 'permalink_settings',
+				'name'     => __( 'Settings', 'agp' ),
+				'template' => 'agp-settings-view.php',
+			],
+			[
+				'id'       => 'generate_permalinks',
+				'name'     => __( 'Convert old posts/terms', 'agp' ),
+				'template' => 'agp-converter-view.php',
+			],
+		);
+
 		include_once( 'partials/agp-admin-view.php' );
 
 	}
@@ -300,13 +313,13 @@ class Agp_Admin {
 		$post_types_selected   = get_option( 'agp_automatic_post' );
 		$is_post_type_selected = false;
 
-		if ($post_types_selected) {
+		if ( $post_types_selected ) {
 			foreach ( $post_types_selected as $post_type_selected ) {
-				if ( $post_type_selected === 'all_options' ) {
+				if ( $post_type === $post_type_selected ) {
 					$is_post_type_selected = true;
 					break;
 				}
-				if ( $post_type === $post_type_selected ) {
+				if ( $post_type_selected === 'all_options' ) {
 					$is_post_type_selected = true;
 					break;
 				}
@@ -338,7 +351,7 @@ class Agp_Admin {
 		$taxonomies_selected  = get_option( 'agp_automatic_tax' );
 		$taxonomy             = $term->taxonomy;
 		$is_taxonomy_selected = false;
-		if ($taxonomies_selected) {
+		if ( $taxonomies_selected ) {
 			foreach ( $taxonomies_selected as $taxonomy_selected ) {
 				if ( $taxonomy_selected === 'all_options' ) {
 					$is_taxonomy_selected = true;

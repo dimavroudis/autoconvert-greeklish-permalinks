@@ -9,11 +9,16 @@
 $automatic_taxonomies = get_option( 'agp_automatic_tax' );
 $taxonomies           = array();
 
+$select_all = false;
+$select_none = false;
+
 if ( $automatic_taxonomies ) {
-	$select_all = false;
 	foreach ( $automatic_taxonomies as $selected_taxonomy ) {
 		if ( $selected_taxonomy === 'all_options' ) {
 			$select_all = true;
+		}
+		if ( $selected_taxonomy === 'no_options' ) {
+			$select_none = true;
 		}
 	}
 } else {
@@ -28,16 +33,18 @@ foreach ( $tax as $taxonomy ) {
 	$value    = $taxonomy->name;
 	$name     = $taxonomy->labels->name;
 	$selected = false;
-if ( $automatic_taxonomies ) {
-	foreach ( $automatic_taxonomies as $selected_taxonomy ) {
-		if ( $selected_taxonomy === $value ) {
-			$selected = true;
-			break;
+	if ( $automatic_taxonomies ) {
+		foreach ( $automatic_taxonomies as $selected_taxonomy ) {
+			if ( $selected_taxonomy === $value ) {
+				$selected = true;
+				break;
+			}
 		}
 	}
-}
 	$taxonomies[] = array( 'value' => $value, 'name' => $name, 'selected' => $selected );
 }
+
+$taxonomies[] = array( 'value' => 'no_options', 'name' => __( 'No taxonomies', 'agp' ), 'selected' => $select_none );
 
 
 ?>

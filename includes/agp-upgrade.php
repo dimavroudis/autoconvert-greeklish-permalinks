@@ -21,13 +21,13 @@ class Agp_Upgrade {
 
 		$version_old = get_option( 'agp_version' );
 		$version_new = AGP_VERSION;
-		if (version_compare( $version_old, $version_new, '<' )) {
+		if ( version_compare( $version_old, $version_new, '<' ) ) {
 			//Upgrades
-			self::upgrade_v2($version_old);
-			self::upgrade_v2_0_2($version_old);
-			self::upgrade_v3_2_0($version_old);
+			self::upgrade_v2( $version_old );
+			self::upgrade_v2_0_2( $version_old );
+			self::upgrade_v3_2_0( $version_old );
 			//Update version
-			update_option( 'agp_version',  $version_new);
+			update_option( 'agp_version', $version_new );
 		}
 
 	}
@@ -39,7 +39,7 @@ class Agp_Upgrade {
 	 *
 	 * @param string $version_old
 	 */
-	public static function upgrade_v2($version_old) {
+	public static function upgrade_v2( $version_old ) {
 		if ( ! $version_old ) {
 			if ( get_option( 'auto_gr_permalinks_automatic' ) ) {
 				update_option( 'agp_automatic', get_option( 'auto_gr_permalinks_automatic', 'disabled' ) );
@@ -60,7 +60,7 @@ class Agp_Upgrade {
 	 *
 	 * @param string $version_old
 	 */
-	public static function upgrade_v2_0_2($version_old) {
+	public static function upgrade_v2_0_2( $version_old ) {
 		if ( $version_old === '2.0.0' || $version_old === '2.0.1' ) {
 			if ( ! get_option( 'agp_automatic' ) ) {
 				update_option( 'agp_automatic', 'enabled' );
@@ -78,7 +78,7 @@ class Agp_Upgrade {
 	 *
 	 * @param string $version_old
 	 */
-	public static function upgrade_v3_2_0($version_old) {
+	public static function upgrade_v3_2_0( $version_old ) {
 		if ( version_compare( $version_old, '3.2.0', '<' ) ) {
 			if ( ! get_option( 'agp_automatic_post' ) ) {
 				update_option( 'agp_automatic_post', array( 'all_options' ) );
