@@ -11,7 +11,7 @@ $automatic = $options === 'enabled' ? 'checked' : '';
 
 ?>
 <label class="agp-switch">
-	<input type="hidden" id="agpAutomatic" name="agp_automatic" value="disabled">
+	<input type="hidden" name="agp_automatic" value="disabled">
 	<input type="checkbox" id="agpAutomatic" name="agp_automatic"
 		   value="enabled" <?php echo $automatic; ?>>
 	<span class="agp-slider round"></span>

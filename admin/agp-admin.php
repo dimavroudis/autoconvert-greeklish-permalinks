@@ -78,21 +78,35 @@ class Agp_Admin {
 	/**
 	 * Initialize the settings page
 	 *
-	 * @since    1.0.0
+	 * @since    3.2.0
 	 * @access   public
 	 */
 	public function settings_init() {
 		register_setting( 'agp', 'agp_automatic' );
 		register_setting( 'agp', 'agp_diphthongs' );
-		add_settings_section( 'agp_custom', '', array( $this, 'custom_section_content' ), 'agp' );
+		register_setting( 'agp', 'agp_automatic_post' );
+		register_setting( 'agp', 'agp_automatic_tax' );
+		add_settings_section( 'agp_automatic_options', '', array( $this, 'automatic_options_section_content' ), 'agp' );
+		add_settings_section( 'agp_diphthongs_options', '', array(
+			$this,
+			'diphthongs_options_section_content',
+		), 'agp' );
 		add_settings_field( 'agp_automatic', __( 'Do you want all new permalinks to be converted to greeklish?', 'agp' ), array(
 			$this,
 			'automatic_option',
-		), 'agp', 'agp_custom' );
+		), 'agp', 'agp_automatic_options' );
+		add_settings_field( 'agp_automatic_post', __( 'Which post types to be automatically converted?', 'agp' ), array(
+			$this,
+			'automatic_posts_option',
+		), 'agp', 'agp_automatic_options' );
+		add_settings_field( 'agp_automatic_tax', __( 'Which taxonomies to be automatically converted?', 'agp' ), array(
+			$this,
+			'automatic_taxonomies_option',
+		), 'agp', 'agp_automatic_options' );
 		add_settings_field( 'agp_diphthongs', __( 'How do you want diphthongs to be converted?', 'agp' ), array(
 			$this,
 			'diphthongs_option',
-		), 'agp', 'agp_custom' );
+		), 'agp', 'agp_diphthongs_options' );
 	}
 
 	/**
@@ -159,10 +173,25 @@ class Agp_Admin {
 	/**
 	 * Adds the customization's section content
 	 *
-	 * @since    1.0.0
+	 * @since    3.2.0
 	 * @access   public
 	 */
-	public function custom_section_content() {
+	public function automatic_options_section_content() {
+		?>
+		<h3><?php _e( 'Automatic Conversion', 'agp' ); ?> </h3>
+		<?php
+	}
+
+	/**
+	 * Adds the customization's section content
+	 *
+	 * @since    3.2.0
+	 * @access   public
+	 */
+	public function diphthongs_options_section_content() {
+		?>
+		<h3><?php _e( 'Diphthongs Conversion', 'agp' ); ?> </h3>
+		<?php
 	}
 
 	/**
@@ -174,6 +203,30 @@ class Agp_Admin {
 	public function automatic_option() {
 
 		include_once( 'partials/agp-automatic-option-view.php' );
+
+	}
+
+	/**
+	 * Adds the option of which posts types to autoconvert
+	 *
+	 * @since    3.2.0
+	 * @access   public
+	 */
+	public function automatic_posts_option() {
+
+		include_once( 'partials/agp-automatic-posts-option-view.php' );
+
+	}
+
+	/**
+	 * Adds the option of which taxonomies to autoconvert
+	 *
+	 * @since    3.2.0
+	 * @access   public
+	 */
+	public function automatic_taxonomies_option() {
+
+		include_once( 'partials/agp-automatic-taxonomies-option-view.php' );
 
 	}
 
@@ -229,22 +282,80 @@ class Agp_Admin {
 	}
 
 	/**
-	 * Callback for sanitize_title hook
-	 * Checks if automatic conversion is enabled and then calls convertSlug function
+	 * Callback for wp_unique_post_slug hook
+	 * Checks if automatic conversion is enabled and post type is selected and then calls convertSlug function
 	 *
-	 * @since    1.0.0
+	 * @since    3.2.0
 	 * @access   public
 	 *
-	 * @param    string $current_post_title The current post title
+	 * @param    string $slug The current slug
+	 * @param   int $post_ID
+	 * @param   string $post_status
+	 * @param   string $post_type
 	 *
 	 * @return   string        The converted slug in greeklish
 	 */
-	public function sanitize_title_hook( $current_post_title ) {
-		if ( get_option( 'agp_automatic' ) === 'enabled' ) {
-			$current_post_title = Agp_Converter::convertSlug( $current_post_title );
+	public function greeklish_post_permalinks( $slug, $post_ID, $post_status, $post_type ) {
+		$is_automatic_enabled  = get_option( 'agp_automatic' );
+		$post_types_selected   = get_option( 'agp_automatic_post' );
+		$is_post_type_selected = false;
+
+		if ($post_types_selected) {
+			foreach ( $post_types_selected as $post_type_selected ) {
+				if ( $post_type_selected === 'all_options' ) {
+					$is_post_type_selected = true;
+					break;
+				}
+				if ( $post_type === $post_type_selected ) {
+					$is_post_type_selected = true;
+					break;
+				}
+			}
+		}
+		if ( $is_automatic_enabled && $is_post_type_selected ) {
+			$slug = urldecode( $slug );
+			$slug = Agp_Converter::convertSlug( $slug );
+			$slug = urlencode( $slug );
 		}
 
-		return $current_post_title;
+		return $slug;
+	}
+
+	/**
+	 * Callback for wp_unique_term_slug hook
+	 * Checks if automatic conversion is enabled and taxonomy is selected and then calls convertSlug function
+	 *
+	 * @since    3.2.0
+	 * @access   public
+	 *
+	 * @param    string $slug The current slug
+	 * @param   object $term
+	 *
+	 * @return   string        The converted slug in greeklish
+	 */
+	public function greeklish_term_permalinks( $slug, $term ) {
+		$is_automatic_enabled = get_option( 'agp_automatic' );
+		$taxonomies_selected  = get_option( 'agp_automatic_tax' );
+		$taxonomy             = $term->taxonomy;
+		$is_taxonomy_selected = false;
+		if ($taxonomies_selected) {
+			foreach ( $taxonomies_selected as $taxonomy_selected ) {
+				if ( $taxonomy_selected === 'all_options' ) {
+					$is_taxonomy_selected = true;
+					break;
+				}
+				if ( $taxonomy === $taxonomy_selected ) {
+					$is_taxonomy_selected = true;
+				}
+			}
+		}
+		if ( $is_automatic_enabled && $is_taxonomy_selected ) {
+			$slug = urldecode( $slug );
+			$slug = Agp_Converter::convertSlug( $slug );
+			$slug = urlencode( $slug );
+		}
+
+		return $slug;
 	}
 
 	/**

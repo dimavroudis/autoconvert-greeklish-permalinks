@@ -164,7 +164,7 @@ class Agp {
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
-	 * @since    2.0.0
+	 * @since    3.2.0
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
@@ -178,7 +178,9 @@ class Agp {
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'settings_init' );
 
 		$this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'action_links', 10, 5 );
-		$this->loader->add_filter( 'sanitize_title', $plugin_admin, 'sanitize_title_hook', 1 );
+
+		$this->loader->add_filter( 'wp_unique_post_slug', $plugin_admin, 'greeklish_post_permalinks', 10, 4 );
+		$this->loader->add_filter( 'wp_unique_term_slug', $plugin_admin, 'greeklish_term_permalinks', 10, 2 );
 
 		$this->loader->add_action( 'admin_notices', $plugin_admin, 'conversion_progress_notice' );
 	}
@@ -233,6 +235,8 @@ class Agp {
 	 */
 	public static function clean() {
 		delete_option( 'agp_automatic' );
+		delete_option( 'agp_automatic_post' );
+		delete_option( 'agp_automatic_tax' );
 		delete_option( 'agp_diphthongs' );
 		delete_option( 'agp_conversion' );
 		delete_transient( 'agp_notice_dismiss' );
