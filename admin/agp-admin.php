@@ -86,11 +86,20 @@ class Agp_Admin {
 		register_setting( 'agp', 'agp_diphthongs' );
 		register_setting( 'agp', 'agp_automatic_post' );
 		register_setting( 'agp', 'agp_automatic_tax' );
-		add_settings_section( 'agp_automatic_options', '', array( $this, 'automatic_options_section_content' ), 'agp' );
-		add_settings_section( 'agp_diphthongs_options', '', array(
+
+		add_settings_section( 'agp_automatic_options', __( 'Automatic Conversion', 'agp' ), array(
 			$this,
-			'diphthongs_options_section_content',
+			'automatic_options_section',
 		), 'agp' );
+		add_settings_section( 'agp_custom_automatic_options', '', array(
+			$this,
+			'custom_automatic_options_section',
+		), 'agp' );
+		add_settings_section( 'agp_diphthongs_options', __( 'Diphthongs Conversion', 'agp' ), array(
+			$this,
+			'diphthongs_options_section',
+		), 'agp' );
+
 		add_settings_field( 'agp_automatic', __( 'Do you want all new permalinks to be converted to greeklish?', 'agp' ), array(
 			$this,
 			'automatic_option',
@@ -98,11 +107,11 @@ class Agp_Admin {
 		add_settings_field( 'agp_automatic_post', __( 'Which post types to be automatically converted?', 'agp' ), array(
 			$this,
 			'automatic_posts_option',
-		), 'agp', 'agp_automatic_options' );
+		), 'agp', 'agp_custom_automatic_options' );
 		add_settings_field( 'agp_automatic_tax', __( 'Which taxonomies to be automatically converted?', 'agp' ), array(
 			$this,
 			'automatic_taxonomies_option',
-		), 'agp', 'agp_automatic_options' );
+		), 'agp', 'agp_custom_automatic_options' );
 		add_settings_field( 'agp_diphthongs', __( 'How do you want diphthongs to be converted?', 'agp' ), array(
 			$this,
 			'diphthongs_option',
@@ -183,15 +192,64 @@ class Agp_Admin {
 
 	}
 
+
+	/**
+	 * Prints the settings sections of a page
+	 *
+	 * @since    3.3.0
+	 * @access   public
+	 *
+	 * @param string $page
+	 */
+	public function do_settings_sections( $page ) {
+		global $wp_settings_sections, $wp_settings_fields;
+
+		if ( ! isset( $wp_settings_sections[ $page ] ) ) {
+			return;
+		}
+
+		foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
+
+			if ( $section['title'] ) {
+				echo "<h3>{$section['title']}</h3>\n";
+			}
+			echo "<div id='{$section['id']}' class='card'>";
+
+			if ( $section['callback'] ) {
+				call_user_func( $section['callback'], $section );
+			}
+
+			if ( ! isset( $wp_settings_fields ) || ! isset( $wp_settings_fields[ $page ] ) || ! isset( $wp_settings_fields[ $page ][ $section['id'] ] ) ) {
+				continue;
+			}
+			echo '<table class="form-table">';
+			do_settings_fields( $page, $section['id'] );
+			echo '</table>';
+			echo '</div>';
+		}
+	}
+
 	/**
 	 * Adds the customization's section content
 	 *
 	 * @since    3.2.0
 	 * @access   public
 	 */
-	public function automatic_options_section_content() {
+	public function automatic_options_section() {
+	}
+
+	/**
+	 * Adds the customization's section content
+	 *
+	 * @since    3.3.0
+	 * @access   public
+	 */
+	public function custom_automatic_options_section() {
 		?>
-		<h3><?php _e( 'Automatic Conversion', 'agp' ); ?> </h3>
+		<p>
+			<strong><?php echo __( 'Heads-up!', 'agp' ); ?></strong>
+			<?php echo __( 'Choosing post types or taxonomies for automatic conversion will decrease the maximum length of the slugs from 200 characters to about 50, due to limitations from WordPress. Set the settings to "All post types" and "All taxonomies" if you want to keep slugs at 200 characters maximum.', 'agp' ) ?>
+		</p>
 		<?php
 	}
 
@@ -201,10 +259,7 @@ class Agp_Admin {
 	 * @since    3.2.0
 	 * @access   public
 	 */
-	public function diphthongs_options_section_content() {
-		?>
-		<h3><?php _e( 'Diphthongs Conversion', 'agp' ); ?> </h3>
-		<?php
+	public function diphthongs_options_section() {
 	}
 
 	/**
@@ -369,6 +424,25 @@ class Agp_Admin {
 		}
 
 		return $slug;
+	}
+
+	/**
+	 * Callback for sanitize_title hook
+	 * Checks if automatic conversion is enabled and then calls convertSlug function
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 *
+	 * @param    string $current_post_title The current post title
+	 *
+	 * @return   string        The converted slug in greeklish
+	 */
+	public function sanitize_title_hook( $current_post_title ) {
+		if ( get_option( 'agp_automatic' ) === 'enabled' ) {
+			$current_post_title = Agp_Converter::convertSlug( $current_post_title );
+		}
+
+		return $current_post_title;
 	}
 
 	/**

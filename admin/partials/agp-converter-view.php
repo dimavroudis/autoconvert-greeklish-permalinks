@@ -33,9 +33,8 @@ foreach ( $tax as $taxonomy ) {
 }
 ?>
 <div>
-
+	<h3><?php _e( 'Convert old posts/terms', 'agp' ); ?></h3>
 	<div class="card">
-		<h3 class="title"><?php _e( 'Convert old posts/terms', 'agp' ); ?></h3>
 		<p><?php _e( 'Depending on your server and the amount of permalinks that needs to be converted, the conversion might take a few minutes to complete.', 'agp' ) ?></p>
 		<form action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI'] ); ?>" method="post">
 			<table class="form-table">

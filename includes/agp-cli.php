@@ -15,7 +15,7 @@
 /**
  * The wp-cli commands for autoconvert
  *
- * @since      3.1.0
+ * @since      3.3.0
  * @package    Agp
  * @subpackage Agp/includes
  *
@@ -27,14 +27,14 @@ class Agp_CLI extends WP_CLI_Command {
 	 * ## OPTIONS
 	 *
 	 *
-	 * [--post_type=<post_type>]
-	 * : Which post type to check
+	 * [--post_types=<post_types>]
+	 * : Which post types to check
 	 * ---
 	 * default: all
 	 * ---
 	 *
-	 * [--taxonomy=<taxonomy>]
-	 * : Which taxonomy to check
+	 * [--taxonomies=<taxonomies>]
+	 * : Which taxonomies to check
 	 * ---
 	 * default: all
 	 * ---
@@ -42,9 +42,9 @@ class Agp_CLI extends WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     wp agp check
-	 *     wp agp check --post_type=post
-	 *     wp agp check --taxonomy=category
-	 *     wp agp check --post_type=post --taxonomy=category
+	 *     wp agp check --post_types=post,page
+	 *     wp agp check --taxonomies=category
+	 *     wp agp check --post_types=post,page --taxonomies=category
 	 *
 	 * @when after_wp_load
 	 */
@@ -52,32 +52,50 @@ class Agp_CLI extends WP_CLI_Command {
 		$converter = new Agp_Converter();
 
 		//Get posts types
-		if ( $assoc_args['post_type'] === 'all' ) {
-			$post_types = get_post_types( array( 'public' => true ), 'names' );
-		} elseif ( $assoc_args['post_type'] === 'none' ) {
-			$post_types = array();
-		} else {
-			if ( ! post_type_exists( $assoc_args['post_type'] ) ) {
-				WP_CLI::error( sprintf( "'%s' is not a registered post type.", $assoc_args['post_type'] ) );
+		$post_types = array();
+		if ( isset( $assoc_args['post_types'] ) ) {
+			switch ( $assoc_args['post_types'] ) {
+				case 'all':
+					$post_types = get_post_types( array( 'public' => true ), 'names' );
+					break;
+				case 'none':
+					break;
+				default:
+					$stripped  = str_replace( ' ', '', $assoc_args['post_types'] );
+					$arg_array = explode( ",", $stripped );
+					foreach ( $arg_array as $post_type ) {
+						if ( ! post_type_exists( $post_type ) ) {
+							WP_CLI::error( sprintf( "'%s' is not a registered post type.", $post_type ) );
 
-				return;
-			} else {
-				$post_types = array( $assoc_args['post_type'] );
+							return;
+						} else {
+							$post_types[] = $post_type;
+						}
+					}
 			}
 		}
 
 		//Get taxonomies
-		if ( $assoc_args['taxonomy'] === 'all' ) {
-			$taxonomies = get_taxonomies( array( 'public' => true ), 'names' );
-		} elseif ( $assoc_args['taxonomy'] === 'none' ) {
-			$taxonomies = array();
-		} else {
-			if ( ! taxonomy_exists( $assoc_args['taxonomy'] ) ) {
-				WP_CLI::error( sprintf( "'%s' is not a registered taxonomy.", $assoc_args['taxonomy'] ) );
+		$taxonomies = array();
+		if ( isset( $assoc_args['taxonomies'] ) ) {
+			switch ( $assoc_args['taxonomies'] ) {
+				case 'all':
+					$taxonomies = get_taxonomies( array( 'public' => true ), 'names' );
+					break;
+				case 'none':
+					break;
+				default:
+					$stripped  = str_replace( ' ', '', $assoc_args['taxonomies'] );
+					$arg_array = explode( ",", $stripped );
+					foreach ( $arg_array as $taxonomy ) {
+						if ( ! taxonomy_exists( $taxonomy ) ) {
+							WP_CLI::error( sprintf( "'%s' is not a registered taxonomy.", $taxonomy ) );
 
-				return;
-			} else {
-				$taxonomies = array( $assoc_args['taxonomy'] );
+							return;
+						} else {
+							$taxonomies[] = $taxonomy;
+						}
+					}
 			}
 		}
 
@@ -102,14 +120,14 @@ class Agp_CLI extends WP_CLI_Command {
 	 * ## OPTIONS
 	 *
 	 *
-	 * [--post_type=<post_type>]
-	 * : Which post type to convert
+	 * [--post_types=<post_types>]
+	 * : Which post types to convert
 	 * ---
 	 * default: all
 	 * ---
 	 *
-	 * [--taxonomy=<taxonomy>]
-	 * : Which taxonomy to convert
+	 * [--taxonomies=<taxonomies>]
+	 * : Which taxonomies to convert
 	 * ---
 	 * default: all
 	 * ---
@@ -117,8 +135,9 @@ class Agp_CLI extends WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     wp agp convert
-	 *     wp agp convert --post_type=post
-	 *     wp agp convert --taxonomy=category
+	 *     wp agp convert --post_types=post,page
+	 *     wp agp convert --taxonomies=category
+	 *     wp agp convert --post_types=post,page --taxonomies=category
 	 *
 	 * @when after_wp_load
 	 */
@@ -128,39 +147,57 @@ class Agp_CLI extends WP_CLI_Command {
 		$converter  = new Agp_Converter();
 
 		//Get posts types
-		if ( $assoc_args['post_type'] === 'all' ) {
-			$post_types = get_post_types( array( 'public' => true ), 'names' );
-		} elseif ( $assoc_args['post_type'] === 'none' ) {
-			$post_types = array();
-		} else {
-			if ( ! post_type_exists( $assoc_args['post_type'] ) ) {
-				WP_CLI::error( sprintf( "'%s' is not a registered post type.", $assoc_args['post_type'] ) );
+		$post_types = array();
+		if ( isset( $assoc_args['post_types'] ) ) {
+			switch ( $assoc_args['post_types'] ) {
+				case 'all':
+					$post_types = get_post_types( array( 'public' => true ), 'names' );
+					break;
+				case 'none':
+					break;
+				default:
+					$stripped  = str_replace( ' ', '', $assoc_args['post_types'] );
+					$arg_array = explode( ",", $stripped );
+					foreach ( $arg_array as $post_type ) {
+						if ( ! post_type_exists( $post_type ) ) {
+							WP_CLI::error( sprintf( "'%s' is not a registered post type.", $post_type ) );
 
-				return;
-			} else {
-				$post_types = array( $assoc_args['post_type'] );
+							return;
+						} else {
+							$post_types[] = $post_type;
+						}
+					}
 			}
 		}
 
 		//Get taxonomies
-		if ( $assoc_args['taxonomy'] === 'all' ) {
-			$taxonomies = get_taxonomies( array( 'public' => true ), 'names' );
-		} elseif ( $assoc_args['taxonomy'] === 'none' ) {
-			$taxonomies = array();
-		} else {
-			if ( ! taxonomy_exists( $assoc_args['taxonomy'] ) ) {
-				WP_CLI::error( sprintf( "'%s' is not a registered taxonomy.", $assoc_args['taxonomy'] ) );
+		$taxonomies = array();
+		if ( isset( $assoc_args['taxonomies'] ) ) {
+			switch ( $assoc_args['taxonomies'] ) {
+				case 'all':
+					$taxonomies = get_taxonomies( array( 'public' => true ), 'names' );
+					break;
+				case 'none':
+					break;
+				default:
+					$stripped  = str_replace( ' ', '', $assoc_args['taxonomies'] );
+					$arg_array = explode( ",", $stripped );
+					foreach ( $arg_array as $taxonomy ) {
+						if ( ! taxonomy_exists( $taxonomy ) ) {
+							WP_CLI::error( sprintf( "'%s' is not a registered taxonomy.", $taxonomy ) );
 
-				return;
-			} else {
-				$taxonomies = array( $assoc_args['taxonomy'] );
+							return;
+						} else {
+							$taxonomies[] = $taxonomy;
+						}
+					}
 			}
 		}
 
 		$posts_to_update = $converter->postQuery( $post_types, 'convert' );
 		$terms_to_update = $converter->termQuery( $taxonomies, 'convert' );
 
-		$count = count( $posts_to_update ) + count( $terms_to_update );
+		$count = $posts_to_update ? count( $posts_to_update ) : 0 + $terms_to_update ? count( $terms_to_update ) : 0;
 
 		if ( $count !== 0 ) {
 
@@ -205,6 +242,159 @@ class Agp_CLI extends WP_CLI_Command {
 			WP_CLI::success( 'All your posts were already in greeklish. No posts or terms to convert.' );
 		}
 
+	}
+
+	/**
+	 * Update options
+	 *
+	 * ## OPTIONS
+	 *
+	 *
+	 * [--automatic=<automatic>]
+	 * : Automatic Conversion option status
+	 * ---
+	 * options:
+	 *   - enabled
+	 *   - disabled
+	 *
+	 * [--diphthongs=<diphthongs>]
+	 * : Diphthongs Conversion option status
+	 * ---
+	 * options:
+	 *   - advanced
+	 *   - simple
+	 *
+	 * ---
+	 *
+	 * [--automatic_posts=<automatic_posts>]
+	 * : Which post type to autoconvert
+	 * ---
+	 *
+	 * [--automatic_tax=<automatic_tax>]
+	 * : Which taxonomy to autoconvert
+	 * ---
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp agp update_options --automatic=enabled
+	 *     wp agp update_options --automatic=disabled
+	 *     wp agp update_options --automatic_posts=post,page
+	 *     wp agp update_options --automatic_posts=all
+	 *     wp agp update_options --automatic_posts=none
+	 *     wp agp update_options --diphthongs=simple
+	 *     wp agp update_options --diphthongs=advanced
+	 *
+	 * @when after_wp_load
+	 */
+	function update_options( $args, $assoc_args ) {
+		if ( isset( $assoc_args['automatic'] ) ) {
+			if ( $assoc_args['automatic'] === 'enabled' || $assoc_args['automatic'] === 'disabled' ) {
+				update_option( 'agp_automatic', $assoc_args['automatic'] );
+				WP_CLI::success( 'Automatic conversion is now ' . $assoc_args['automatic'] );
+			}
+		}
+		if ( isset( $assoc_args['diphthongs'] ) ) {
+			if ( $assoc_args['diphthongs'] === 'advanced' || $assoc_args['diphthongs'] === 'simple' ) {
+				update_option( 'agp_diphthongs', $assoc_args['diphthongs'] === 'advanced' ? 'enabled' : 'disabled' );
+				WP_CLI::success( 'Diphthongs conversion is now switched to ' . $assoc_args['diphthongs'] );
+			}
+		}
+		if ( isset( $assoc_args['automatic_posts'] ) ) {
+			if ( $assoc_args['automatic_posts'] === 'all' || $assoc_args['automatic_posts'] === 'none' ) {
+				$post_types[] = $assoc_args['automatic_posts'] === 'all' ? 'all_options' : 'no_option';
+			} else {
+				$stripped   = str_replace( ' ', '', $assoc_args['automatic_posts'] );
+				$arg_array  = explode( ",", $stripped );
+				$post_types = array();
+				foreach ( $arg_array as $post_type ) {
+					if ( ! post_type_exists( $post_type ) ) {
+						WP_CLI::error( sprintf( "'%s' is not a registered post type.", $post_type ) );
+
+						return;
+					} else {
+						$post_types[] = $post_type;
+					}
+				}
+				if ( empty( $post_types ) ) {
+					$post_types[] = 'no_option';
+				}
+			}
+			update_option( 'agp_automatic_post', $post_types );
+			WP_CLI::success( 'Post types to be autoconverted from now on: ' . implode( ", ", $post_types ) );
+		}
+		if ( isset( $assoc_args['automatic_tax'] ) ) {
+			if ( $assoc_args['automatic_tax'] === 'all' || $assoc_args['automatic_tax'] === 'none' ) {
+				$taxonomies[] = $assoc_args['automatic_tax'] === 'all' ? 'all_options' : 'no_option';
+			} else {
+				$stripped   = str_replace( ' ', '', $assoc_args['automatic_tax'] );
+				$arg_array  = explode( ",", $stripped );
+				$taxonomies = array();
+				foreach ( $arg_array as $taxonomy ) {
+					if ( ! taxonomy_exists( $taxonomy ) ) {
+						WP_CLI::error( sprintf( "'%s' is not a registered taxonomy.", $taxonomy ) );
+
+						return;
+					} else {
+						$taxonomies[] = $taxonomy;
+					}
+				}
+				if ( empty( $taxonomies ) ) {
+					$taxonomies[] = 'no_option';
+				}
+			}
+			update_option( 'agp_automatic_tax', $taxonomies );
+			WP_CLI::success( 'Taxonomies to be autoconverted from now on: ' . implode( ", ", $taxonomies ) );
+		}
+	}
+
+	/**
+	 * Get options
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--options=<options>]
+	 * : Which options to print
+	 * ---
+	 * default: all
+	 * options:
+	 *      - all
+	 *      - automatic
+	 *      - diphthongs
+	 *      - automatic_posts
+	 *      - automatic_tax
+	 * ---
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp agp get_options
+	 *     wp agp get_options --options=all
+	 *     wp agp get_options --options=automatic
+	 *     wp agp get_options --options=diphthongs
+	 *
+	 * @when after_wp_load
+	 */
+	function get_options( $args, $assoc_args ) {
+		$print_all = false;
+		$option    = $assoc_args['options'];
+		if ( $option === 'all' ) {
+			$print_all = true;
+		}
+		if ( $option === 'automatic' || $print_all ) {
+			$message = WP_CLI::colorize( $print_all ? '%yAutomatic Conversion%n: ' : '' );
+			WP_CLI::log( $message . get_option( 'agp_automatic' ) );
+		}
+		if ( $option === 'diphthongs' || $print_all ) {
+			$message = WP_CLI::colorize( $print_all ? '%yDiphthongs Conversion%n: ' : '' );
+			WP_CLI::log( $message . get_option( 'agp_diphthongs' ) );
+		}
+		if ( $option === 'automatic_posts' || $print_all ) {
+			$message = WP_CLI::colorize( $print_all ? '%yAutoConvert Post Types%n: ' : '' );
+			WP_CLI::log( $message . implode( ", ", get_option( 'agp_automatic_post' ) ) );
+		}
+		if ( $option === 'automatic_tax' || $print_all ) {
+			$message = WP_CLI::colorize( $print_all ? '%yAutoConvert Taxonomies%n: ' : '' );
+			WP_CLI::log( $message . implode( ", ", get_option( 'agp_automatic_tax' ) ) );
+		}
 	}
 }
 

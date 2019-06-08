@@ -9,60 +9,48 @@
 <div>
 	<form action="options.php" method="post">
 		<?php settings_fields( 'agp' ); ?>
-		<?php do_settings_sections( 'agp' ); ?>
+		<?php $this->do_settings_sections( 'agp' ); ?>
 		<?php submit_button( __( 'Save Settings', 'agp' ) ); ?>
 	</form>
 
 	<script>
-		var automaticOption = document.getElementById("agpAutomatic");
-		var postsOption = document.getElementById("selectPosts");
-		var taxonomiesOption = document.getElementById("selectTaxonomies");
-
-		var postsRow = postsOption.closest('tr');
-		var taxonomiesRow = taxonomiesOption.closest('tr');
+		var automaticSwitch = document.getElementById("agpAutomatic");
+		var automaticOptions = [document.getElementById("selectPosts"), document.getElementById("selectTaxonomies")];
 
 		toggleOptions();
-		automaticOption.addEventListener('click', function () {
+		automaticSwitch.addEventListener('click', function () {
 			toggleOptions();
 		});
 
-
-		function toggleOptions() {
-			if (!automaticOption.checked) {
-				postsRow.style.display = 'none';
-				postsOption.disabled = true;
-				taxonomiesRow.style.display = 'none';
-				taxonomiesOption.disabled = true;
-			} else {
-				postsRow.style.display = 'table-row';
-				postsOption.disabled = false;
-				taxonomiesRow.style.display = 'table-row';
-				taxonomiesOption.disabled = false;
-			}
-		}
-
 		jQuery(function () {
 			jQuery('.select2').select2();
-			jQuery(postsOption).on('select2:select', function (e) {
-				var data = e.params.data;
-				if (data.id === 'all_options') {
-					jQuery(postsOption).val('all_options').trigger('change');
-				} else {
-					var selectall = jQuery(postsOption).find('option[value="all_options"]');
-					selectall.prop('selected', false);
-					jQuery(postsOption).trigger('change');
-				}
-			});
-			jQuery(taxonomiesOption).on('select2:select', function (e) {
-				var data = e.params.data;
-				if (data.id === 'all_options') {
-					jQuery(taxonomiesOption).val('all_options').trigger('change');
-				} else {
-					var selectall = jQuery(taxonomiesOption).find('option[value="all_options"]');
-					selectall.prop('selected', false);
-					jQuery(taxonomiesOption).trigger('change');
-				}
+			automaticOptions.forEach(function (element) {
+				jQuery(element).on('select2:select', function (e) {
+					var data = e.params.data;
+					if (data.id === 'all_options' || data.id === 'no_options') {
+						jQuery(element).val(data.id).trigger('change');
+					} else {
+						jQuery(element).find('option[value="all_options"]').prop('selected', false);
+						jQuery(element).find('option[value="no_options"]').prop('selected', false);
+						jQuery(element).trigger('change');
+					}
+				});
 			});
 		});
+
+		function toggleOptions() {
+			var customAutoSection = document.getElementById('agp_custom_automatic_options');
+			if (!automaticSwitch.checked) {
+				customAutoSection.style.display = 'none';
+				automaticOptions.forEach(function (element) {
+					element.disabled = true;
+				});
+			} else {
+				customAutoSection.style.display = 'block';
+				automaticOptions.forEach(function (element) {
+					element.disabled = false;
+				});
+			}
+		}
 	</script>
 </div>

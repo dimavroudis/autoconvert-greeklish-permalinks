@@ -8,7 +8,7 @@
 $automatic_posts = get_option( 'agp_automatic_post' );
 $post_types      = array();
 
-$select_all = false;
+$select_all  = false;
 $select_none = false;
 
 if ( $automatic_posts ) {

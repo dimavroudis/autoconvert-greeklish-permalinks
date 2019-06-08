@@ -46,9 +46,8 @@ if ( $log && $log['status'] === 'done' ) {
 	}
 
 	?>
-	<div class="card" id="report">
-
-		<h3><?php echo __( 'Last conversion report', 'agp' ) ?></h3>
+	<h3><?php echo __( 'Last conversion report', 'agp' ) ?></h3>
+	<div class="card card-success" id="report">
 
 		<p>
 			<b><?php echo $started; ?></b> ( <?php echo sprintf( __( 'Duration: %s', 'agp' ), $duration ); ?> )

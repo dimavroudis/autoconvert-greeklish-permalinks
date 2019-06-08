@@ -9,7 +9,7 @@
 $automatic_taxonomies = get_option( 'agp_automatic_tax' );
 $taxonomies           = array();
 
-$select_all = false;
+$select_all  = false;
 $select_none = false;
 
 if ( $automatic_taxonomies ) {

@@ -179,8 +179,14 @@ class Agp {
 
 		$this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'action_links', 10, 5 );
 
-		$this->loader->add_filter( 'wp_unique_post_slug', $plugin_admin, 'greeklish_post_permalinks', 10, 4 );
-		$this->loader->add_filter( 'wp_unique_term_slug', $plugin_admin, 'greeklish_term_permalinks', 10, 2 );
+		$post_types_selected = get_option( 'agp_automatic_post' );
+		$taxonomies_selected = get_option( 'agp_automatic_tax' );
+		if ( ( $post_types_selected && $taxonomies_selected ) && ! ( $post_types_selected[0] === 'all_options' && $taxonomies_selected[0] === 'all_options' ) ) {
+			$this->loader->add_filter( 'wp_unique_post_slug', $plugin_admin, 'greeklish_post_permalinks', 10, 4 );
+			$this->loader->add_filter( 'wp_unique_term_slug', $plugin_admin, 'greeklish_term_permalinks', 10, 2 );
+		} else {
+			$this->loader->add_filter( 'sanitize_title', $plugin_admin, 'sanitize_title_hook', 1 );
+		}
 
 		$this->loader->add_action( 'admin_notices', $plugin_admin, 'conversion_progress_notice' );
 	}

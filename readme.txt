@@ -4,8 +4,8 @@ Author link: https://mavrou.gr
 Tags: greek, greeklish, slugs, permalinks, links, autoconvert, convert, agp
 Requires at least: 3.8
 Requires PHP: 5.2
-Tested up to: 5.1.1
-Stable tag: 3.2.0
+Tested up to: 5.2.1
+Stable tag: 3.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,8 +62,19 @@ Yes! As of 3.1 version, wp-cli commands have been included. You can convert all 
 
 == Changelog ==
 
+= 3.3.1 =
+* Fixed error on upgrade
+
+= 3.3.0 =
+* Added wp-cli commands for getting (`wp agp get_options`) and updating the options( `wp agp update_options`) of the plugin
+* Added support for multiple post types and taxonomies as arguments. Example:  `wp agp convert --post_types=post,page`
+* Minor UI update
+* Fix: Reduced slug length on 3.2.0 version
+* Added warning about reduced slug length when selecting post types and taxonomies for automatic conversion
+
 = 3.2.0 =
 * **Added the option to select which taxonomies and  post types affected by automatic conversion**
+* Changed hook for automatic conversion from sanitize_title to wp_unique_post_slug and wp_unique_term_slug
 
 = 3.1.0 =
 * **Added wp-cli support**
