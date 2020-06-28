@@ -40,7 +40,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-    -webkit-border-radius: 26px;
     border-radius: 26px;
     background-color: #ccc;
     -webkit-transition: .4s;
@@ -55,7 +54,6 @@
     width: 18px;
     left: 4px;
     bottom: 4px;
-    -webkit-border-radius: 50%;
     border-radius: 50%;
     background-color: white;
     -webkit-transition: .4s;
