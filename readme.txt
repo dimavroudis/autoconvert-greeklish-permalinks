@@ -3,9 +3,9 @@ Contributors: Dimitris Mavroudis, d1m1tr1s_mav
 Author link: https://mavrou.gr
 Tags: greek, greeklish, slugs, permalinks, links, autoconvert, convert, agp
 Requires at least: 3.8
-Requires PHP: 5.2
-Tested up to: 5.2.1
-Stable tag: 3.3.1
+Requires PHP: 5.6
+Tested up to: 5.4.2
+Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,11 +16,10 @@ Convert Greek characters to Latin on all your site's permalinks instantly.
 AutoConvert Greeklish Permalinks converts greek characters to latin in all permalinks. The plugin makes sure that every new permalink is in greeklish and offers the option to convert all the old links with greek characters to latin.
 
 == Features ==
-* Automatic permalink conversion for every new post and term.
-* Conversion tool for older posts and terms.
-* Option to disable automatic permalink conversion.
-* Option on how to convert diphthongs.
-* WP-CLI support
+* Convert automaticly the permalink of every new post and term.
+* Convert all your older posts and terms with a click of a button.
+* Choose how dipthongs are converted. 
+* Developed to be friendly to developers with WP-CLI support and filter to modify the converion.
 
 == Screenshots ==
 1. As simple as that. Write your title, draft, schedule or publish your post and the permalink is set.
@@ -61,6 +60,11 @@ Yes! As of 3.1 version, wp-cli commands have been included. You can convert all 
 4. To convert old posts/terms, go to 'Settings' > 'Convert Greek Permalinks' > 'Convert old posts/terms', select the post types and taxonomies you want to convert and click the "Convert Permalinks" button.
 
 == Changelog ==
+
+
+= 3.4.0 =
+* Added support for polytonic characters
+* Added hook for modifying expressions
 
 = 3.3.1 =
 * Fixed error on upgrade

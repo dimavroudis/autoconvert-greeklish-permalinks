@@ -15,7 +15,7 @@ class Agp_Converter extends WP_Background_Process {
 	 * All the greek letters and their latin counterparts
 	 *
 	 * @since    1.0.0
-	 * @since    3.2.0 Added polytonic characters
+	 * @since    3.4.0 Added polytonic characters
 	 * @access   protected
 	 * @var      array $expressions All the greek letters and their latin counterparts
 	 */
@@ -50,7 +50,7 @@ class Agp_Converter extends WP_Background_Process {
 	 * All the greek diphthongs and their latin counterparts
 	 *
 	 * @since    1.0.0
-	 * @since    3.2.0 Added polytonic characters
+	 * @since    3.4.0 Added polytonic characters
 	 * @access   protected
 	 * @var      array $diphthongs All the greek diphthongs and their latin counterparts
 	 */
@@ -233,7 +233,7 @@ class Agp_Converter extends WP_Background_Process {
 	 *  Converts the slug to greeklish
 	 *
 	 * @since    1.0.0
-	 * @since    3.2.0 Added filter to modify expressions
+	 * @since    3.4.0 Added filter to modify expressions
 	 * @access   public
 	 *
 	 * @param    string $current_slug The current post slug
