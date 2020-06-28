@@ -233,6 +233,7 @@ class Agp_Converter extends WP_Background_Process {
 	 *  Converts the slug to greeklish
 	 *
 	 * @since    1.0.0
+	 * @since    3.2.0 Added filter to modify expressions
 	 * @access   public
 	 *
 	 * @param    string $current_slug The current post slug
@@ -241,13 +242,15 @@ class Agp_Converter extends WP_Background_Process {
 	 */
 	public static function convertSlug( $current_slug ) {
 
-		$diphthongs_status = get_option( 'agp_diphthongs' ) === 'enabled';
+		$diphthongs_enabled = get_option( 'agp_diphthongs' ) === 'enabled';
 
-		if ( $diphthongs_status ) {
+		if ( $diphthongs_enabled ) {
 			$expressions = array_merge( self::$diphthongs, self::$expressions );
 		} else {
 			$expressions = self::$expressions;
 		}
+
+		$expressions = apply_filters( self::$action . '_expressions', $expressions );
 
 		$current_slug = preg_replace( array_keys( $expressions ), array_values( $expressions ), $current_slug );
 
