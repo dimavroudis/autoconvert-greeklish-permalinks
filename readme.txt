@@ -40,6 +40,17 @@ On Settings > Convert Greek Permalinks > Settings, you can also modify how the p
 * Choose which post types and taxonomies you want to be affected by automatic conversion
 * Choose how the dipthongs will be converted
 
+From version 3.4.0, the filter `agp_convert_expressions` has been added to allow you to make further changes.
+
+```
+function change_expressions( $expressions ) {
+	// You can modify the rules of conversion
+	$expressions['/[βΒ]/u'] = 'g';
+    return $expressions;
+}
+add_filter('agp_convert_expressions', 'change_expressions' );
+```
+
 = How do I convert old permalinks? =
 
 If you want to convert all your older permalinks, go to Settings > Convert Greek Permalinks > Convert old posts/terms , select the post types and taxonomies you want to convert and click the "Convert Permalinks" button.

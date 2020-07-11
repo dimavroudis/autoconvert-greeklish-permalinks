@@ -250,7 +250,7 @@ class Agp_Converter extends WP_Background_Process {
 			$expressions = self::$expressions;
 		}
 
-		$expressions = apply_filters( self::$action . '_expressions', $expressions );
+		$expressions = apply_filters( 'agp_convert_expressions', $expressions );
 
 		$current_slug = preg_replace( array_keys( $expressions ), array_values( $expressions ), $current_slug );
 

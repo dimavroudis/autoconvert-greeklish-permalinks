@@ -1,18 +1,30 @@
-# Copyright (C) 2020 agp
-# This file is distributed under the same license as the agp package.
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: agp\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: AutoConvert Greeklish Permalinks\n"
+"POT-Creation-Date: 2020-07-11 11:44+0300\n"
+"PO-Revision-Date: 2020-07-11 11:38+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3.1\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: auto-gr-permalinks.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: node_modules\n"
+"X-Poedit-SearchPathExcluded-2: dist\n"
 
+#. Plugin Name of the plugin/theme
 #: admin/agp-admin.php:72
 msgid "AutoConvert Greeklish Permalinks"
 msgstr ""
@@ -45,20 +57,20 @@ msgstr ""
 msgid "How do you want diphthongs to be converted?"
 msgstr ""
 
-#: admin/agp-admin.php:134, admin/agp-admin.php:493
+#: admin/agp-admin.php:134 admin/agp-admin.php:493
 msgid "Settings"
 msgstr ""
 
-#: admin/agp-admin.php:139, admin/partials/agp-converter-view.php:36
+#: admin/agp-admin.php:139 admin/partials/agp-converter-view.php:36
 msgid "Convert old posts/terms"
-msgstr ""
-
-#: admin/agp-admin.php:167
-msgid "Permalinks conversion has started in the background."
 msgstr ""
 
 #: admin/agp-admin.php:163
 msgid "All your permalinks were already in greeklish."
+msgstr ""
+
+#: admin/agp-admin.php:167
+msgid "Permalinks conversion has started in the background."
 msgstr ""
 
 #: admin/agp-admin.php:250
@@ -66,10 +78,15 @@ msgid "Heads-up!"
 msgstr ""
 
 #: admin/agp-admin.php:251
-msgid "Choosing post types or taxonomies for automatic conversion will decrease the maximum length of the slugs from 200 characters to about 50, due to limitations from WordPress. Set the settings to \"All post types\" and \"All taxonomies\" if you want to keep slugs at 200 characters maximum."
+msgid ""
+"Choosing post types or taxonomies for automatic conversion will decrease the "
+"maximum length of the slugs from 200 characters to about 50, due to "
+"limitations from WordPress. Set the settings to \"All post types\" and \"All "
+"taxonomies\" if you want to keep slugs at 200 characters maximum."
 msgstr ""
 
 #: admin/agp-admin.php:336
+#, php-format
 msgid "Permalinks conversion is at %s"
 msgstr ""
 
@@ -97,11 +114,14 @@ msgstr ""
 msgid "No post types"
 msgstr ""
 
-#: admin/partials/agp-automatic-posts-option-view.php:49, admin/partials/agp-converter-view.php:44, admin/partials/agp-converter-view.php:47
+#: admin/partials/agp-automatic-posts-option-view.php:49
+#: admin/partials/agp-converter-view.php:44
+#: admin/partials/agp-converter-view.php:47
 msgid "Post types to convert"
 msgstr ""
 
-#: admin/partials/agp-automatic-posts-option-view.php:51, admin/partials/agp-converter-view.php:49
+#: admin/partials/agp-automatic-posts-option-view.php:51
+#: admin/partials/agp-converter-view.php:49
 msgid "Select one or more post types"
 msgstr ""
 
@@ -113,19 +133,25 @@ msgstr ""
 msgid "No taxonomies"
 msgstr ""
 
-#: admin/partials/agp-automatic-taxonomies-option-view.php:52, admin/partials/agp-converter-view.php:64, admin/partials/agp-converter-view.php:67
+#: admin/partials/agp-automatic-taxonomies-option-view.php:52
+#: admin/partials/agp-converter-view.php:64
+#: admin/partials/agp-converter-view.php:67
 msgid "Taxonomies to convert"
 msgstr ""
 
-#: admin/partials/agp-automatic-taxonomies-option-view.php:54, admin/partials/agp-converter-view.php:69
+#: admin/partials/agp-automatic-taxonomies-option-view.php:54
+#: admin/partials/agp-converter-view.php:69
 msgid "Select one or more taxonomies"
 msgstr ""
 
 #: admin/partials/agp-converter-view.php:38
-msgid "Depending on your server and the amount of permalinks that needs to be converted, the conversion might take a few minutes to complete."
+msgid ""
+"Depending on your server and the amount of permalinks that needs to be "
+"converted, the conversion might take a few minutes to complete."
 msgstr ""
 
-#: admin/partials/agp-converter-view.php:58, admin/partials/agp-converter-view.php:79
+#: admin/partials/agp-converter-view.php:58
+#: admin/partials/agp-converter-view.php:79
 msgid "Select All"
 msgstr ""
 
@@ -138,7 +164,9 @@ msgid "Simple conversion"
 msgstr ""
 
 #: admin/partials/agp-diphthongs-option-view.php:16
-msgid "For example \"ει\" becomes \"ei\", \"οι\" becomes \"οi\", \"μπ\" becomes \"mp\" etc"
+msgid ""
+"For example \"ει\" becomes \"ei\", \"οι\" becomes \"οi\", \"μπ\" becomes \"mp"
+"\" etc"
 msgstr ""
 
 #: admin/partials/agp-diphthongs-option-view.php:24
@@ -165,12 +193,14 @@ msgstr ""
 msgid "terms"
 msgstr ""
 
-#: admin/partials/agp-log-view.php:42
-msgid "The term %s was not converted. %s"
+#: admin/partials/agp-log-view.php:38
+#, php-format
+msgid "The post %s was not converted. %s"
 msgstr ""
 
-#: admin/partials/agp-log-view.php:38
-msgid "The post %s was not converted. %s"
+#: admin/partials/agp-log-view.php:42
+#, php-format
+msgid "The term %s was not converted. %s"
 msgstr ""
 
 #: admin/partials/agp-log-view.php:49
@@ -178,21 +208,40 @@ msgid "Last conversion report"
 msgstr ""
 
 #: admin/partials/agp-log-view.php:53
+#, php-format
 msgid "Duration: %s"
 msgstr ""
 
 #: admin/partials/agp-log-view.php:56
+#, php-format
 msgid "Permalinks successfully converted for %d/%d %s and %d/%d %s."
-msgstr ""
-
-#: admin/partials/agp-log-view.php:69
-msgid "No errors reported."
 msgstr ""
 
 #: admin/partials/agp-log-view.php:60
 msgid "The following errors occurred:"
 msgstr ""
 
+#: admin/partials/agp-log-view.php:69
+msgid "No errors reported."
+msgstr ""
+
 #: admin/partials/agp-settings-view.php:13
 msgid "Save Settings"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Convert Greek characters to Latin on all your site's permalinks instantly."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Dimitris Mavroudis"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://mavrou.gr/"
 msgstr ""

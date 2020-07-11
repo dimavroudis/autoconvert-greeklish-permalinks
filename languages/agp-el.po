@@ -1,14 +1,16 @@
 msgid ""
 msgstr ""
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Project-Id-Version: AutoConvert Greeklish Permalinks\n"
-"POT-Creation-Date: 2019-03-20 13:28+0200\n"
-"PO-Revision-Date: 2019-03-20 13:29+0200\n"
+"POT-Creation-Date: 2020-07-11 11:46+0300\n"
+"PO-Revision-Date: 2020-07-11 11:46+0300\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.3.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: auto-gr-permalinks.php\n"
@@ -16,10 +18,9 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
-"Last-Translator: \n"
-"Language: el_GR\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SearchPathExcluded-1: node_modules\n"
+"X-Poedit-SearchPathExcluded-2: dist\n"
 
 #. Plugin Name of the plugin/theme
 #: admin/agp-admin.php:72
@@ -54,7 +55,7 @@ msgstr "Ποιες ταξινομήσεις να μετατρέπονται αυ
 msgid "How do you want diphthongs to be converted?"
 msgstr "Πώς θέλετε να μετατραπούν οι δίφθογγοι;"
 
-#: admin/agp-admin.php:134 admin/agp-admin.php:484
+#: admin/agp-admin.php:134 admin/agp-admin.php:493
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
@@ -70,11 +71,11 @@ msgstr "Όλοι οι σύνδεσμοί σας ήταν ήδη σε greeklish."
 msgid "Permalinks conversion has started in the background."
 msgstr "Η μετατροπή των συνδέσμων ξεκίνησε στο παρασκήνιο."
 
-#: admin/agp-admin.php:241
+#: admin/agp-admin.php:250
 msgid "Heads-up!"
 msgstr "Προσοχή!"
 
-#: admin/agp-admin.php:242
+#: admin/agp-admin.php:251
 msgid ""
 "Choosing post types or taxonomies for automatic conversion will decrease the "
 "maximum length of the slugs from 200 characters to about 50, due to "
@@ -86,20 +87,20 @@ msgstr ""
 "περιορισμών του WordPress. Επιλέξτε \"Όλοι οι τύποι άρθρων\" και \"Όλες οι "
 "ταξινομήσεις\" παρακάτω, αν δε θέλετε να μειωθεί το μέγεθος των URLs σας."
 
-#: admin/agp-admin.php:327
+#: admin/agp-admin.php:336
 #, php-format
 msgid "Permalinks conversion is at %s"
 msgstr "Η μετατροπή των συνδέσμων είναι στο %s"
 
-#: admin/agp-admin.php:337
+#: admin/agp-admin.php:346
 msgid "Permalinks conversion is done!"
 msgstr "Η μετατροπή των συνδέσμων ολοκληρώθηκε!"
 
-#: admin/agp-admin.php:337
+#: admin/agp-admin.php:346
 msgid "Dismiss"
 msgstr "Κλείσιμο"
 
-#: admin/agp-admin.php:487
+#: admin/agp-admin.php:496
 msgid "Convert old permalinks"
 msgstr "Μετατροπή παλιών συνδέσμων"
 
