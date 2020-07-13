@@ -1,3 +1,4 @@
 theme: jekyll-theme-cayman
 title: AutoConvert Greeklish Permalinks
 description: Convert Greek characters to Latin on all your WordPress website's permalinks instantly.
+show_downloads: true
