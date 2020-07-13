@@ -42,14 +42,14 @@ On Settings > Convert Greek Permalinks > Settings, you can also modify how the p
 
 From version 3.4.0, the filter `agp_convert_expressions` has been added to allow you to make further changes.
 
-```
+`
 function change_expressions( $expressions ) {
 	// You can modify the rules of conversion
 	$expressions['/[βΒ]/u'] = 'g';
     return $expressions;
 }
 add_filter('agp_convert_expressions', 'change_expressions' );
-```
+`
 
 = How do I convert old permalinks? =
 
