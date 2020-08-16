@@ -4,8 +4,8 @@ Author link: https://mavrou.gr
 Tags: greek, greeklish, slugs, permalinks, links, autoconvert, convert, agp
 Requires at least: 3.8
 Requires PHP: 5.6
-Tested up to: 5.4.2
-Stable tag: 3.4.0
+Tested up to: 5.5
+Stable tag: 4.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,10 @@ Yes! As of 3.1 version, wp-cli commands have been included. You can convert all 
 
 == Changelog ==
 
+= 4.0.0 =
+* **New Convertor for old posts and terms**
+* Removed WP Background Processing dependency
+* Added WP Rest API endpoints
 
 = 3.4.0 =
 * Added support for polytonic characters
@@ -104,18 +108,6 @@ Yes! As of 3.1 version, wp-cli commands have been included. You can convert all 
 * Added conversion progress notice
 * Set default diphthongs option on advanced (affects only on new installations)
 
-= 2.0.4 =
-* Limited loading of styles and javascript only to AutoConvert's admin pages (Fixes to select2 issue)
-
-= 2.0.3 =
-* Copywriting review - Fixed grammar and syntax errors
-
-= 2.0.2 =
-* New installations' options were not initialized properly
-
-= 2.0.1 =
-* Fixed fatal error
-
 = 2.0.0 =
 * **Rewrite of plugin as object-oriented**
 * Improved the UI of the dipthongs option at settings
@@ -123,41 +115,3 @@ Yes! As of 3.1 version, wp-cli commands have been included. You can convert all 
 * Added notices for success and failure of conversion
 * Added uninstall function that deletes plugin's options stored in your database
 * Better copywriting
-
-= 1.3.8 =
-* Added support for two more letters, ΐ and ΰ. (Thanks to @princeofabyss)
-
-= 1.3.6 =
-* Removed estimated slug on conversion
-* Minor UI improvements
-
-= 1.3.5 =
-* Added Greek translation
-
-= 1.3.3 =
-* Improved UI: Used WordPress Colors
-
-= 1.3.2 =
-* Fixed bug that didn't allow terms without posts to be converted
-
-= 1.3.1 =
-* Fixed bug that didn't allow taxonomies to be converted
-
-= 1.3 =
-* **Added conversion of old terms**
-* Option to disable automatic transliteration of new posts and terms
-* Improved UI with select2 for selects with multiple options and switches instead of checkboxes
-* Improved UI by using post types' and taxonomies' labels
-
-= 1.2.1 =
-* Fixed minor bug on previous update
-
-= 1.2 =
-* **Added options for diphthongs conversion or not**
-
-= 1.1 =
-* **Added options page**
-* Fixed minor issues
-
-= 1.0 =
-* Initial release

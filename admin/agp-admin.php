@@ -19,14 +19,7 @@ class Agp_Admin {
 	 * @var      string $plugin_path The plugin path of this plugin.
 	 */
 	protected $plugin_path;
-	/**
-	 * An instance of the converter class
-	 *
-	 * @since    2.0.0
-	 * @access   protected
-	 * @var Agp_Converter
-	 */
-	protected $converter;
+
 	/**
 	 * The ID of this plugin.
 	 *
@@ -55,7 +48,6 @@ class Agp_Admin {
 	 */
 	public function __construct( $plugin_name, $version, $plugin_path ) {
 
-		$this->converter   = new Agp_Converter();
 		$this->plugin_name = $plugin_name;
 		$this->plugin_path = $plugin_path;
 		$this->version     = $version;
@@ -126,8 +118,6 @@ class Agp_Admin {
 	 */
 	public function options_page_content() {
 
-		$this->on_convert();
-
 		$tabs = array(
 			[
 				'id'       => 'permalink_settings',
@@ -144,32 +134,6 @@ class Agp_Admin {
 		include_once( 'partials/agp-admin-view.php' );
 
 	}
-
-	/**
-	 * Initializes conversion on POST
-	 *
-	 * @since    3.0.0
-	 * @access   private
-	 */
-	private function on_convert() {
-		if ( isset( $_POST['convert-button'] ) ) {
-
-			$posts_type = isset( $_POST['post-types'] ) ? $_POST['post-types'] : array();
-			$taxonomy   = isset( $_POST['taxonomies'] ) ? $_POST['taxonomies'] : array();
-
-			$has_posts = $this->converter->prepareData( $posts_type, $taxonomy );
-
-			if ( ! $has_posts ) {
-				$message = '<b>' . __( 'All your permalinks were already in greeklish.', 'agp' ) . '</b>';
-				echo $this->admin_notice( 'info', $message, true );
-			} else {
-				$this->converter->dispatch();
-				$message = '<b>' . __( 'Permalinks conversion has started in the background.', 'agp' ) . '</b>';
-				echo $this->admin_notice( 'success', $message, true );
-			}
-		}
-	}
-
 	/**
 	 * Template for admin notices
 	 *
@@ -311,45 +275,6 @@ class Agp_Admin {
 	}
 
 	/**
-	 * Manages conversion progress notices
-	 *
-	 * @since    3.0.0
-	 * @access   public
-	 */
-	public function conversion_progress_notice() {
-
-		if ( isset( $_GET['agp_notice_dismiss'] ) ) {
-			delete_transient( 'agp_notice_dismiss' );
-		}
-
-		$log = get_option( 'agp_conversion' );
-
-		//In progress
-		if ( $log && $log['status'] === 'started' ) {
-
-			$count_complete = $log['converted']['posts'] + $log['converted']['terms'];
-			$count_estimate = $log['estimated']['posts'] + $log['estimated']['terms'];
-
-			$percentage     = round( $count_complete / $count_estimate * 100 );
-			$percentage_txt = $percentage . '%';
-
-			$message = sprintf( __( 'Permalinks conversion is at %s', 'agp' ), $percentage_txt );
-			echo $this->admin_notice( 'info', $message );
-		}
-
-		//Done
-		$is_active = get_transient( 'agp_notice_dismiss' );
-		if ( $log['status'] === 'done' && $is_active ) {
-			$params  = array_merge( $_GET, array( 'agp_notice_dismiss' => false ) );
-			$queries = http_build_query( $params );
-			$url     = ( empty( $_SERVER['HTTPS'] ) ? 'http://' : 'https://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '?' . $queries;
-			$message = '<b>' . __( 'Permalinks conversion is done!', 'agp' ) . '</b> <a style="float:right;" href="' . esc_url( $url ) . '">' . __( 'Dismiss', 'agp' ) . '</a>';
-			echo $this->admin_notice( 'success', $message );
-		}
-
-	}
-
-	/**
 	 * Callback for wp_unique_post_slug hook
 	 * Checks if automatic conversion is enabled and post type is selected and then calls convertSlug function
 	 *
@@ -472,6 +397,7 @@ class Agp_Admin {
 		if ( $hook != 'settings_page_agp' ) {
 			return;
 		}
+		wp_enqueue_script( 'agp-admin', plugin_dir_url( __FILE__ ) . 'js/admin.js',array( 'jquery' ), $this->version, true  );
 		wp_enqueue_script( 'select2', plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), $this->version, false );
 
 	}

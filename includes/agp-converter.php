@@ -9,7 +9,8 @@
  * @since    3.0.0
  *
  */
-class Agp_Converter extends WP_Background_Process {
+class Agp_Converter
+{
 
 	/**
 	 * All the greek letters and their latin counterparts
@@ -83,62 +84,27 @@ class Agp_Converter extends WP_Background_Process {
 	protected $action = 'agp_convert';
 
 	/**
-	 * Queries the database for the items to convert, adds them on the queue, saves and initializes logger
-	 *
-	 * @since    3.1.0
-	 * @access   public
-	 *
-	 * @param    array $post_types
-	 * @param    array $taxonomies
-	 *
-	 * @return   boolean
-	 */
-	public function prepareData( $post_types, $taxonomies ) {
-
-		$post_count = $this->postQuery( $post_types, 'queue' );
-		$term_count = $this->termQuery( $taxonomies, 'queue' );
-
-		if ( $post_count || $term_count ) {
-			$now = time();
-			update_option( 'agp_conversion', array(
-				'status'    => 'started',
-				'started'   => $now,
-				'ended'     => '',
-				'converted' => array( 'posts' => 0, 'terms' => 0 ),
-				'estimated' => array( 'posts' => $post_count, 'terms' => $term_count ),
-				'errors'    => array(),
-			) );
-			set_transient( 'agp_notice_active', true );
-			$this->save();
-
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
-	/**
 	 * Queries the database for posts related to specified post types
 	 *
 	 * @since    3.1.0
 	 * @access   public
 	 *
 	 * @param array $post_types
-	 * @param string $callback
+	 * @param string $return
 	 *
-	 * @return array|int|boolean
+	 * @return array|int
 	 */
-	public function postQuery( $post_types, $callback = 'count' ) {
+	public function postQuery($post_types, $return = 'count', $limit = -1)
+	{
 		global $wpdb;
 		$count           = 0;
 		$posts_to_update = array();
 
-		if ( ! empty( $post_types ) ) {
+		if (!empty($post_types)) {
 			$sql_post_types = '';
 			$isFirst        = true;
-			foreach ( $post_types as $post_type ) {
-				if ( $isFirst ) {
+			foreach ($post_types as $post_type) {
+				if ($isFirst) {
 					$isFirst = false;
 				} else {
 					$sql_post_types .= 'OR ';
@@ -155,107 +121,32 @@ class Agp_Converter extends WP_Background_Process {
 				OR p.post_status = 'pending'
 				OR p.post_status = 'private')";
 
-			$query = $wpdb->get_results( $sql );
+			$query = $wpdb->get_results($sql);
 
-			if ( $query ) {
-				foreach ( $query as $post ) {
-					$slug = urldecode( $post->post_name );
-					if ( ! self::isValidSlug( $slug ) ) {
-						if ( $callback === 'queue' ) {
-							$this->pushToQueue( 'post', $post );
-						}
-						if ( $callback === 'convert' ) {
-							$new_slug          = Agp_Converter::convertSlug( $slug );
+			if ($query) {
+				foreach ($query as $post) {
+					if ($limit > 0 && $count >= $limit) {
+						break;
+					}
+					$slug = urldecode($post->post_name);
+					if (!self::isValidSlug($slug)) {
+						if ($return === 'object') {
+							$new_slug          = Agp_Converter::convertSlug($slug);
 							$posts_to_update[] = array(
 								'ID'        => $post->ID,
 								'post_name' => $new_slug,
 							);
-						} else {
-							$count ++;
 						}
+						$count++;
 					}
 				}
 			}
-			if ( $callback === 'convert' ) {
-				return $posts_to_update;
-			}
-
+		}
+		if ($return === 'object') {
+			return $posts_to_update;
+		} else {
 			return $count;
-		} else {
-			return false;
 		}
-	}
-
-	/**
-	 * Check if the slug provided is valid (greeklish) or needs conversion
-	 *
-	 * @since    1.0.0
-	 * @access   public
-	 *
-	 * @param    string $current_post_title The current post title
-	 *
-	 * @return   boolean
-	 */
-	public static function isValidSlug( $current_post_title ) {
-
-		$is_valid_slug = true;
-
-		foreach ( self::$expressions as $key => $value ) {
-			if ( preg_match( $key, $current_post_title ) ) {
-				$is_valid_slug = false;
-				break;
-			}
-		}
-
-		return $is_valid_slug;
-
-	}
-
-	/**
-	 * Pushes items to queue
-	 *
-	 * @since    3.1.0
-	 * @access   public
-	 *
-	 * @param string $type
-	 * @param object $item
-	 *
-	 * @return int
-	 */
-	private function pushToQueue( $type, $item ) {
-		$item = (object) array_merge( array( 'type' => $type ), (array) $item );
-		$this->push_to_queue( $item );
-
-		return true;
-	}
-
-	/**
-	 *  Converts the slug to greeklish
-	 *
-	 * @since    1.0.0
-	 * @since    3.4.0 Added filter to modify expressions
-	 * @access   public
-	 *
-	 * @param    string $current_slug The current post slug
-	 *
-	 * @return   string        The converted slug in greeklish
-	 */
-	public static function convertSlug( $current_slug ) {
-
-		$diphthongs_enabled = get_option( 'agp_diphthongs' ) === 'enabled';
-
-		if ( $diphthongs_enabled ) {
-			$expressions = array_merge( self::$diphthongs, self::$expressions );
-		} else {
-			$expressions = self::$expressions;
-		}
-
-		$expressions = apply_filters( 'agp_convert_expressions', $expressions );
-
-		$current_slug = preg_replace( array_keys( $expressions ), array_values( $expressions ), $current_slug );
-
-		return $current_slug;
-
 	}
 
 	/**
@@ -265,19 +156,21 @@ class Agp_Converter extends WP_Background_Process {
 	 * @access   public
 	 *
 	 * @param array $taxonomies
-	 * @param string $callback
+	 * @param string $return
 	 *
-	 * @return array|int|boolean
+	 * @return array|int
 	 */
-	public function termQuery( $taxonomies, $callback = 'count' ) {
+	public function termQuery($taxonomies, $return = 'count', $limit = -1)
+	{
 		global $wpdb;
 		$count           = 0;
 		$terms_to_update = array();
-		if ( ! empty( $taxonomies ) ) {
+
+		if (!empty($taxonomies)) {
 			$sql_taxonomies = '';
 			$isFirst        = true;
-			foreach ( $taxonomies as $index => $taxonomy ) {
-				if ( $isFirst ) {
+			foreach ($taxonomies as $index => $taxonomy) {
+				if ($isFirst) {
 					$isFirst = false;
 				} else {
 					$sql_taxonomies .= ', ';
@@ -291,117 +184,87 @@ class Agp_Converter extends WP_Background_Process {
 				ON t.term_id = tt.term_id
 				WHERE tt.taxonomy IN ($sql_taxonomies)";
 
-			$query = $wpdb->get_results( $sql );
+			$query = $wpdb->get_results($sql);
 
-			if ( $query ) {
-				foreach ( $query as $term ) {
-					$slug = urldecode( $term->slug );
-					if ( ! self::isValidSlug( $slug ) ) {
-						if ( $callback === 'queue' ) {
-							$this->pushToQueue( 'term', $term );
-						}
-						if ( $callback === 'convert' ) {
-							$new_slug          = Agp_Converter::convertSlug( $slug );
+			if ($query) {
+				foreach ($query as $term) {
+					if ($limit > 0 && $count >= $limit) {
+						break;
+					}
+					$slug = urldecode($term->slug);
+					if (!self::isValidSlug($slug)) {
+						if ($return === 'object') {
+							$new_slug          = Agp_Converter::convertSlug($slug);
 							$terms_to_update[] = array(
 								'id'       => $term->term_id,
 								'taxonomy' => $term->taxonomy,
 								'slug'     => $new_slug,
 							);
-						} else {
-							$count ++;
 						}
-
+						$count++;
 					}
 				}
 			}
-			if ( $callback === 'convert' ) {
-				return $terms_to_update;
-			}
-
-			return $count;
+		}
+		if ($return === 'object') {
+			return $terms_to_update;
 		} else {
-			return false;
+			return $count;
 		}
 	}
 
 	/**
-	 * Save queue
+	 * Check if the slug provided is valid (greeklish) or needs conversion
 	 *
-	 * @since 3.0.0
+	 * @since    1.0.0
 	 * @access   public
 	 *
-	 * @return $this
+	 * @param    string $current_post_title The current post title
+	 *
+	 * @return   boolean
 	 */
-	public function save() {
+	public static function isValidSlug($current_post_title)
+	{
 
-		if ( ! empty( $this->data ) ) {
-			$chuncks = array_chunk( $this->data, 1000, true );
-			foreach ( $chuncks as $chunck ) {
-				$key = $this->generate_key();
-				update_site_option( $key, $chunck );
+		$is_valid_slug = true;
+
+		foreach (self::$expressions as $key => $value) {
+			if (preg_match($key, $current_post_title)) {
+				$is_valid_slug = false;
+				break;
 			}
 		}
 
-		return $this;
+		return $is_valid_slug;
 	}
 
 	/**
-	 * Background Conversion Process
+	 *  Converts the slug to greeklish
 	 *
-	 * @since    3.0.0
-	 * @access   protected
+	 * @since    1.0.0
+	 * @since    3.4.0 Added filter to modify expressions
+	 * @access   public
 	 *
-	 * @param    stdClass $item Post or term to convert
+	 * @param    string $current_slug The current post slug
 	 *
-	 * @return mixed
+	 * @return   string        The converted slug in greeklish
 	 */
-	protected function task( $item ) {
+	public static function convertSlug($current_slug)
+	{
 
-		$log = get_option( 'agp_conversion' );
+		$diphthongs_enabled = get_option('agp_diphthongs') === 'enabled';
 
-		if ( $item->type === 'post' ) {
-			$slug         = urldecode( $item->post_name );
-			$new_slug     = self::convertSlug( $slug );
-			$post         = array(
-				'ID'        => $item->ID,
-				'post_name' => $new_slug,
-			);
-			$is_converted = wp_update_post( $post, true );
-
-			if ( ! is_wp_error( $is_converted ) ) {
-				$log['converted']['posts'] ++;
-			} else {
-				$error_message   = $is_converted->get_error_message();
-				$error           = [
-					'type'    => 'post',
-					'id'      => $item->ID,
-					'message' => $error_message,
-				];
-				$log['errors'][] = $error;
-			}
+		if ($diphthongs_enabled) {
+			$expressions = array_merge(self::$diphthongs, self::$expressions);
+		} else {
+			$expressions = self::$expressions;
 		}
 
-		if ( $item->type === 'term' ) {
-			$slug         = urldecode( $item->slug );
-			$new_slug     = self::convertSlug( $slug );
-			$is_converted = self::updateTerm( $item->term_id, $item->taxonomy, $new_slug );
+		$expressions = apply_filters('agp_convert_expressions', $expressions);
 
-			if ( ! is_wp_error( $is_converted ) ) {
-				$log['converted']['terms'] ++;
-			} else {
-				$error_message   = $is_converted->get_error_message();
-				$error           = [
-					'type'    => 'term',
-					'id'      => $item->term_id,
-					'message' => $error_message,
-				];
-				$log['errors'][] = $error;
-			}
-		}
+		$current_slug = preg_replace(array_keys($expressions), array_values($expressions), $current_slug);
 
-		update_option( 'agp_conversion', $log );
-
-		return false;
+		return $current_slug;
 	}
 
 	/**
@@ -418,50 +281,31 @@ class Agp_Converter extends WP_Background_Process {
 	 *
 	 * @return   array|WP_Error
 	 */
-	public static function updateTerm( $term_id, $taxonomy, $slug ) {
+	public static function updateTerm($term_id, $taxonomy, $slug)
+	{
 		global $wpdb;
 
 		$needs_suffix = true;
 
 		// As of 4.1, duplicate slugs are allowed as long as they're in different taxonomies.
-		if ( ! term_exists( $slug ) || get_option( 'db_version' ) >= 30133 && ! get_term_by( 'slug', $slug, $taxonomy ) ) {
+		if (!term_exists($slug) || get_option('db_version') >= 30133 && !get_term_by('slug', $slug, $taxonomy)) {
 			$needs_suffix = false;
 		}
 
-		if ( $needs_suffix ) {
-			$query = $wpdb->prepare( "SELECT slug FROM $wpdb->terms WHERE slug = %s AND term_id != %d", $slug, $term_id );
+		if ($needs_suffix) {
+			$query = $wpdb->prepare("SELECT slug FROM $wpdb->terms WHERE slug = %s AND term_id != %d", $slug, $term_id);
 
-			if ( $wpdb->get_var( $query ) ) {
+			if ($wpdb->get_var($query)) {
 				$num = 2;
 				do {
 					$alt_slug = $slug . "-$num";
-					$num ++;
-					$slug_check = $wpdb->get_var( $wpdb->prepare( "SELECT slug FROM $wpdb->terms WHERE slug = %s", $alt_slug ) );
-				} while ( $slug_check );
+					$num++;
+					$slug_check = $wpdb->get_var($wpdb->prepare("SELECT slug FROM $wpdb->terms WHERE slug = %s", $alt_slug));
+				} while ($slug_check);
 				$slug = $alt_slug;
 			}
 		}
 
-		return wp_update_term( $term_id, $taxonomy, array( 'slug' => $slug ) );
+		return wp_update_term($term_id, $taxonomy, array('slug' => $slug));
 	}
-
-	/**
-	 * Complete
-	 *
-	 * @since    3.0.0
-	 * @access   protected
-	 */
-	protected function complete() {
-		parent::complete();
-
-		$log = get_option( 'agp_conversion' );
-
-		$now           = time();
-		$log['status'] = 'done';
-		$log['ended']  = $now;
-
-		update_option( 'agp_conversion', $log );
-
-	}
-
 }

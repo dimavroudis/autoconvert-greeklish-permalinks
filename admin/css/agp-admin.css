@@ -11,15 +11,6 @@
 
 .card {
     max-width: 800px;
-    border-left: 4px solid #ffffff;
-}
-
-.card-warning {
-    border-left-color: #ffb900;
-}
-
-.card-success {
-    border-left-color: #46b450;
 }
 
 .agp-switch {

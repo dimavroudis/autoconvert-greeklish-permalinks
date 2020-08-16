@@ -78,13 +78,13 @@ class Agp {
 	 */
 	public function __construct( $plugin_path ) {
 		$this->version     = defined( 'AGP_VERSION' ) ? AGP_VERSION : '2.0.0';
-		$this->plugin_name = 'auto-gr-permalinks';
+		$this->plugin_name = 'agp';
 		$this->plugin_path = $plugin_path;
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
+		$this->register_rest_api_endpoints();
 		$this->upgrade_hook();
-
 	}
 
 	/**
@@ -127,15 +127,19 @@ class Agp {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/agp-admin.php';
 
 		/**
-		 * The plugin responsible for background processing
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'vendor/wp-background-processing/wp-background-processing.php';
-
-		/**
-		 * The conversion functions
+		 * The class responsible for conversions
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-converter.php';
 
+		/**
+		 *  The class responsible for the Rest API
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-endpoints.php';
+
+
+		/**
+		 *  The class responsible for the CLI
+		 */
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/agp-cli.php';
 		}
@@ -187,8 +191,21 @@ class Agp {
 		} else {
 			$this->loader->add_filter( 'sanitize_title', $plugin_admin, 'sanitize_title_hook', 1 );
 		}
+	}
 
-		$this->loader->add_action( 'admin_notices', $plugin_admin, 'conversion_progress_notice' );
+	/**
+	 * Register all rest api endpoints
+	 *
+	 * @since    4.0.0
+	 * @access   private
+	 */
+	private function register_rest_api_endpoints() {
+
+		$plugin_endpoints = new Agp_Endpoints( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_path() );
+		
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_endpoints, 'localize_scripts' );
+		$this->loader->add_action( 'rest_api_init', $plugin_endpoints, 'register_routes' );
+		
 	}
 
 	/**
