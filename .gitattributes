@@ -2,5 +2,4 @@
 .gitignore export-ignore
 assets export-ignore
 docs export-ignore
-README.md export-ignore
 readme.txt export-ignore
