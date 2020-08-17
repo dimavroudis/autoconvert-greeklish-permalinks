@@ -57,6 +57,9 @@ Yes! As of 3.1 version, wp-cli commands have been included. You can convert all 
 
 ## Changelog ##
 
+### 4.0.1 
+* Removed warning
+
 ### 4.0.0 
 * **New Convertor for old posts and terms**
 * Removed WP Background Processing dependency

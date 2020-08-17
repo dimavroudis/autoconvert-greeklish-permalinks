@@ -1,7 +1,4 @@
-
-
- <?php
-
+<?php
     /**
      * The class responsible for the Rest API
      *
