@@ -1,6 +1,4 @@
 
-
-
 (function ($) {
 
     /**
@@ -41,8 +39,7 @@
         });
 
         //Conversion Form
-        $('#converterForm').submit(function (e) {
-            e.preventDefault();
+        $('#converterForm #submit').click(function (e) {
             var post_types = selectPosts.val() ? selectPosts.val() : [];
             var taxonomies = selectTaxonomies.val() ? selectTaxonomies.val() : [];
             var limit = 100;

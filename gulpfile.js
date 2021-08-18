@@ -5,10 +5,11 @@ const autoprefixer = require('gulp-autoprefixer')
 
 // Utility related plugins.
 const notify = require('gulp-notify');
-const wpPot = require('gulp-wp-pot');
-const zip = require('gulp-zip');
-const copy = require('gulp-copy');
-const CSSsrc = './admin/css/*.css';
+const minify = require('gulp-minify');
+const cleanCss = require('gulp-clean-css');
+const rename = require("gulp-rename");
+const CSSsrc = './admin/src/css/*.css';
+const JSsrc = './admin/src/js/*.js';
 const PHPsrc = ['./**/*.php', './*.php', '!./dist/**/*.php'];
 
 function styles() {
@@ -16,13 +17,37 @@ function styles() {
         .src(CSSsrc)
         .pipe(
             autoprefixer({
-                overrideBrowserslist: ['last 10 versions', '> 1% in GR', 'ie 9'],
+                overrideBrowserslist: ['last 10 versions', '> 1% in GR', 'ie 11'],
             })
         )
+        .pipe(cleanCss())
+        .pipe(rename({
+            suffix: ".min"
+        }))
         .pipe(gulp.dest('./admin/css'))
+
         .pipe(
             notify({
-                message: 'CSS Prefixed',
+                message: 'CSS Optimized',
+                onLast: true,
+            })
+        )
+}
+
+function scripts() {
+    return gulp
+        .src(JSsrc)
+        .pipe(minify({
+            ext: {
+                min: '.min.js'
+            },
+            ignoreFiles: ['*.min.js'],
+            noSource: true
+        }))
+        .pipe(gulp.dest('./admin/js'))
+        .pipe(
+            notify({
+                message: 'JS Optimized',
                 onLast: true,
             })
         )
@@ -30,7 +55,7 @@ function styles() {
 
 function buildVersion() {
     return gulp
-        .src(['./**', '!./package.json', '!./package-lock.json','!./LICENSE', '!./README.md', '!./gulpfile.js', '!./node_modules/**', '!./docs/**', '!./dist/**', '!./assets/**'])
+        .src(['./**', '!./package.json', '!./package-lock.json', '!./LICENSE', '!./README.md', '!./gulpfile.js', '!./node_modules/**', '!./docs/**', '!./dist/**', '!./assets/**', '!./admin/src/**'])
         .pipe(gulp.dest('./dist'))
         .pipe(
             notify({
@@ -40,31 +65,12 @@ function buildVersion() {
         )
 }
 
-
-function translate() {
-    return gulp
-        .src(PHPsrc)
-        .pipe(
-            wpPot({
-                domain: 'agp',
-                package: 'agp',
-            })
-        )
-        .pipe(gulp.dest('./languages/agp.pot'))
-        .pipe(
-            notify({
-                message: 'Translations Updated',
-                onLast: true,
-            })
-        )
-}
-
 function watch() {
-    gulp.watch(CSSsrc, translate);
-    gulp.watch(PHPsrc, styles);
+    gulp.watch(CSSsrc, styles);
+    gulp.watch(JSsrc, scripts);
 }
 
-var build = gulp.series(styles, buildVersion);
+var build = gulp.series(styles, scripts, buildVersion);
 
 exports.build = build;
 exports.watch = watch;

@@ -16,7 +16,7 @@
  * Plugin Name:             AutoConvert Greeklish Permalinks
  * Plugin URI:              https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink
  * Description:             Convert Greek characters to Latin on all your site's permalinks instantly.
- * Version:                 4.0.1
+ * Version:                 4.0.2
  * Author:                  Dimitris Mavroudis
  * Author URI:              http://mavrou.gr/
  * License:                 GPL-2.0+
@@ -24,7 +24,7 @@
  * Text Domain:             agp
  * Domain Path:             /languages
  * WC requires at least:    2.0.0
- * WC tested up to:         4.3.3
+ * WC tested up to:         5.6.0
  */
 
 // If this file is called directly, abort.

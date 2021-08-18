@@ -1,5 +1,8 @@
 ![Autoconert Greeklish Permalinks](https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink/blob/master/assets/banner-1544x500.png)
 
+[![WP compatibility](https://plugintests.com/plugins/wporg/autoconvert-greeklish-permalinks/wp-badge.svg)](https://plugintests.com/plugins/wporg/autoconvert-greeklish-permalinks/latest)
+[![PHP compatibility](https://plugintests.com/plugins/wporg/autoconvert-greeklish-permalinks/php-badge.svg)](https://plugintests.com/plugins/wporg/autoconvert-greeklish-permalinks/latest)
+
 # AutoConvert Greeklish Permalinks
 
 AutoConvert Greeklish Permalinks is the WordPress plugin that converts greek characters to latin in all permalinks. The plugin makes sure that every new permalink is in greeklish and offers the option to convert all the old links with greek characters to latin.

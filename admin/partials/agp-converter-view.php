@@ -8,8 +8,8 @@
  */
 
 $log      = get_option('agp_conversion');
-$status   = $log['status'] === 'started';
-$disabled = $status ? 'disabled' : '';
+$hasStarted   = isset($log['status']) && $log['status'] == 'started';
+$disabled = $hasStarted ? 'disabled' : '';
 
 //Populate select fields
 $args_post = array('public' => true);
@@ -76,7 +76,7 @@ foreach ($tax as $taxonomy) {
 			</table>
 			<input name="convert-button" type="hidden" value="1" />
 			<p class="submit">
-				<input type="submit" name="submit" id="submit" class="button button-primary" <?php echo $disabled ?> value="<?php _e('Convert Permalinks', 'agp'); ?>">
+				<input type="button" name="submit" id="submit" class="button button-primary" <?php echo $disabled ?> value="<?php _e('Convert Permalinks', 'agp'); ?>">
 			</p>
 			<div style="display: none;" id="messageOutput"></div>
 		</form>

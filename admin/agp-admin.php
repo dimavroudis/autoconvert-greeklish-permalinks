@@ -381,7 +381,7 @@ class Agp_Admin {
 		if ( $hook != 'settings_page_agp' ) {
 			return;
 		}
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/agp-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/agp-admin.min.css', array(), $this->version, 'all' );
 		wp_enqueue_style( 'select2', plugin_dir_url( __FILE__ ) . 'css/select2.min.css', array(), $this->version, 'all' );
 
 	}
@@ -397,7 +397,7 @@ class Agp_Admin {
 		if ( $hook != 'settings_page_agp' ) {
 			return;
 		}
-		wp_enqueue_script( 'agp-admin', plugin_dir_url( __FILE__ ) . 'js/admin.js',array( 'jquery' ), $this->version, true  );
+		wp_enqueue_script( 'agp-admin', plugin_dir_url( __FILE__ ) . 'js/admin.min.js',array( 'jquery' ), $this->version, true  );
 		wp_enqueue_script( 'select2', plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), $this->version, false );
 
 	}
