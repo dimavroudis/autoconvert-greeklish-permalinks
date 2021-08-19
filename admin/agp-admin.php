@@ -397,7 +397,7 @@ class Agp_Admin {
 		if ( $hook != 'settings_page_agp' ) {
 			return;
 		}
-		wp_enqueue_script( 'agp-admin', plugin_dir_url( __FILE__ ) . 'js/admin.min.js',array( 'jquery' ), $this->version, true  );
+		wp_enqueue_script( 'agp-admin', plugin_dir_url( __FILE__ ) . 'js/admin.min.js', array( 'jquery', 'select2' ), $this->version, true  );
 		wp_enqueue_script( 'select2', plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), $this->version, false );
 
 	}

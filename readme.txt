@@ -5,7 +5,7 @@ Tags: greek, greeklish, slugs, permalinks, links, autoconvert, convert, agp
 Requires at least: 3.8
 Requires PHP: 5.6
 Tested up to: 5.8.0
-Stable tag: 4.0.2
+Stable tag: 4.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,9 @@ Yes! As of 3.1 version, wp-cli commands have been included. You can convert all 
 4. To convert old posts/terms, go to 'Settings' > 'Convert Greek Permalinks' > 'Convert old posts/terms', select the post types and taxonomies you want to convert and click the "Convert Permalinks" button.
 
 == Changelog ==
+
+= 4.0.3 =
+* Fix js dependency
 
 = 4.0.2 =
 * Optimize js/css files

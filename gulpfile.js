@@ -1,16 +1,19 @@
-const gulp = require('gulp')
+const gulp = require('gulp');
 
 // CSS related plugins.
-const autoprefixer = require('gulp-autoprefixer')
+const autoprefixer = require('gulp-autoprefixer');
+const cleanCss = require('gulp-clean-css');
+
+// JS related plugins.
+const minify = require('gulp-minify');
 
 // Utility related plugins.
-const notify = require('gulp-notify');
-const minify = require('gulp-minify');
-const cleanCss = require('gulp-clean-css');
 const rename = require("gulp-rename");
+const del = require('del');
+
+// File paths/globs
 const CSSsrc = './admin/src/css/*.css';
 const JSsrc = './admin/src/js/*.js';
-const PHPsrc = ['./**/*.php', './*.php', '!./dist/**/*.php'];
 
 function styles() {
     return gulp
@@ -25,13 +28,6 @@ function styles() {
             suffix: ".min"
         }))
         .pipe(gulp.dest('./admin/css'))
-
-        .pipe(
-            notify({
-                message: 'CSS Optimized',
-                onLast: true,
-            })
-        )
 }
 
 function scripts() {
@@ -45,24 +41,16 @@ function scripts() {
             noSource: true
         }))
         .pipe(gulp.dest('./admin/js'))
-        .pipe(
-            notify({
-                message: 'JS Optimized',
-                onLast: true,
-            })
-        )
 }
 
-function buildVersion() {
+function cleanDist() {
+    return del('dist/**', { force: true });
+};
+
+function copyToDist() {
     return gulp
         .src(['./**', '!./package.json', '!./package-lock.json', '!./LICENSE', '!./README.md', '!./gulpfile.js', '!./node_modules/**', '!./docs/**', '!./dist/**', '!./assets/**', '!./admin/src/**'])
         .pipe(gulp.dest('./dist'))
-        .pipe(
-            notify({
-                message: 'Build Complete',
-                onLast: true,
-            })
-        )
 }
 
 function watch() {
@@ -70,7 +58,7 @@ function watch() {
     gulp.watch(JSsrc, scripts);
 }
 
-var build = gulp.series(styles, scripts, buildVersion);
+const build = gulp.series(styles, scripts, cleanDist, copyToDist);
 
 exports.build = build;
 exports.watch = watch;
