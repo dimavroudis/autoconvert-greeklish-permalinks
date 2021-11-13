@@ -111,7 +111,9 @@
             } else {
                 messageOutput.attr("class", "notice")
             }
-            messageOutput.html('<p>' + formatString(message, ...args) + '</p>');
+            const messageElement = document.createElement('p');
+            $(messageElement).text(formatString(message, ...args));
+            messageOutput.html(messageElement);
             messageOutput.show();
         }
 
