@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AutoConvert Greeklish Permalinks\n"
-"POT-Creation-Date: 2020-08-16 14:28+0300\n"
-"PO-Revision-Date: 2020-08-16 14:31+0300\n"
+"POT-Creation-Date: 2022-09-18 12:06+0300\n"
+"PO-Revision-Date: 2022-09-18 12:06+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: el\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: auto-gr-permalinks.php\n"
@@ -97,8 +97,8 @@ msgstr "Κανένας τύπος άρθρου"
 
 #: admin/partials/agp-automatic-posts-option-view.php:49
 #: admin/partials/agp-converter-view.php:43
-#: admin/partials/agp-converter-view.php:46 includes/agp-endpoints.php:86
-#: includes/agp-endpoints.php:108
+#: admin/partials/agp-converter-view.php:46 includes/agp-endpoints.php:83
+#: includes/agp-endpoints.php:105
 msgid "Post types to convert"
 msgstr "Τύποι άρθρων  για μετατροπή"
 
@@ -117,8 +117,8 @@ msgstr "Καμία ταξινόμηση"
 
 #: admin/partials/agp-automatic-taxonomies-option-view.php:52
 #: admin/partials/agp-converter-view.php:60
-#: admin/partials/agp-converter-view.php:63 includes/agp-endpoints.php:92
-#: includes/agp-endpoints.php:114
+#: admin/partials/agp-converter-view.php:63 includes/agp-endpoints.php:89
+#: includes/agp-endpoints.php:111
 msgid "Taxonomies to convert"
 msgstr "Ταξονομίες για μετατροπή"
 
@@ -161,34 +161,34 @@ msgstr ""
 msgid "Save Settings"
 msgstr "Αποθήκευση Αλλαγών"
 
-#: includes/agp-endpoints.php:121
+#: includes/agp-endpoints.php:118
 msgid "Max number of items to be converted"
 msgstr "Μέγιστος αριθμός στοιχείων προς μετατροπή"
 
-#: includes/agp-endpoints.php:140 includes/agp-endpoints.php:200
+#: includes/agp-endpoints.php:137 includes/agp-endpoints.php:197
 #, php-format
 msgid "'%s' is not a registered post type."
 msgstr "Το '%s' δεν είναι καταχωρημένος τύπος άρθρου."
 
-#: includes/agp-endpoints.php:153 includes/agp-endpoints.php:211
+#: includes/agp-endpoints.php:150 includes/agp-endpoints.php:208
 #, php-format
 msgid "'%s' is not a registered taxonomy."
 msgstr "Το '%s' δεν είναι καταχωρημένη ταξινόμηση."
 
-#: includes/agp-endpoints.php:161 includes/agp-endpoints.php:219
+#: includes/agp-endpoints.php:158 includes/agp-endpoints.php:216
 msgid "No post types or taxonomies selected"
 msgstr "Δεν έχουν επιλεγεί τύποι άρθρου ή ταξινομήσεις"
 
-#: includes/agp-endpoints.php:175
+#: includes/agp-endpoints.php:172
 #, php-format
 msgid "%d posts and %d terms are in greek."
 msgstr "%d άρθρα και %d όροι είναι στα ελληνικά."
 
-#: includes/agp-endpoints.php:183
+#: includes/agp-endpoints.php:180
 msgid "All your permalinks were already in greeklish."
 msgstr "Όλοι οι σύνδεσμοί σας ήταν ήδη σε greeklish."
 
-#: includes/agp-endpoints.php:283
+#: includes/agp-endpoints.php:280
 msgid ""
 "<b>Conversion in progress!</b> Keep the window open.<br>Converted {0}/{1} "
 "posts and {2}/{3} terms."
@@ -196,7 +196,7 @@ msgstr ""
 "<b>Μετατροπή σε εξέλιξη!</b> Κρατήστε το παράθυρο ανοιχτό.<br>Μετατρέπονται "
 "{0}/{1} δημοσιεύσεις και {2}/{3} όροι."
 
-#: includes/agp-endpoints.php:284
+#: includes/agp-endpoints.php:281
 msgid "<b>Conversion complete!</b><br>Converted {0} posts and {1} terms."
 msgstr ""
 "<b>Η μετατροπή ολοκληρώθηκε!</b><br>Μετατράπηκαν {0} δημοσιεύσεις και {1} "
