@@ -4,7 +4,7 @@ Author link: https://mavrou.gr
 Tags: greek, greeklish, slugs, permalinks, links, autoconvert, convert, agp
 Requires at least: 3.8
 Requires PHP: 5.6
-Tested up to: 6.0.2
+Tested up to: 6.2.2
 Stable tag: 4.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
