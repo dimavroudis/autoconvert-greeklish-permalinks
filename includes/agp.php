@@ -183,6 +183,8 @@ class Agp {
 
 		$this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'action_links', 10, 5 );
 
+		$this->loader->add_action( 'before_woocommerce_init', $plugin_admin, 'declare_hpos_compatability' );
+
 		$post_types_selected = get_option( 'agp_automatic_post' );
 		$taxonomies_selected = get_option( 'agp_automatic_tax' );
 		if ( ( $post_types_selected && $taxonomies_selected ) && ! ( $post_types_selected[0] === 'all_options' && $taxonomies_selected[0] === 'all_options' ) ) {

@@ -427,6 +427,20 @@ class Agp_Admin {
 
 		return $actions;
 
-	}
+	}	
+	
+	/**
+	* Marks plugin compatible for WooCommerce HPOS
+	*
+	* @link https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#declaring-extension-incompatibility
+	* @return void
+	*/
+   public function declare_hpos_compatability() {
+	   if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+		   \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->plugin_path, true );
+	   }
+   }
+
+
 
 }
