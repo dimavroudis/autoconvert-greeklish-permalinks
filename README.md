@@ -1,4 +1,4 @@
-![Autoconert Greeklish Permalinks](https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink/blob/master/assets/banner-1544x500.png)
+![Autoconert Greeklish Permalinks](https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink/blob/master/.wordpress-org/banner-1544x500.png)
 
 [![WordPress.org rating](https://img.shields.io/wordpress/plugin/rating/autoconvert-greeklish-permalinks?label=WordPress.org%20rating)](https://wordpress.org/plugins/autoconvert-greeklish-permalinks/)
 [![WP compatibility](https://plugintests.com/plugins/wporg/autoconvert-greeklish-permalinks/wp-badge.svg)](https://plugintests.com/plugins/wporg/autoconvert-greeklish-permalinks/latest)
