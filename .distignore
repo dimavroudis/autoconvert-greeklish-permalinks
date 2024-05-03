@@ -1,0 +1,15 @@
+/.wordpress-org
+/.git
+/.github
+/node_modules
+/admin/src
+/dist
+
+.distignore
+.gitignore
+.gitattributes
+gulpfile.js
+phpunit.xml.dist
+README.md
+composer.json
+composer.lock
