@@ -1,7 +1,7 @@
 === AutoConvert Greeklish Permalinks ===
-Contributors: Dimitris Mavroudis, d1m1tr1s_mav
+Contributors: d1m1tr1s_mav
 Author link: https://mavrou.gr
-Tags: greek, greeklish, slugs, permalinks, links, autoconvert, convert, agp
+Tags: greek, greeklish, slugs, permalinks, links
 Requires at least: 3.8
 Requires PHP: 5.6
 Tested up to: 6.5.2
