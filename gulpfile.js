@@ -1,23 +1,23 @@
-const gulp = require("gulp");
+import { src, dest, watch, series } from "gulp";
+import autoprefixer from "gulp-autoprefixer";
+import cleanCss from "gulp-clean-css";
+import minify from "gulp-minify";
+import rename from "gulp-rename";
+import { deleteAsync as del } from "del";
 
-// CSS related plugins.
-const autoprefixer = require("gulp-autoprefixer");
-const cleanCss = require("gulp-clean-css");
-
-// JS related plugins.
-const minify = require("gulp-minify");
-
-// Utility related plugins.
-const rename = require("gulp-rename");
-const del = require("del");
-
-// File paths/globs
-const CSSsrc = "./admin/src/css/*.css";
-const JSsrc = "./admin/src/js/*.js";
+const paths = {
+  styles: {
+    src: "./admin/src/css/*.css",
+    dest: "./admin/css",
+  },
+  scripts: {
+    src: "./admin/src/js/*.js",
+    dest: "./admin/js",
+  },
+};
 
 function styles() {
-  return gulp
-    .src(CSSsrc)
+  return src(paths.styles.src)
     .pipe(
       autoprefixer({
         overrideBrowserslist: ["last 10 versions", "> 1% in GR", "ie 11"],
@@ -29,12 +29,11 @@ function styles() {
         suffix: ".min",
       })
     )
-    .pipe(gulp.dest("./admin/css"));
+    .pipe(dest(paths.styles.dest));
 }
 
 function scripts() {
-  return gulp
-    .src(JSsrc)
+  return src(paths.scripts.src)
     .pipe(
       minify({
         ext: {
@@ -44,7 +43,7 @@ function scripts() {
         noSource: true,
       })
     )
-    .pipe(gulp.dest("./admin/js"));
+    .pipe(dest(paths.scripts.dest));
 }
 
 function cleanDist() {
@@ -52,33 +51,30 @@ function cleanDist() {
 }
 
 function copyToDist() {
-  return gulp
-    .src([
-      "./**",
-      "!./package.json",
-      "!./package-lock.json",
-      "!./LICENSE",
-      "!./README.md",
-      "!./gulpfile.js",
-      "!./node_modules/**",
-      "!./dist/**",
-      "!./.github/**",
-      "!./.git/**",
-      "!./.wordpress-org/**",
-      "!./admin/src/**",
-    ])
-    .pipe(gulp.dest("./dist"));
+  return src([
+    "./**",
+    "!./package.json",
+    "!./package-lock.json",
+    "!./LICENSE",
+    "!./README.md",
+    "!./gulpfile.js",
+    "!./node_modules/**",
+    "!./dist/**",
+    "!./.github/**",
+    "!./.git/**",
+    "!./.wordpress-org/**",
+    "!./admin/src/**",
+  ]).pipe(dest("./dist"));
 }
 
-function watch() {
-  gulp.watch(CSSsrc, styles);
-  gulp.watch(JSsrc, scripts);
+function watchAll() {
+  watch(paths.styles.src, styles);
+  watch(paths.scripts.src, scripts);
 }
 
-const build = gulp.series(styles, scripts);
-const archive = gulp.series(styles, scripts, cleanDist, copyToDist);
+const build = series(styles, scripts);
+const archive = series(styles, scripts, cleanDist, copyToDist);
 
-exports.build = build;
-exports.archive = archive;
-exports.watch = watch;
-exports.default = watch;
+export { build, archive, watchAll as watch };
+
+export default watchAll;
