@@ -61,9 +61,6 @@ Yes! As of 3.1 version, wp-cli commands have been included. You can convert all 
 
 ## Changelog ##
 
-### 4.2.0
-* Fix diphthongs conversion
-
 ### 4.1.2
 * Added support for WooCommerce HPOS
 

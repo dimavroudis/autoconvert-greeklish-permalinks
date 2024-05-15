@@ -52,7 +52,7 @@ class Agp_Converter
 	 * All the greek diphthongs and their latin counterparts
 	 *
 	 * @since    1.0.0
-	 * @since    4.2.0 Added polytonic characters
+	 * @since    3.4.0 Added polytonic characters
 	 * @access   protected
 	 * @var      array $diphthongs All the greek diphthongs and their latin counterparts
 	 */
