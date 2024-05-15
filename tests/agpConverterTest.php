@@ -50,4 +50,20 @@ class Agp_Converter_Test extends \WP_Mock\Tools\TestCase
             $this->assertSame($transliteration, $classInstance->convertSlug($original));
         }
     }
+
+    public function testConvertSlugWithExpresionFilter()
+    {
+
+        WP_Mock::userFunction('get_option')
+            ->with('agp_diphthongs')
+            ->andReturn('disabled');
+
+        WP_Mock::onFilter('agp_convert_expressions')
+            ->with(Agp_Converter::getExpressions())
+            ->reply(array('/[βΒ]/u' => 'g'));
+
+        $classInstance = new Agp_Converter();
+
+        $this->assertSame('gα', $classInstance->convertSlug('βα'));
+    }
 }

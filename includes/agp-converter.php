@@ -89,6 +89,15 @@ class Agp_Converter
 		return get_option('agp_diphthongs') === 'enabled';
 	}
 
+	public static function getExpressions()
+	{
+		if (self::is_diphthongs_enabled()) {
+			return array_merge(self::$diphthongs, self::$expressions);
+		}
+
+		return self::$expressions;
+	}
+
 	/**
 	 * Queries the database for posts related to specified post types
 	 *
@@ -258,13 +267,7 @@ class Agp_Converter
 	public static function convertSlug($current_slug)
 	{
 
-		if (self::is_diphthongs_enabled()) {
-			$expressions = array_merge(self::$diphthongs, self::$expressions);
-		} else {
-			$expressions = self::$expressions;
-		}
-
-		$expressions = apply_filters('agp_convert_expressions', $expressions);
+		$expressions = apply_filters('agp_convert_expressions', self::getExpressions());
 
 		$current_slug = preg_replace(array_keys($expressions), array_values($expressions), $current_slug);
 
