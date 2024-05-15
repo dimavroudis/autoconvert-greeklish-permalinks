@@ -84,6 +84,11 @@ class Agp_Converter
 	 */
 	protected $action = 'agp_convert';
 
+	public static function is_diphthongs_enabled()
+	{
+		return get_option('agp_diphthongs') === 'enabled';
+	}
+
 	/**
 	 * Queries the database for posts related to specified post types
 	 *
@@ -253,9 +258,7 @@ class Agp_Converter
 	public static function convertSlug($current_slug)
 	{
 
-		$diphthongs_enabled = get_option('agp_diphthongs') === 'enabled';
-
-		if ($diphthongs_enabled) {
+		if (self::is_diphthongs_enabled()) {
 			$expressions = array_merge(self::$diphthongs, self::$expressions);
 		} else {
 			$expressions = self::$expressions;

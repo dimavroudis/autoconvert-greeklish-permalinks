@@ -1,3 +1,17 @@
 node_modules
-dist
+vendor
 .dccache
+.phpunit.result.cache
+
+# Project Files
+dist
+
+# Mac OSX
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Desktop.ini
