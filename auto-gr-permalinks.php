@@ -24,7 +24,7 @@
  * Text Domain:             agp
  * Domain Path:             /languages
  * WC requires at least:    2.0.0
- * WC tested up to:         8.1.1
+ * WC tested up to:         8.9.0
  */
 
 // If this file is called directly, abort.
