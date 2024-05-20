@@ -1,0 +1,27 @@
+{
+  "name": "mavrou/autoconvert-greeklish-permalink",
+  "description": "Converts every new permalink from greek to greeklish and offers the option to convert all the old links with greek characters to latin.",
+  "type": "wordpress-plugin",
+  "keywords": [
+    "wordpress",
+    "greeklish",
+    "permalinks"
+  ],
+  "authors": [
+    {
+      "name": "Dimitris Mavroudis",
+      "homepage": "https://mavrou.gr"
+    }
+  ],
+  "homepage": "https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink",
+  "support": {
+    "issues": "https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink/issues",
+    "source": "https://github.com/dimavroudis/AutoConvert-Greeklish-Permalink"
+  },
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "10up/wp_mock": "1.0.1"
+  }
+}

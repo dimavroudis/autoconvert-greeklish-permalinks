@@ -1,15 +1,19 @@
-/.wordpress-org
 /.git
 /.github
+/.wordpress-org
 /node_modules
 /admin/src
 /dist
+/tests
+/vendor
 
 .distignore
-.gitignore
 .gitattributes
-gulpfile.js
-phpunit.xml.dist
-README.md
+.gitignore
 composer.json
 composer.lock
+gulpfile.js
+package.json
+package-lock.json
+phpunit.xml.dist
+README.md
