@@ -15,5 +15,5 @@ composer.lock
 gulpfile.js
 package.json
 package-lock.json
-phpunit.xml.dist
+phpunit.xml
 README.md
