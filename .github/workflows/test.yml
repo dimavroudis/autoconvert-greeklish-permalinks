@@ -21,7 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set PHP version
-        uses: shivammathur/setup-php@2.30.4
+        uses: shivammathur/setup-php@2.37.1
         with:
           php-version: ${{ matrix.php }}
           coverage: none
