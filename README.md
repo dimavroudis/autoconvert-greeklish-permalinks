@@ -59,6 +59,29 @@ Yes! As of 3.1 version, wp-cli commands have been included. You can convert all 
 3. You can adjust conversion and disable automatic conversion on 'Settings' > 'Convert Greek Permalinks'.
 4. To convert old posts/terms, go to 'Settings' > 'Convert Greek Permalinks' > 'Convert old posts/terms', select the post types and taxonomies you want to convert and click the "Convert Permalinks" button.
 
+## Development and releases
+
+The `develop` branch is used for development and pull-request testing. Releases are promoted to `master`.
+
+See [TESTING.md](./TESTING.md) for automated checks and the staging end-to-end test checklist.
+
+### Before a release
+
+1. Merge the finished changes into `develop` through a reviewed pull request and make sure the PHPUnit workflow passes.
+2. Check the latest stable WordPress and WooCommerce releases. Use staging to validate the plugin against them before claiming support; do not update compatibility metadata based only on a release announcement.
+3. After validation, update `Tested up to` in `readme.txt` to the latest WordPress version tested, and `WC tested up to` in `auto-gr-permalinks.php` to the WooCommerce version tested. Keep these values at the highest versions actually verified.
+4. Update the plugin `Version` header and `AGP_VERSION` in `auto-gr-permalinks.php`, and the `Stable tag` in `readme.txt` to the same new plugin version.
+5. Build the generated admin assets with `npm ci` followed by `npm run build`, and review the resulting changes.
+6. Promote the reviewed release changes from `develop` to `master`.
+
+### Publishing
+
+A push to `master` runs the build-and-tag workflow, which creates and pushes a `vX.Y.Z` Git tag using the plugin header version. It also updates the WordPress.org readme and plugin assets. Check that these workflows complete successfully.
+
+Publish a GitHub Release for that tag to deploy the plugin code to WordPress.org. Publishing a prerelease does not deploy it. The deployment workflow requires the GitHub Actions secrets `SVN_USERNAME` and `SVN_PASSWORD`, and the repository variable `SLUG`.
+
+After deployment, verify the plugin version, readme, assets, and downloadable package on WordPress.org. Do not push another release to `master` with a version whose Git tag already exists.
+
 ## Changelog
 
 ### 4.2.0

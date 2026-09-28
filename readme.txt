@@ -3,7 +3,7 @@ Contributors: d1m1tr1s_mav
 Author link: https://mavrou.gr
 Tags: greek, greeklish, slugs, permalinks, links
 Requires at least: 3.8
-Requires PHP: 5.6
+Requires PHP: 7.4
 Tested up to: 6.9.1
 Stable tag: 4.2.0
 License: GPLv2 or later
