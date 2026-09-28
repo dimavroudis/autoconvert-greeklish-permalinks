@@ -32,9 +32,10 @@ This umbrella skill is best used as a summary or to orient the workflow; the sta
    - `Version` in the plugin header and `AGP_VERSION` in `auto-gr-permalinks.php`.
    - `Stable tag` in `readme.txt`.
    Use the numeric version only in these fields (for example, `4.3.0`); the `Build and Tag` workflow adds the `v` prefix when creating the GitHub tag (`v4.3.0`).
-6. Install the locked JavaScript dependencies and build the generated assets with `npm ci` and `npm run build`. Review generated changes and include the required production assets in the release.
-7. Run the relevant checks. The PHPUnit workflow tests PHP 7.4 and the latest stable PHP release; run the repository's PHPUnit suite when possible. `npm test` is a placeholder that intentionally exits with an error, so do not report it as a functional test suite.
-8. Inspect the final diff and working-tree status. Ensure the changes are limited to the intended release and that version and compatibility values match the validations before promotion.
+6. Add the new release's notes to both `CHANGELOG.md` and the `== Changelog ==` section in `readme.txt`. Keep the entry accurate and consistent with the changes being released.
+7. Install the locked JavaScript dependencies and build the generated assets with `npm ci` and `npm run build`. Review generated changes and include the required production assets in the release.
+8. Run the relevant checks. The PHPUnit workflow tests PHP 7.4 and the latest stable PHP release; run the repository's PHPUnit suite when possible. `npm test` is a placeholder that intentionally exits with an error, so do not report it as a functional test suite.
+9. Inspect the final diff and working-tree status. Ensure the changelog entries, version and compatibility values agree with the release and validations before promotion.
 
 ## Promote and publish
 
