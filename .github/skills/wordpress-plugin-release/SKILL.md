@@ -5,7 +5,14 @@ description: Safely prepare and publish this WordPress plugin to WordPress.org. 
 
 # WordPress.org plugin release
 
-Use this skill to guide or carry out a release of this repository. The release flow is `develop` → `master` → published GitHub Release → WordPress.org. Treat publishing a GitHub Release as a live deployment.
+Use this umbrella skill when you want a high-level release flow for this repository. It covers the full lifecycle: `develop` → `master` → published GitHub Release → WordPress.org. Treat publishing a GitHub Release as a live deployment.
+
+For specific release stages, prefer the narrower skills below:
+- `wordpress-plugin-release-prep` for preparation and readiness checks.
+- `wordpress-plugin-release-validate` for compatibility testing and support validation.
+- `wordpress-plugin-release-publish` for promotion, tagging, and live publication.
+
+This umbrella skill is best used as a summary or to orient the workflow; the stage-specific skills are safer and easier to target for a specific task.
 
 ## Safety rules
 
