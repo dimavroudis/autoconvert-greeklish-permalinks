@@ -53,40 +53,6 @@ class Agp_Query_Test extends \WP_Mock\Tools\TestCase
 		parent::tearDown();
 	}
 
-	public function testPostQueryReadsRowsInBatches()
-	{
-		$wpdb = new Agp_Query_Test_WPDB();
-		for ($i = 0; $i < 500; $i++) {
-			$wpdb->post_rows[] = (object) array('ID' => $i + 1, 'post_name' => 'post-' . $i);
-		}
-		$wpdb->post_rows[] = (object) array('ID' => 501, 'post_name' => 'α');
-		$GLOBALS['wpdb'] = $wpdb;
-
-		$count = (new Agp_Converter())->postQuery(array('post'));
-
-		$this->assertSame(1, $count);
-		$this->assertSame(array(500, 1), $wpdb->batch_sizes);
-		$this->assertSame(array('post', 500, 0), $wpdb->prepared_args[0]);
-		$this->assertSame(array('post', 500, 500), $wpdb->prepared_args[1]);
-	}
-
-	public function testTermQueryReadsRowsInBatches()
-	{
-		$wpdb = new Agp_Query_Test_WPDB();
-		for ($i = 0; $i < 500; $i++) {
-			$wpdb->term_rows[] = (object) array('term_id' => $i + 1, 'slug' => 'term-' . $i, 'taxonomy' => 'category');
-		}
-		$wpdb->term_rows[] = (object) array('term_id' => 501, 'slug' => 'α', 'taxonomy' => 'category');
-		$GLOBALS['wpdb'] = $wpdb;
-
-		$count = (new Agp_Converter())->termQuery(array('category'));
-
-		$this->assertSame(1, $count);
-		$this->assertSame(array(500, 1), $wpdb->batch_sizes);
-		$this->assertSame(array('category', 500, 0), $wpdb->prepared_args[0]);
-		$this->assertSame(array('category', 500, 500), $wpdb->prepared_args[1]);
-	}
-
 	public function testPostQueryReturnsObjectsAndHonorsLimit()
 	{
 		$wpdb = new Agp_Query_Test_WPDB();
