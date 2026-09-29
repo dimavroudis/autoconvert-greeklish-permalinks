@@ -22,7 +22,7 @@ Before each release, identify the latest stable WordPress and WooCommerce releas
 
 ## 3. Run automated checks
 
-The GitHub Actions PHPUnit workflow runs the test suite on PHP 7.4 (the declared minimum) and the latest stable PHP release for pushes and pull requests targeting `develop`. Confirm both checks pass before doing manual acceptance testing.
+The unit workflow runs PHPUnit on PHP 7.4 (the declared minimum) and the latest stable PHP release for pushes and pull requests targeting `develop`. The separate Playwright workflow runs on the same daily condition and is not a push/PR gate. Both workflows run before release tagging; confirm they pass before manual acceptance testing.
 
 For a local run with dependencies installed:
 
@@ -33,7 +33,23 @@ npm ci
 npm run build
 ```
 
-The PHPUnit suite includes converter checks for diphthong modes and the `agp_convert_expressions` filter, and query checks for post/term conversion and batched reads. `npm test` is currently a placeholder, not a test suite.
+The PHPUnit suite includes converter checks for diphthong modes and the `agp_convert_expressions` filter, and query checks for post/term conversion and batched reads. Use `npm run test:e2e` for the Playwright suite.
+
+### Playwright end-to-end tests
+
+The E2E suite requires Node.js 24.18.0, npm 11.16.0, and Docker Desktop. It uses the local wp-env site at `http://localhost:8888`; never point it at staging or production. Install the browser once, then start the disposable site and run the tests:
+
+```sh
+npm ci
+npx playwright install chromium
+npm run wp-env:start
+npm run test:e2e
+npm run wp-env:stop
+```
+
+The suite covers the admin converter and settings UI, the authenticated `agp/v1` REST endpoints, and the `wp agp check` / `wp agp convert` commands. It also checks REST batching and UI progress with more than 100 records. E2E fixtures use a unique run marker, create legacy Greek slugs only in the disposable wp-env database, and remove only their own posts and terms after each test. The separate wp-env demo records are retained.
+
+The Playwright config runs tests serially because each interface shares the same database. On failure, screenshots and traces are written under `tests/e2e/output/`; CI uploads these diagnostics and stops wp-env even if a test fails.
 
 ## 4. Build and install the branch on staging
 
