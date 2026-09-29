@@ -47,7 +47,7 @@ npm run test:e2e
 npm run wp-env:stop
 ```
 
-The suite covers the admin converter and settings UI, the authenticated `agp/v1` REST endpoints, and WP-CLI empty-selection validation. E2E fixtures use a unique run marker, create legacy Greek slugs only in the disposable wp-env database, and remove only their own posts and terms after each test. The separate wp-env demo records are retained.
+The suite covers the admin converter and settings UI, the authenticated `agp/v1` REST endpoints, and WP-CLI empty-selection validation, invalid-option handling, and successful conversion of marked post fixtures. E2E fixtures use a unique run marker, create legacy Greek slugs only in the disposable wp-env database, and remove only their own posts and terms after each test. The separate wp-env demo records are retained.
 
 The Playwright config runs tests serially because each interface shares the same database. On failure, screenshots and traces are written under `tests/e2e/output/`; CI uploads these diagnostics and stops wp-env even if a test fails.
 
