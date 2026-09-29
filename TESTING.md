@@ -33,7 +33,7 @@ npm ci
 npm run build
 ```
 
-The PHPUnit suite includes converter checks for diphthong modes and the `agp_convert_expressions` filter, and query checks for post/term conversion and batched reads. Use `npm run test:e2e` for the Playwright suite.
+The PHPUnit suite includes converter checks for diphthong modes and the `agp_convert_expressions` filter, and query checks for post/term conversion. Use `npm run test:e2e` for the Playwright suite.
 
 ### Playwright end-to-end tests
 
@@ -47,7 +47,7 @@ npm run test:e2e
 npm run wp-env:stop
 ```
 
-The suite covers the admin converter and settings UI, the authenticated `agp/v1` REST endpoints, and the `wp agp check` / `wp agp convert` commands. It also checks REST batching and UI progress with more than 100 records. E2E fixtures use a unique run marker, create legacy Greek slugs only in the disposable wp-env database, and remove only their own posts and terms after each test. The separate wp-env demo records are retained.
+The suite covers the admin converter and settings UI, the authenticated `agp/v1` REST endpoints, and WP-CLI empty-selection validation. E2E fixtures use a unique run marker, create legacy Greek slugs only in the disposable wp-env database, and remove only their own posts and terms after each test. The separate wp-env demo records are retained.
 
 The Playwright config runs tests serially because each interface shares the same database. On failure, screenshots and traces are written under `tests/e2e/output/`; CI uploads these diagnostics and stops wp-env even if a test fails.
 

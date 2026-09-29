@@ -9,7 +9,7 @@ export function createFixtureId() {
   return `e2e-${Date.now()}-${randomUUID().slice(0, 8)}`;
 }
 
-export function runWpCli(...args) {
+function runWpCliProcess(args) {
   const result = spawn.sync("wp-env", ["run", "cli", "wp", ...args], {
     encoding: "utf8",
     windowsHide: true,
@@ -25,7 +25,16 @@ export function runWpCli(...args) {
     );
   }
 
-  return result.stdout.trim();
+  return result;
+}
+
+export function runWpCli(...args) {
+  return runWpCliProcess(args).stdout.trim();
+}
+
+export function runWpCliOutput(...args) {
+  const result = runWpCliProcess(args);
+  return `${result.stdout || ""}${result.stderr || ""}`.trim();
 }
 
 export function setupFixtures(fixtureId, mode = "setup", count) {

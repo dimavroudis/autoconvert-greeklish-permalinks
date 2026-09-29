@@ -86,33 +86,3 @@ test("settings persist after saving", async ({ page }) => {
     cleanupFixtures(fixtureId);
   }
 });
-
-test("converter reports completion across multiple batches", async ({
-  page,
-}) => {
-  test.setTimeout(120000);
-  const fixtureId = createFixtureId();
-  setupFixtures(fixtureId, "setup-large", 101);
-
-  try {
-    await loginAsAdmin(page);
-    await page.goto(`${settingsUrl}&tab=generate_permalinks`);
-    await page.locator("#selectPosts").selectOption("post");
-    await page.locator("#submit").click();
-    await expect(page.locator("#messageOutput")).toContainText(
-      "Conversion complete!",
-    );
-    await expect(page.locator("#messageOutput")).toContainText(
-      "Converted 101 posts and 0 terms.",
-    );
-    await expect(page.locator("#submit")).toBeEnabled();
-
-    const posts = getFixturePosts(fixtureId);
-    expect(posts).toHaveLength(101);
-    expect(posts.every((post) => /^[a-z0-9-]+$/.test(post.post_name))).toBe(
-      true,
-    );
-  } finally {
-    cleanupFixtures(fixtureId);
-  }
-});

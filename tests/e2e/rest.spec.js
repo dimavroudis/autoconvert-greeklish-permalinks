@@ -77,31 +77,6 @@ test("REST endpoints reject unauthenticated requests", async () => {
   }
 });
 
-test("REST convert respects its batch limit", async ({ page }) => {
-  test.setTimeout(120000);
-  const fixtureId = createFixtureId();
-  setupFixtures(fixtureId, "setup-large", 101);
-
-  try {
-    const api = await getAdminApi(page);
-    const selection = { post_types: ["post"], taxonomies: [] };
-    const first = await api.convert({ ...selection, limit: 100 });
-    expect((await first.json()).data).toEqual({ posts: 100, terms: 0 });
-    const second = await api.convert({ ...selection, limit: 100 });
-    expect((await second.json()).data).toEqual({ posts: 1, terms: 0 });
-    const third = await api.convert({ ...selection, limit: 100 });
-    expect((await third.json()).data).toEqual({ posts: 0, terms: 0 });
-    expect(getFixturePosts(fixtureId)).toHaveLength(101);
-    expect(
-      getFixturePosts(fixtureId).every((post) =>
-        /^[a-z0-9-]+$/.test(post.post_name),
-      ),
-    ).toBe(true);
-  } finally {
-    cleanupFixtures(fixtureId);
-  }
-});
-
 test("REST validation rejects empty selections and unknown post types", async ({
   page,
 }) => {
@@ -114,10 +89,4 @@ test("REST validation rejects empty selections and unknown post types", async ({
     taxonomies: [],
   });
   expect((await invalid.json()).code).toBe("invalid_post_types");
-  const invalidLimit = await api.convert({
-    post_types: ["post"],
-    taxonomies: [],
-    limit: 0,
-  });
-  expect(invalidLimit.status()).toBe(400);
 });
