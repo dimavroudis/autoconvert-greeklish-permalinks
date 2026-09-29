@@ -2,6 +2,7 @@ node_modules
 vendor
 .dccache
 .phpunit.result.cache
+tests/e2e/output
 
 # Project Files
 dist

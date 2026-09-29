@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../includes/agp-converter.php';
+require_once __DIR__ . '/../../includes/agp-converter.php';
 
 class Agp_Query_Test_WPDB
 {
