@@ -9,7 +9,12 @@ $mode         = isset($fixture_args[0]) ? $fixture_args[0] : '';
 $fixture_id   = isset($fixture_args[1]) ? sanitize_key($fixture_args[1]) : '';
 $batch_count  = isset($fixture_args[2]) ? absint($fixture_args[2]) : 101;
 $settings_key = '_agp_e2e_settings_' . $fixture_id;
-$setting_names = array('agp_automatic', 'agp_automatic_post', 'agp_automatic_tax');
+$setting_names = array(
+    'agp_automatic',
+    'agp_automatic_post',
+    'agp_automatic_tax',
+    'agp_diphthongs',
+);
 
 function agp_e2e_restore_settings($settings)
 {
@@ -18,6 +23,40 @@ function agp_e2e_restore_settings($settings)
             delete_option($name);
         } else {
             update_option($name, $value);
+        }
+    }
+}
+
+function agp_e2e_reset_test_content()
+{
+    $posts = get_posts(
+        array(
+            'post_type'   => 'any',
+            'post_status' => 'any',
+            'numberposts' => -1,
+            'fields'      => 'ids',
+        )
+    );
+
+    foreach ($posts as $post_id) {
+        wp_delete_post($post_id, true);
+    }
+
+    $taxonomies = get_taxonomies(array(), 'names');
+    foreach ($taxonomies as $taxonomy) {
+        $terms = get_terms(
+            array(
+                'taxonomy'   => $taxonomy,
+                'hide_empty' => false,
+            )
+        );
+
+        if (is_wp_error($terms)) {
+            continue;
+        }
+
+        foreach ($terms as $term) {
+            wp_delete_term($term->term_id, $taxonomy);
         }
     }
 }
@@ -109,6 +148,7 @@ if ('prepare' === $mode) {
         delete_option($settings_key);
     }
 
+    agp_e2e_reset_test_content();
     agp_e2e_delete_fixtures($fixture_id);
     $previous_settings = array();
     foreach ($setting_names as $setting_name) {
@@ -123,6 +163,7 @@ if ('prepare' === $mode) {
 }
 
 if ('cleanup' === $mode) {
+    agp_e2e_reset_test_content();
     agp_e2e_delete_fixtures($fixture_id);
     $previous_settings = get_option($settings_key, false);
     if (is_array($previous_settings)) {
@@ -133,6 +174,7 @@ if ('cleanup' === $mode) {
     return;
 }
 
+agp_e2e_reset_test_content();
 agp_e2e_delete_fixtures($fixture_id);
 $previous_settings = get_option($settings_key, false);
 if (! is_array($previous_settings)) {
