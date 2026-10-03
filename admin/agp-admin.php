@@ -352,6 +352,60 @@ class Agp_Admin {
 	}
 
 	/**
+	 * Converts a selected post type's raw slug before it is saved.
+	 *
+	 * @param array $data The sanitized post data.
+	 * @param array $postarr The post data passed to wp_insert_post().
+	 * @param array $unsanitized_postarr The unsanitized post data.
+	 * @param bool  $update Whether this is an existing post update.
+	 * @return array
+	 */
+	public function greeklish_post_data( $data, $postarr, $unsanitized_postarr, $update ) {
+		if ( get_option( 'agp_automatic' ) !== 'enabled' || empty( $data['post_type'] ) ) {
+			return $data;
+		}
+
+		$post_types_selected   = get_option( 'agp_automatic_post' );
+		$is_post_type_selected = false;
+
+		if ( is_array( $post_types_selected ) ) {
+			foreach ( $post_types_selected as $post_type_selected ) {
+				if ( 'all_options' === $post_type_selected || $data['post_type'] === $post_type_selected ) {
+					$is_post_type_selected = true;
+					break;
+				}
+			}
+		}
+
+		if ( ! $is_post_type_selected ) {
+			return $data;
+		}
+
+		if ( $update ) {
+			if ( empty( $postarr['ID'] ) || empty( $unsanitized_postarr['post_name'] ) ) {
+				return $data;
+			}
+
+			$slug = $unsanitized_postarr['post_name'];
+			if ( $slug === get_post_field( 'post_name', $postarr['ID'] ) ) {
+				return $data;
+			}
+		} else {
+			$slug = isset( $unsanitized_postarr['post_name'] ) ? $unsanitized_postarr['post_name'] : '';
+			if ( '' === $slug && isset( $unsanitized_postarr['post_title'] ) ) {
+				$slug = $unsanitized_postarr['post_title'];
+			}
+		}
+
+		if ( '' !== $slug ) {
+			$slug = Agp_Converter::convertSlug( $slug );
+			$data['post_name'] = sanitize_title( $slug, '', 'save' );
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Callback for sanitize_title hook
 	 * Checks if automatic conversion is enabled and then calls convertSlug function
 	 *
