@@ -140,6 +140,99 @@ test("automatic conversion off preserves new Greek post and term slugs", async (
   ).toBe(termSlug);
 });
 
+test("automatic conversion converts post and term slugs created or edited in the admin UI", async ({
+  page,
+  emptyFixtureId,
+}) => {
+  await loginAsAdmin(page);
+  await page.goto(`${settingsUrl}&tab=permalink_settings`);
+
+  const automaticOption = page.locator("#agpAutomatic");
+  if (!(await automaticOption.isChecked())) {
+    await page.locator("label.agp-switch").click();
+  }
+  await page.locator("#selectPosts").selectOption(["post"]);
+  await page.locator("#selectTaxonomies").selectOption(["category"]);
+  await page.getByRole("button", { name: "Save Settings" }).click();
+
+  const postTitle = `Μπάμπης Post ${emptyFixtureId}`;
+  await page.goto("/wp-admin/post-new.php");
+  const closeEditorGuide = page.getByRole("button", { name: "Close" });
+  if (await closeEditorGuide.isVisible()) {
+    await closeEditorGuide.click();
+  }
+  await page
+    .frameLocator('iframe[name="editor-canvas"]')
+    .getByRole("textbox", { name: "Add title" })
+    .fill(postTitle);
+  await page
+    .getByRole("button", { name: "Publish", exact: true })
+    .first()
+    .click();
+  await page
+    .getByRole("button", { name: "Publish", exact: true })
+    .last()
+    .click();
+
+  await expect(page).toHaveURL(/post\.php\?post=\d+&action=edit/);
+  const postId = new URL(page.url()).searchParams.get("post");
+  tagFixturePost(emptyFixtureId, postId);
+  expect(
+    runWpCli("post", "get", postId, "--field=post_name"),
+  ).toBe(`mpampis-post-${emptyFixtureId}`);
+
+  const editedPostSlug = `μπαμπης-edited-post-${emptyFixtureId}`;
+  await page.goto("/wp-admin/edit.php");
+  const postRow = page.locator("#the-list tr").filter({ hasText: postTitle });
+  await postRow.hover();
+  await postRow.locator(".editinline").click();
+  const quickEdit = page.locator(`#edit-${postId}`);
+  await quickEdit.getByRole("textbox", { name: "Slug" }).fill(editedPostSlug);
+  await quickEdit.locator(".save").first().click();
+  await expect(quickEdit).toBeHidden();
+  expect(
+    runWpCli("post", "get", postId, "--field=post_name"),
+  ).toBe(`mpampis-edited-post-${emptyFixtureId}`);
+
+  const termName = `Μπάμπης Κατηγορία ${emptyFixtureId}`;
+  await page.goto("/wp-admin/edit-tags.php?taxonomy=category");
+  await page.locator("#tag-name").fill(termName);
+  await page.locator("#submit").click();
+
+  const terms = JSON.parse(
+    runWpCli(
+      "term",
+      "list",
+      "category",
+      `--search=${termName}`,
+      "--fields=term_id,name,slug",
+      "--format=json",
+    ),
+  );
+  const term = terms.find((entry) => entry.name === termName);
+  expect(term).toBeDefined();
+  tagFixtureTerm(emptyFixtureId, term.term_id);
+  expect(term.slug).toBe(`mpampis-katigoria-${emptyFixtureId}`);
+
+  const termRow = page.locator("#the-list tr").filter({ hasText: termName });
+  await expect(termRow.locator(".column-slug")).toHaveText(
+    `mpampis-katigoria-${emptyFixtureId}`,
+  );
+
+  const editedTermSlug = `μπαμπης-edited-category-${emptyFixtureId}`;
+  await page.goto(
+    `/wp-admin/term.php?taxonomy=category&tag_ID=${term.term_id}&post_type=post`,
+  );
+  await page.locator("#slug").fill(editedTermSlug);
+  await page.getByRole("button", { name: "Update", exact: true }).click();
+  await expect(page.locator("#slug")).toHaveValue(
+    `mpampis-edited-category-${emptyFixtureId}`,
+  );
+  expect(
+    runWpCli("term", "get", "category", term.term_id, "--field=slug"),
+  ).toBe(`mpampis-edited-category-${emptyFixtureId}`);
+});
+
 test("all automatic settings persist and control generated slugs", async ({
   page,
   emptyFixtureId,

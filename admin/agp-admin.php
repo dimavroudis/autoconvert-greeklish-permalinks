@@ -352,6 +352,25 @@ class Agp_Admin {
 	}
 
 	/**
+	 * Converts term slugs when an existing term is updated
+	 *
+	 * @param    array  $data      Term data to update.
+	 * @param    int    $term_id   Term ID.
+	 * @param    string $taxonomy  Taxonomy name.
+	 * @param    array  $args      Arguments passed to wp_update_term().
+	 *
+	 * @return   array             Updated term data.
+	 */
+	public function greeklish_updated_term_data( $data, $term_id, $taxonomy, $args ) {
+		if ( isset( $data['slug'] ) ) {
+			$term         = (object) array( 'taxonomy' => $taxonomy );
+			$data['slug'] = $this->greeklish_term_permalinks( $data['slug'], $term );
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Callback for sanitize_title hook
 	 * Checks if automatic conversion is enabled and then calls convertSlug function
 	 *

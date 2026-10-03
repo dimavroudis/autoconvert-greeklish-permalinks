@@ -190,6 +190,7 @@ class Agp {
 		if ( ( $post_types_selected && $taxonomies_selected ) && ! ( $post_types_selected[0] === 'all_options' && $taxonomies_selected[0] === 'all_options' ) ) {
 			$this->loader->add_filter( 'wp_unique_post_slug', $plugin_admin, 'greeklish_post_permalinks', 10, 4 );
 			$this->loader->add_filter( 'wp_unique_term_slug', $plugin_admin, 'greeklish_term_permalinks', 10, 2 );
+			$this->loader->add_filter( 'wp_update_term_data', $plugin_admin, 'greeklish_updated_term_data', 10, 4 );
 		} else {
 			$this->loader->add_filter( 'sanitize_title', $plugin_admin, 'sanitize_title_hook', 1 );
 		}
