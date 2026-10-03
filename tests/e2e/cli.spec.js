@@ -1,12 +1,10 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
 import {
-  cleanupFixtures,
-  createFixtureId,
   getFixturePosts,
   runWpCli,
   runWpCliOutput,
-  setupFixtures,
 } from "./support.js";
+import { test } from "./fixtures.js";
 
 test("WP-CLI reports an empty selection without changing content", () => {
   const result = runWpCliOutput(
@@ -19,33 +17,26 @@ test("WP-CLI reports an empty selection without changing content", () => {
   expect(result).toContain("No post types or taxonomies selected");
 });
 
-test("WP-CLI converts Greek fixture posts successfully", () => {
-  const fixtureId = createFixtureId();
-  setupFixtures(fixtureId);
+test("WP-CLI converts Greek fixture posts successfully", async ({ fixtureId }) => {
+  const result = runWpCliOutput(
+    "agp",
+    "convert",
+    "--post_types=post",
+    "--taxonomies=none",
+  );
+  expect(result).toMatch(/\d+ posts and 0 terms converted/);
 
-  try {
-    const result = runWpCliOutput(
-      "agp",
-      "convert",
-      "--post_types=post",
-      "--taxonomies=none",
-    );
-    expect(result).toMatch(/\d+ posts and 0 terms converted/);
-
-    const fixturePosts = getFixturePosts(fixtureId).filter(
-      (post) => post.post_type === "post",
-    );
-    expect(fixturePosts).toHaveLength(2);
-    expect(
-      fixturePosts.every(
-        (post) =>
-          post.post_name.includes(fixtureId) &&
-          /^[a-z0-9-]+$/.test(post.post_name),
-      ),
-    ).toBe(true);
-  } finally {
-    cleanupFixtures(fixtureId);
-  }
+  const fixturePosts = getFixturePosts(fixtureId).filter(
+    (post) => post.post_type === "post",
+  );
+  expect(fixturePosts).toHaveLength(2);
+  expect(
+    fixturePosts.every(
+      (post) =>
+        post.post_name.includes(fixtureId) &&
+        /^[a-z0-9-]+$/.test(post.post_name),
+    ),
+  ).toBe(true);
 });
 
 const invalidSelections = [
