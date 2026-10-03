@@ -1,9 +1,5 @@
 import { expect } from "@playwright/test";
-import {
-  getFixturePosts,
-  loginAsAdmin,
-  runWpCli,
-} from "./support.js";
+import { getFixturePosts, loginAsAdmin, runWpCli } from "./support.js";
 import { test } from "./fixtures.js";
 
 const settingsUrl = "/wp-admin/options-general.php?page=agp";
@@ -96,6 +92,46 @@ test("automatic settings require post types and taxonomies", async ({
   await expect(page).toHaveURL(/page=agp&tab=permalink_settings/);
 });
 
+test("automatic conversion off preserves new Greek post and term slugs", async ({
+  page,
+  automaticOffFixtureId,
+}) => {
+  await loginAsAdmin(page);
+  await page.goto(`${settingsUrl}&tab=permalink_settings`);
+
+  const automaticOption = page.locator("#agpAutomatic");
+  await expect(automaticOption).not.toBeChecked();
+
+  const postSlug = `νέο-άρθρο-${automaticOffFixtureId}`;
+  const postId = runWpCli(
+    "post",
+    "create",
+    "--post_type=post",
+    `--post_title=Νέο άρθρο ${automaticOffFixtureId}`,
+    `--post_name=${postSlug}`,
+    "--post_status=publish",
+    "--porcelain",
+  );
+  expect(
+    decodeURIComponent(runWpCli("post", "get", postId, "--field=post_name")),
+  ).toBe(postSlug);
+
+  const termSlug = `νέα-κατηγορία-${automaticOffFixtureId}`;
+  const termId = runWpCli(
+    "term",
+    "create",
+    "category",
+    `Νέα κατηγορία ${automaticOffFixtureId}`,
+    `--slug=${termSlug}`,
+    "--porcelain",
+  );
+  expect(
+    decodeURIComponent(
+      runWpCli("term", "get", "category", termId, "--field=slug"),
+    ),
+  ).toBe(termSlug);
+});
+
 test("all automatic settings persist and control generated slugs", async ({
   page,
   fixtureId,
@@ -159,15 +195,4 @@ test("all automatic settings persist and control generated slugs", async ({
   expect(runWpCli("post", "get", simplePostId, "--field=post_name")).toBe(
     `mpampis-simple-${fixtureId}`,
   );
-});
-
-test("settings persist after saving", async ({ page, fixtureId }) => {
-  await loginAsAdmin(page);
-  await page.goto(`${settingsUrl}&tab=permalink_settings`);
-  const automaticOption = page.locator("#agpAutomatic");
-  const originalState = await automaticOption.isChecked();
-
-  await page.locator("label.agp-switch").click();
-  await page.getByRole("button", { name: "Save Settings" }).click();
-  await expect(automaticOption).toBeChecked({ checked: !originalState });
 });

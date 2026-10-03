@@ -145,6 +145,28 @@ test("REST routes deny authenticated users without manage_options", async ({
   expect(response.status()).toBe(403);
 });
 
+test("REST-created Greek post and category slugs stay unchanged when automatic conversion is off", async ({
+  adminApi,
+  automaticOffFixtureId,
+}) => {
+  const postSlug = `νέο-άρθρο-${automaticOffFixtureId}`;
+  const postResponse = await adminApi.createPost({
+    title: `Νέο άρθρο ${automaticOffFixtureId}`,
+    slug: postSlug,
+    status: "publish",
+  });
+  expect(postResponse.ok()).toBe(true);
+  expect(decodeURIComponent((await postResponse.json()).slug)).toBe(postSlug);
+
+  const termSlug = `νέα-κατηγορία-${automaticOffFixtureId}`;
+  const termResponse = await adminApi.createCategory({
+    name: `Νέα κατηγορία ${automaticOffFixtureId}`,
+    slug: termSlug,
+  });
+  expect(termResponse.ok()).toBe(true);
+  expect(decodeURIComponent((await termResponse.json()).slug)).toBe(termSlug);
+});
+
 test("REST convert endpoint respects the requested batch limit", async ({
   adminApi,
   fixtureId,

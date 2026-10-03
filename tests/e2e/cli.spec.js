@@ -39,6 +39,39 @@ test("WP-CLI converts Greek fixture posts successfully", async ({ fixtureId }) =
   ).toBe(true);
 });
 
+test("WP-CLI preserves new Greek post and term slugs when automatic conversion is off", async ({
+  automaticOffFixtureId,
+}) => {
+  const postSlug = `νέο-άρθρο-${automaticOffFixtureId}`;
+  const postId = runWpCli(
+    "post",
+    "create",
+    "--post_type=post",
+    `--post_title=Νέο άρθρο ${automaticOffFixtureId}`,
+    `--post_name=${postSlug}`,
+    "--post_status=publish",
+    "--porcelain",
+  );
+  expect(
+    decodeURIComponent(runWpCli("post", "get", postId, "--field=post_name")),
+  ).toBe(postSlug);
+
+  const termSlug = `νέα-κατηγορία-${automaticOffFixtureId}`;
+  const termId = runWpCli(
+    "term",
+    "create",
+    "category",
+    `Νέα κατηγορία ${automaticOffFixtureId}`,
+    `--slug=${termSlug}`,
+    "--porcelain",
+  );
+  expect(
+    decodeURIComponent(
+      runWpCli("term", "get", "category", termId, "--field=slug"),
+    ),
+  ).toBe(termSlug);
+});
+
 const invalidSelections = [
   [
     "post types in check",

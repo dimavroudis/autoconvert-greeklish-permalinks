@@ -37,6 +37,9 @@ async function createAuthenticatedApi(username, applicationName) {
   return {
     check: (data) => context.post(checkEndpoint, { data }),
     convert: (data) => context.post(convertEndpoint, { data }),
+    createPost: (data) => context.post("/wp-json/wp/v2/posts", { data }),
+    createCategory: (data) =>
+      context.post("/wp-json/wp/v2/categories", { data }),
     dispose: async () => {
       try {
         await context.dispose();
@@ -70,6 +73,16 @@ export const test = base.extend({
     const fixtureId = createFixtureId();
     setupFixtures(fixtureId);
     try {
+      await use(fixtureId);
+    } finally {
+      cleanupFixtures(fixtureId);
+    }
+  },
+  automaticOffFixtureId: async ({}, use) => {
+    const fixtureId = createFixtureId();
+    setupFixtures(fixtureId);
+    try {
+      runWpCli("option", "update", "agp_automatic", "0");
       await use(fixtureId);
     } finally {
       cleanupFixtures(fixtureId);
