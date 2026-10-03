@@ -80,9 +80,35 @@ export const test = base.extend({
   },
   automaticOffFixtureId: async ({}, use) => {
     const fixtureId = createFixtureId();
-    setupFixtures(fixtureId);
+    setupFixtures(fixtureId, "setup-empty-off");
     try {
-      runWpCli("option", "update", "agp_automatic", "0");
+      await use(fixtureId);
+    } finally {
+      cleanupFixtures(fixtureId);
+    }
+  },
+  postsFixtureId: async ({}, use) => {
+    const fixtureId = createFixtureId();
+    setupFixtures(fixtureId, "setup-posts", 2);
+    try {
+      await use(fixtureId);
+    } finally {
+      cleanupFixtures(fixtureId);
+    }
+  },
+  countsFixtureId: async ({}, use) => {
+    const fixtureId = createFixtureId();
+    setupFixtures(fixtureId, "setup-counts");
+    try {
+      await use(fixtureId);
+    } finally {
+      cleanupFixtures(fixtureId);
+    }
+  },
+  emptyFixtureId: async ({}, use) => {
+    const fixtureId = createFixtureId();
+    setupFixtures(fixtureId, "setup-empty");
+    try {
       await use(fixtureId);
     } finally {
       cleanupFixtures(fixtureId);

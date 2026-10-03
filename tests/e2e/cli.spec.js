@@ -3,6 +3,8 @@ import {
   getFixturePosts,
   runWpCli,
   runWpCliOutput,
+  tagFixturePost,
+  tagFixtureTerm,
 } from "./support.js";
 import { test } from "./fixtures.js";
 
@@ -17,7 +19,9 @@ test("WP-CLI reports an empty selection without changing content", () => {
   expect(result).toContain("No post types or taxonomies selected");
 });
 
-test("WP-CLI converts Greek fixture posts successfully", async ({ fixtureId }) => {
+test("WP-CLI converts Greek fixture posts successfully", async ({
+  postsFixtureId,
+}) => {
   const result = runWpCliOutput(
     "agp",
     "convert",
@@ -26,14 +30,14 @@ test("WP-CLI converts Greek fixture posts successfully", async ({ fixtureId }) =
   );
   expect(result).toMatch(/\d+ posts and 0 terms converted/);
 
-  const fixturePosts = getFixturePosts(fixtureId).filter(
+  const fixturePosts = getFixturePosts(postsFixtureId).filter(
     (post) => post.post_type === "post",
   );
   expect(fixturePosts).toHaveLength(2);
   expect(
     fixturePosts.every(
       (post) =>
-        post.post_name.includes(fixtureId) &&
+        post.post_name.includes(postsFixtureId) &&
         /^[a-z0-9-]+$/.test(post.post_name),
     ),
   ).toBe(true);
@@ -52,6 +56,7 @@ test("WP-CLI preserves new Greek post and term slugs when automatic conversion i
     "--post_status=publish",
     "--porcelain",
   );
+  tagFixturePost(automaticOffFixtureId, postId);
   expect(
     decodeURIComponent(runWpCli("post", "get", postId, "--field=post_name")),
   ).toBe(postSlug);
@@ -65,6 +70,7 @@ test("WP-CLI preserves new Greek post and term slugs when automatic conversion i
     `--slug=${termSlug}`,
     "--porcelain",
   );
+  tagFixtureTerm(automaticOffFixtureId, termId);
   expect(
     decodeURIComponent(
       runWpCli("term", "get", "category", termId, "--field=slug"),

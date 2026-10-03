@@ -71,9 +71,15 @@ export function deleteWpApplicationPassword(username, name) {
   }
 }
 
-export function setupFixtures(fixtureId, mode = "setup", count) {
-  runWpCli("eval-file", fixtureFile, "prepare", fixtureId);
+export function tagFixturePost(fixtureId, postId) {
+  runWpCli("post", "meta", "add", postId, "_agp_e2e_run", fixtureId);
+}
 
+export function tagFixtureTerm(fixtureId, termId) {
+  runWpCli("term", "meta", "add", termId, "_agp_e2e_run", fixtureId);
+}
+
+export function setupFixtures(fixtureId, mode = "setup", count) {
   const args = ["eval-file", fixtureFile, mode, fixtureId];
   if (count) {
     args.push(String(count));
@@ -87,8 +93,12 @@ export function setupFixtures(fixtureId, mode = "setup", count) {
   }
 }
 
+export function prepareE2ESuite() {
+  runWpCli("eval-file", fixtureFile, "prepare-suite", "suite");
+}
+
 export function cleanupFixtures(fixtureId) {
-  return setupFixtures(fixtureId, "cleanup");
+  return runWpCli("eval-file", fixtureFile, "cleanup", fixtureId);
 }
 
 export function getFixturePosts(fixtureId) {

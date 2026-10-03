@@ -27,40 +27,6 @@ function agp_e2e_restore_settings($settings)
     }
 }
 
-function agp_e2e_reset_test_content()
-{
-    $posts = get_posts(
-        array(
-            'post_type'   => 'any',
-            'post_status' => 'any',
-            'numberposts' => -1,
-            'fields'      => 'ids',
-        )
-    );
-
-    foreach ($posts as $post_id) {
-        wp_delete_post($post_id, true);
-    }
-
-    $taxonomies = get_taxonomies(array(), 'names');
-    foreach ($taxonomies as $taxonomy) {
-        $terms = get_terms(
-            array(
-                'taxonomy'   => $taxonomy,
-                'hide_empty' => false,
-            )
-        );
-
-        if (is_wp_error($terms)) {
-            continue;
-        }
-
-        foreach ($terms as $term) {
-            wp_delete_term($term->term_id, $taxonomy);
-        }
-    }
-}
-
 function agp_e2e_delete_fixtures($fixture_id)
 {
     $posts = get_posts(
@@ -102,18 +68,67 @@ function agp_e2e_delete_fixtures($fixture_id)
     }
 }
 
-function agp_e2e_insert_post($fixture_id, $case, $post_type, $title, $slug)
+function agp_e2e_remove_demo_content()
+{
+    $posts = get_posts(
+        array(
+            'post_type'      => 'any',
+            'post_status'    => 'any',
+            'numberposts'    => -1,
+            'fields'         => 'ids',
+            'meta_key'       => '_agp_demo_key',
+        )
+    );
+    $terms_by_taxonomy = array();
+
+    foreach ($posts as $post_id) {
+        foreach (get_object_taxonomies(get_post_type($post_id), 'names') as $taxonomy) {
+            $term_ids = wp_get_object_terms($post_id, $taxonomy, array('fields' => 'ids'));
+            if (is_wp_error($term_ids)) {
+                throw new RuntimeException($term_ids->get_error_message());
+            }
+            foreach ($term_ids as $term_id) {
+                $terms_by_taxonomy[$taxonomy][(int) $term_id] = true;
+            }
+        }
+    }
+
+    foreach ($posts as $post_id) {
+        if (false === wp_delete_post($post_id, true)) {
+            throw new RuntimeException('Unable to delete an E2E demo post.');
+        }
+    }
+
+    $default_category = (int) get_option('default_category');
+    foreach ($terms_by_taxonomy as $taxonomy => $term_ids) {
+        foreach (array_keys($term_ids) as $term_id) {
+            $term = get_term($term_id, $taxonomy);
+            if (is_wp_error($term)) {
+                throw new RuntimeException($term->get_error_message());
+            }
+            if (! $term || 0 !== (int) $term->count || $default_category === $term_id) {
+                continue;
+            }
+            $deleted = wp_delete_term($term_id, $taxonomy);
+            if (is_wp_error($deleted) || ! $deleted) {
+                throw new RuntimeException(
+                    is_wp_error($deleted) ? $deleted->get_error_message() : 'Unable to delete an unused E2E demo term.'
+                );
+            }
+        }
+    }
+}
+
+function agp_e2e_insert_post($fixture_id, $post_type, $title, $slug)
 {
     $post_id = wp_insert_post(
         array(
             'post_type'    => $post_type,
             'post_status'  => 'publish',
             'post_title'   => $title,
-            'post_content' => 'Playwright fixture: ' . $case,
             'post_name'    => $slug,
             'meta_input'   => array(
-                '_agp_e2e_run'  => $fixture_id,
-                '_agp_e2e_case' => $case,
+                '_agp_e2e_run' => $fixture_id,
             ),
         ),
         true
@@ -137,63 +152,73 @@ function agp_e2e_insert_term($fixture_id, $taxonomy, $name, $slug)
     return (int) $term['term_id'];
 }
 
-if ('' === $fixture_id || ! in_array($mode, array('prepare', 'setup', 'setup-large', 'cleanup'), true)) {
+if ('prepare-suite' === $mode) {
+    agp_e2e_remove_demo_content();
+    WP_CLI::success('E2E demo content removed.');
+    return;
+}
+
+if ('' === $fixture_id || ! in_array(
+    $mode,
+    array('setup', 'setup-posts', 'setup-counts', 'setup-empty', 'setup-empty-off', 'setup-large', 'cleanup'),
+    true
+)) {
     WP_CLI::error('Expected a fixture mode and run ID.');
 }
 
-if ('prepare' === $mode) {
+if ('cleanup' === $mode) {
     $saved_settings = get_option($settings_key, false);
     if (is_array($saved_settings)) {
         agp_e2e_restore_settings($saved_settings);
         delete_option($settings_key);
     }
 
-    agp_e2e_reset_test_content();
     agp_e2e_delete_fixtures($fixture_id);
-    $previous_settings = array();
-    foreach ($setting_names as $setting_name) {
-        $previous_settings[$setting_name] = get_option($setting_name, false);
-    }
-    update_option($settings_key, $previous_settings);
-    update_option('agp_automatic', false);
-    update_option('agp_automatic_post', array('no_options'));
-    update_option('agp_automatic_tax', array('no_options'));
-    WP_CLI::success('Automatic conversion disabled for fixture creation.');
-    return;
-}
-
-if ('cleanup' === $mode) {
-    agp_e2e_reset_test_content();
-    agp_e2e_delete_fixtures($fixture_id);
-    $previous_settings = get_option($settings_key, false);
-    if (is_array($previous_settings)) {
-        agp_e2e_restore_settings($previous_settings);
-    }
-    delete_option($settings_key);
     WP_CLI::success('E2E fixtures removed.');
     return;
 }
 
-agp_e2e_reset_test_content();
-agp_e2e_delete_fixtures($fixture_id);
-$previous_settings = get_option($settings_key, false);
-if (! is_array($previous_settings)) {
-    WP_CLI::error('Fixture setup was not prepared.');
+$saved_settings = get_option($settings_key, false);
+if (is_array($saved_settings)) {
+    agp_e2e_restore_settings($saved_settings);
+    delete_option($settings_key);
 }
+agp_e2e_delete_fixtures($fixture_id);
+$previous_settings = array();
+foreach ($setting_names as $setting_name) {
+    $previous_settings[$setting_name] = get_option($setting_name, false);
+}
+update_option($settings_key, $previous_settings);
+update_option('agp_automatic', false);
+update_option('agp_automatic_post', array('no_options'));
+update_option('agp_automatic_tax', array('no_options'));
 
 try {
-    if ('setup-large' === $mode) {
-        for ($index = 1; $index <= $batch_count; $index++) {
+    if (in_array($mode, array('setup-large', 'setup-posts'), true)) {
+        $post_count = 'setup-posts' === $mode ? min($batch_count, 2) : $batch_count;
+        for ($index = 1; $index <= $post_count; $index++) {
             $sequence = str_pad((string) $index, 3, '0', STR_PAD_LEFT);
             agp_e2e_insert_post(
                 $fixture_id,
-                'batch-' . $sequence,
                 'post',
                 'E2E batch ' . $fixture_id . ' ' . $sequence,
                 'παρτίδα-' . $fixture_id . '-' . $sequence
             );
         }
-    } else {
+    } elseif ('setup-counts' === $mode) {
+        agp_e2e_insert_term(
+            $fixture_id,
+            'category',
+            'E2E category ' . $fixture_id,
+            'ελληνική-κατηγορία-' . $fixture_id
+        );
+        agp_e2e_insert_post(
+            $fixture_id,
+            'post',
+            'E2E post ' . $fixture_id,
+            'ελληνικό-άρθρο-' . $fixture_id
+        );
+    } elseif ('setup' === $mode) {
         $category_id = agp_e2e_insert_term(
             $fixture_id,
             'category',
@@ -207,9 +232,9 @@ try {
             'δοκιμή-' . $fixture_id
         );
         $slug = 'καλημέρα-αθήνα-' . $fixture_id;
-        $primary_post_id = agp_e2e_insert_post($fixture_id, 'primary', 'post', 'Καλημέρα Αθήνα ' . $fixture_id, $slug);
-        agp_e2e_insert_post($fixture_id, 'collision', 'post', 'Καλημέρα Αθήνα collision ' . $fixture_id, $slug);
-        $page_id = agp_e2e_insert_post($fixture_id, 'page', 'page', 'Οδηγός δοκιμών ' . $fixture_id, 'οδηγός-δοκιμών-' . $fixture_id);
+        $primary_post_id = agp_e2e_insert_post($fixture_id, 'post', 'Καλημέρα Αθήνα ' . $fixture_id, $slug);
+        agp_e2e_insert_post($fixture_id, 'post', 'Καλημέρα Αθήνα collision ' . $fixture_id, $slug);
+        $page_id = agp_e2e_insert_post($fixture_id, 'page', 'Οδηγός δοκιμών ' . $fixture_id, 'οδηγός-δοκιμών-' . $fixture_id);
         wp_set_object_terms($primary_post_id, array($category_id), 'category');
         wp_set_object_terms($primary_post_id, array($tag_id), 'post_tag');
         wp_set_object_terms($page_id, array($category_id), 'category');
@@ -222,5 +247,7 @@ try {
 }
 
 agp_e2e_restore_settings($previous_settings);
-delete_option($settings_key);
+if ('setup-empty-off' === $mode) {
+    update_option('agp_automatic', false);
+}
 WP_CLI::success('E2E fixture data created.');

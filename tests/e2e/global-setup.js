@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import spawn from "cross-spawn";
 import { setTimeout as delay } from "node:timers/promises";
+import { prepareE2ESuite } from "./support.js";
 
 function isDockerAvailable() {
   const result = spawn.sync("docker", ["info"], {
@@ -136,6 +137,7 @@ export default async function globalSetup() {
 
   const applicationName = `playwright-${randomUUID()}`;
   try {
+    prepareE2ESuite();
     process.env.WP_E2E_ADMIN_APPLICATION_PASSWORD = runWpCli(
       "user",
       "application-password",

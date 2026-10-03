@@ -1,5 +1,11 @@
 import { expect } from "@playwright/test";
-import { getFixturePosts, loginAsAdmin, runWpCli } from "./support.js";
+import {
+  getFixturePosts,
+  loginAsAdmin,
+  runWpCli,
+  tagFixturePost,
+  tagFixtureTerm,
+} from "./support.js";
 import { test } from "./fixtures.js";
 
 const settingsUrl = "/wp-admin/options-general.php?page=agp";
@@ -112,6 +118,7 @@ test("automatic conversion off preserves new Greek post and term slugs", async (
     "--post_status=publish",
     "--porcelain",
   );
+  tagFixturePost(automaticOffFixtureId, postId);
   expect(
     decodeURIComponent(runWpCli("post", "get", postId, "--field=post_name")),
   ).toBe(postSlug);
@@ -125,6 +132,7 @@ test("automatic conversion off preserves new Greek post and term slugs", async (
     `--slug=${termSlug}`,
     "--porcelain",
   );
+  tagFixtureTerm(automaticOffFixtureId, termId);
   expect(
     decodeURIComponent(
       runWpCli("term", "get", "category", termId, "--field=slug"),
@@ -134,7 +142,7 @@ test("automatic conversion off preserves new Greek post and term slugs", async (
 
 test("all automatic settings persist and control generated slugs", async ({
   page,
-  fixtureId,
+  emptyFixtureId,
 }) => {
   await loginAsAdmin(page);
   await page.goto(`${settingsUrl}&tab=permalink_settings`);
@@ -160,26 +168,28 @@ test("all automatic settings persist and control generated slugs", async ({
     "post",
     "create",
     "--post_type=page",
-    `--post_title=Advanced ${fixtureId}`,
-    `--post_name=μπαμπης-${fixtureId}`,
+    `--post_title=Advanced ${emptyFixtureId}`,
+    `--post_name=μπαμπης-${emptyFixtureId}`,
     "--post_status=publish",
     "--porcelain",
   );
+  tagFixturePost(emptyFixtureId, advancedPostId);
   expect(runWpCli("post", "get", advancedPostId, "--field=post_name")).toBe(
-    `babis-${fixtureId}`,
+    `babis-${emptyFixtureId}`,
   );
 
   const advancedTerm = runWpCli(
     "term",
     "create",
     "category",
-    `Advanced ${fixtureId}`,
-    `--slug=μπαμπης-${fixtureId}`,
+    `Advanced ${emptyFixtureId}`,
+    `--slug=μπαμπης-${emptyFixtureId}`,
     "--porcelain",
   );
+  tagFixtureTerm(emptyFixtureId, advancedTerm);
   expect(
     runWpCli("term", "get", "category", advancedTerm, "--field=slug"),
-  ).toBe(`babis-${fixtureId}`);
+  ).toBe(`babis-${emptyFixtureId}`);
 
   await page.locator("#agp_diphthongs_disable").check();
   await page.getByRole("button", { name: "Save Settings" }).click();
@@ -187,12 +197,13 @@ test("all automatic settings persist and control generated slugs", async ({
     "post",
     "create",
     "--post_type=post",
-    `--post_title=Simple ${fixtureId}`,
-    `--post_name=μπαμπης-simple-${fixtureId}`,
+    `--post_title=Simple ${emptyFixtureId}`,
+    `--post_name=μπαμπης-simple-${emptyFixtureId}`,
     "--post_status=publish",
     "--porcelain",
   );
+  tagFixturePost(emptyFixtureId, simplePostId);
   expect(runWpCli("post", "get", simplePostId, "--field=post_name")).toBe(
-    `mpampis-simple-${fixtureId}`,
+    `mpampis-simple-${emptyFixtureId}`,
   );
 });

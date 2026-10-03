@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { getFixturePosts } from "./support.js";
+import { getFixturePosts, tagFixturePost, tagFixtureTerm } from "./support.js";
 import { test } from "./fixtures.js";
 
 const checkEndpoint = "/wp-json/agp/v1/check-permalinks";
@@ -97,19 +97,21 @@ test("REST validation rejects empty selections, unknown post types, and invalid 
 
 test("REST check counts only the selected posts and taxonomies", async ({
   adminApi,
-  fixtureId,
+  countsFixtureId,
 }) => {
+  expect(getFixturePosts(countsFixtureId)).toHaveLength(1);
+
   const postOnly = await adminApi.check({
     post_types: ["post", "page"],
     taxonomies: [],
   });
-  expect((await postOnly.json()).data).toEqual({ posts: 3, terms: 0 });
+  expect((await postOnly.json()).data).toEqual({ posts: 1, terms: 0 });
 
   const taxonomyOnly = await adminApi.check({
     post_types: [],
     taxonomies: ["category", "post_tag"],
   });
-  expect((await taxonomyOnly.json()).data).toEqual({ posts: 0, terms: 2 });
+  expect((await taxonomyOnly.json()).data).toEqual({ posts: 0, terms: 1 });
 });
 
 test("REST endpoints validate argument types and supported methods", async ({
@@ -156,7 +158,9 @@ test("REST-created Greek post and category slugs stay unchanged when automatic c
     status: "publish",
   });
   expect(postResponse.ok()).toBe(true);
-  expect(decodeURIComponent((await postResponse.json()).slug)).toBe(postSlug);
+  const post = await postResponse.json();
+  tagFixturePost(automaticOffFixtureId, post.id);
+  expect(decodeURIComponent(post.slug)).toBe(postSlug);
 
   const termSlug = `νέα-κατηγορία-${automaticOffFixtureId}`;
   const termResponse = await adminApi.createCategory({
@@ -164,33 +168,35 @@ test("REST-created Greek post and category slugs stay unchanged when automatic c
     slug: termSlug,
   });
   expect(termResponse.ok()).toBe(true);
-  expect(decodeURIComponent((await termResponse.json()).slug)).toBe(termSlug);
+  const term = await termResponse.json();
+  tagFixtureTerm(automaticOffFixtureId, term.id);
+  expect(decodeURIComponent(term.slug)).toBe(termSlug);
 });
 
 test("REST convert endpoint respects the requested batch limit", async ({
   adminApi,
-  fixtureId,
+  postsFixtureId,
 }) => {
   const selection = {
-    post_types: ["post", "page"],
-    taxonomies: ["category", "post_tag"],
+    post_types: ["post"],
+    taxonomies: [],
   };
 
   const before = await adminApi.check(selection);
-  expect((await before.json()).data).toEqual({ posts: 3, terms: 2 });
+  expect((await before.json()).data).toEqual({ posts: 2, terms: 0 });
 
   const limited = await adminApi.convert({ ...selection, limit: 1 });
   expect(limited.ok()).toBe(true);
   expect((await limited.json()).data).toEqual({ posts: 1, terms: 0 });
 
   const remaining = await adminApi.check(selection);
-  expect((await remaining.json()).data).toEqual({ posts: 2, terms: 2 });
+  expect((await remaining.json()).data).toEqual({ posts: 1, terms: 0 });
 
   const zeroLimit = await adminApi.convert({ ...selection, limit: 0 });
   expect((await zeroLimit.json()).data).toEqual({ posts: 0, terms: 0 });
 
   const stillRemaining = await adminApi.check(selection);
-  expect((await stillRemaining.json()).data).toEqual({ posts: 2, terms: 2 });
+  expect((await stillRemaining.json()).data).toEqual({ posts: 1, terms: 0 });
 });
 
 test("REST convert defaults to batches of 100 and leaves remaining posts", async ({
