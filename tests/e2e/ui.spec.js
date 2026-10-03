@@ -31,7 +31,7 @@ test("admin converter converts selected posts and terms", async ({ page }) => {
     const primary = posts.find(
       (post) =>
         post.post_type === "post" &&
-        post.post_title.startsWith("Καλημέρα Αθήνα"),
+        post.post_title === `Καλημέρα Αθήνα ${fixtureId}`,
     );
     const collision = posts.find(
       (post) =>

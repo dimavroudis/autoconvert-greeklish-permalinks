@@ -54,8 +54,6 @@ jobs:
         run: npm ci
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
-      - name: Start wp-env
-        run: npm run wp-env:start
       - name: Run E2E tests
         run: npm run test:e2e
       - name: Upload Playwright diagnostics
@@ -67,6 +65,3 @@ jobs:
             tests/e2e/output/playwright-report/
             tests/e2e/output/test-results/
           retention-days: 7
-      - name: Stop wp-env
-        if: always()
-        run: npm run wp-env:stop

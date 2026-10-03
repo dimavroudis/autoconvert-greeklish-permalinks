@@ -37,6 +37,40 @@ export function runWpCliOutput(...args) {
   return `${result.stdout || ""}${result.stderr || ""}`.trim();
 }
 
+export function createWpApplicationPassword(username, name) {
+  return runWpCli(
+    "user",
+    "application-password",
+    "create",
+    username,
+    name,
+    "--porcelain",
+  );
+}
+
+export function deleteWpApplicationPassword(username, name) {
+  const passwords = JSON.parse(
+    runWpCli(
+      "user",
+      "application-password",
+      "list",
+      username,
+      "--format=json",
+    ),
+  );
+  const password = passwords.find((entry) => entry.name === name);
+
+  if (password) {
+    runWpCli(
+      "user",
+      "application-password",
+      "delete",
+      username,
+      password.uuid,
+    );
+  }
+}
+
 export function setupFixtures(fixtureId, mode = "setup", count) {
   runWpCli("eval-file", fixtureFile, "prepare", fixtureId);
 
@@ -73,10 +107,21 @@ export function getFixturePosts(fixtureId) {
 
 export async function loginAsAdmin(page) {
   await page.goto("/wp-login.php");
-  await page.locator("#user_login").fill(process.env.WP_ADMIN_USER || "admin");
-  await page
-    .locator("#user_pass")
-    .fill(process.env.WP_ADMIN_PASSWORD || "password");
+  await page.locator("#user_login").fill("admin");
+  await page.locator("#user_pass").fill("password");
   await page.locator("#wp-submit").click();
-  await page.waitForURL((url) => url.pathname.includes("/wp-admin/"));
+
+  const loginError = page.locator("#login_error");
+  const outcome = await Promise.race([
+    page
+      .waitForURL((url) => url.pathname.includes("/wp-admin/"), {
+        waitUntil: "domcontentloaded",
+      })
+      .then(() => "success"),
+    loginError.waitFor({ state: "visible" }).then(() => "failure"),
+  ]);
+
+  if (outcome === "failure") {
+    throw new Error(`WordPress admin login failed: ${await loginError.innerText()}`);
+  }
 }
