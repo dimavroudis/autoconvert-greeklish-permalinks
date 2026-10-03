@@ -1,8 +1,6 @@
 name: Playwright E2E
 
 on:
-  schedule:
-    - cron: "15 4 * * *"
   workflow_dispatch:
   workflow_call:
 
