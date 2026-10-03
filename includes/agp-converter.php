@@ -140,7 +140,7 @@ class Agp_Converter
 
 			if ($query) {
 				foreach ($query as $post) {
-					if ($limit > 0 && $count >= $limit) {
+					if ($limit >= 0 && $count >= $limit) {
 						break;
 					}
 					$slug = urldecode($post->post_name);
@@ -203,7 +203,7 @@ class Agp_Converter
 
 			if ($query) {
 				foreach ($query as $term) {
-					if ($limit > 0 && $count >= $limit) {
+					if ($limit >= 0 && $count >= $limit) {
 						break;
 					}
 					$slug = urldecode($term->slug);

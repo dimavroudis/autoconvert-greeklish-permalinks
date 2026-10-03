@@ -222,7 +222,7 @@
                 $count += count($posts_to_update);
             }
 
-            if ($count < 100) {
+            if ($count < $limit) {
                 $terms_to_update = $this->converter->termQuery($taxonomies, 'object', $limit - $count);
                 if ($terms_to_update) {
                     $count += count($terms_to_update);
