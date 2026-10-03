@@ -193,6 +193,9 @@ class Agp {
 		} else {
 			$this->loader->add_filter( 'sanitize_title', $plugin_admin, 'sanitize_title_hook', 1 );
 		}
+		if ( get_option( 'agp_automatic' ) === 'enabled' ) {
+			$this->loader->add_filter( 'wp_insert_post_data', $plugin_admin, 'greeklish_post_data', 10, 4 );
+		}
 	}
 
 	/**
