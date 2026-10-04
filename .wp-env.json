@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/wp-env.json",
+  "core": null,
+  "plugins": ["."],
+  "testsEnvironment": false,
+  "lifecycleScripts": {
+    "afterStart": "wp-env run cli wp eval \"require_once glob(WP_PLUGIN_DIR . '/*/tests/seed-demo-data.php')[0];\""
+  }
+}

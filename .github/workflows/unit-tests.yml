@@ -1,0 +1,67 @@
+name: Unit tests
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  schedule-check:
+    name: Check develop activity
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+      - name: Run scheduled tests only after recent commits
+        id: check
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != "schedule" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          latest_commit=$(git log -1 --format=%ct)
+          current_time=$(date +%s)
+          if [ "$((current_time - latest_commit))" -le 86400 ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  phpunit:
+    name: ${{ matrix.php }}
+    needs: schedule-check
+    if: needs.schedule-check.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["7.4", "latest"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'develop' || github.sha }}
+      - name: Set PHP version
+        uses: shivammathur/setup-php@2.30.4
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: phpunit-polyfills
+
+      - name: Update dependencies
+        run: composer update -W
+
+      - name: PHPUnit Test
+        run: ./vendor/bin/phpunit

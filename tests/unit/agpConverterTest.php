@@ -1,6 +1,6 @@
 <?php
 
-include './includes/agp-converter.php';
+require_once __DIR__ . '/../../includes/agp-converter.php';
 
 class Agp_Converter_Test extends \WP_Mock\Tools\TestCase
 {

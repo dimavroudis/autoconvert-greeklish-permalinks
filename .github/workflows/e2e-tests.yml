@@ -1,0 +1,67 @@
+name: Playwright E2E
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  schedule-check:
+    name: Check develop activity
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+      - name: Run scheduled tests only after recent commits
+        id: check
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != "schedule" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          latest_commit=$(git log -1 --format=%ct)
+          current_time=$(date +%s)
+          if [ "$((current_time - latest_commit))" -le 86400 ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  e2e:
+    name: Playwright E2E
+    needs: schedule-check
+    if: needs.schedule-check.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'develop' || github.sha }}
+      - name: Set Node version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.18.0
+          cache: npm
+      - name: Set npm version
+        run: npm install --global npm@11.16.0
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run E2E tests
+        run: npm run test:e2e
+      - name: Upload Playwright diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-diagnostics
+          path: |
+            tests/e2e/output/playwright-report/
+            tests/e2e/output/test-results/
+          retention-days: 7

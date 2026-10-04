@@ -5,8 +5,17 @@ on:
       - master
 
 jobs:
+  unit-tests:
+    name: Unit tests
+    uses: ./.github/workflows/unit-tests.yml
+
+  e2e-tests:
+    name: Playwright E2E
+    uses: ./.github/workflows/e2e-tests.yml
+
   wordpress:
     name: Release
+    needs: [unit-tests, e2e-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
