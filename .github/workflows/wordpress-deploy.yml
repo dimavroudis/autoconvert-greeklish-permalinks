@@ -3,21 +3,29 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: read
+
 jobs:
+  verify-build:
+    name: Verify build
+    uses: ./.github/workflows/verify-build.yml
+
+  # This job holds the SVN credentials, so it installs and runs nothing from
+  # npm: it ships the committed assets that verify-build has just checked.
   tag:
     name: New release
+    needs: verify-build
+    if: ${{ ! github.event.release.prerelease }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Build
-        run: |
-          npm i
-          npm run build
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - name: WordPress Plugin Deploy
-        if: ${{! github.event.release.prerelease }}
         id: deploy
-        uses: 10up/action-wordpress-plugin-deploy@stable
+        uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # 2.3.0
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
