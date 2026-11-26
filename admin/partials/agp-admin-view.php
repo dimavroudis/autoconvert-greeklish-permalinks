@@ -9,7 +9,7 @@ if ( ! current_user_can( 'manage_options' ) ) {
 	return;
 }
 
-$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $tabs[0]['id'];
+$active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : $tabs[0]['id'];
 
 ?>
 	<div class="wrap agp-plugin">
@@ -17,9 +17,9 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $tabs[0]['id'];
 		<h2 class="nav-tab-wrapper">
 			<?php foreach ( $tabs as $tab ) {
 				$is_active = $tab['id'] === $active_tab; ?>
-				<a href="?page=agp&tab=<?php echo $tab['id']; ?>"
+				<a href="?page=agp&tab=<?php echo esc_attr( $tab['id'] ); ?>"
 				   class="nav-tab <?php echo $is_active ? 'nav-tab-active' : ''; ?>">
-					<?php echo $tab['name']; ?>
+					<?php echo esc_html( $tab['name'] ); ?>
 				</a>
 			<?php } ?>
 		</h2>

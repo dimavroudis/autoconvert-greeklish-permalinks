@@ -74,10 +74,18 @@ class Agp_Admin {
 	 * @access   public
 	 */
 	public function settings_init() {
-		register_setting( 'agp', 'agp_automatic' );
-		register_setting( 'agp', 'agp_diphthongs' );
-		register_setting( 'agp', 'agp_automatic_post' );
-		register_setting( 'agp', 'agp_automatic_tax' );
+		register_setting( 'agp', 'agp_automatic', array(
+			'sanitize_callback' => array( $this, 'sanitize_toggle_option' ),
+		) );
+		register_setting( 'agp', 'agp_diphthongs', array(
+			'sanitize_callback' => array( $this, 'sanitize_toggle_option' ),
+		) );
+		register_setting( 'agp', 'agp_automatic_post', array(
+			'sanitize_callback' => array( $this, 'sanitize_post_types_option' ),
+		) );
+		register_setting( 'agp', 'agp_automatic_tax', array(
+			'sanitize_callback' => array( $this, 'sanitize_taxonomies_option' ),
+		) );
 
 		add_settings_section( 'agp_automatic_options', __( 'Automatic Conversion', 'agp' ), array(
 			$this,
@@ -108,6 +116,65 @@ class Agp_Admin {
 			$this,
 			'diphthongs_option',
 		), 'agp', 'agp_diphthongs_options' );
+	}
+
+	/**
+	 * Sanitizes an enabled/disabled option
+	 *
+	 * @param mixed $value
+	 *
+	 * @return string
+	 */
+	public function sanitize_toggle_option( $value ) {
+		return $value === 'enabled' ? 'enabled' : 'disabled';
+	}
+
+	/**
+	 * Sanitizes the post types selected for automatic conversion
+	 *
+	 * @param mixed $value
+	 *
+	 * @return array
+	 */
+	public function sanitize_post_types_option( $value ) {
+		return $this->sanitize_selection_option( $value, 'post_type_exists' );
+	}
+
+	/**
+	 * Sanitizes the taxonomies selected for automatic conversion
+	 *
+	 * @param mixed $value
+	 *
+	 * @return array
+	 */
+	public function sanitize_taxonomies_option( $value ) {
+		return $this->sanitize_selection_option( $value, 'taxonomy_exists' );
+	}
+
+	/**
+	 * Keeps only the special selection values and registered names
+	 *
+	 * @param mixed    $value
+	 * @param callable $exists Callback that checks a name is registered.
+	 *
+	 * @return array
+	 */
+	private function sanitize_selection_option( $value, $exists ) {
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+
+		$sanitized = array();
+		foreach ( $value as $item ) {
+			if ( ! is_string( $item ) ) {
+				continue;
+			}
+			if ( $item === 'all_options' || $item === 'no_options' || call_user_func( $exists, $item ) ) {
+				$sanitized[] = $item;
+			}
+		}
+
+		return array_values( array_unique( $sanitized ) );
 	}
 
 	/**
@@ -175,9 +242,9 @@ class Agp_Admin {
 		foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 
 			if ( $section['title'] ) {
-				echo "<h3>{$section['title']}</h3>\n";
+				echo '<h3>' . esc_html( $section['title'] ) . "</h3>\n";
 			}
-			echo "<div id='{$section['id']}' class='card'>";
+			echo "<div id='" . esc_attr( $section['id'] ) . "' class='card'>";
 
 			if ( $section['callback'] ) {
 				call_user_func( $section['callback'], $section );

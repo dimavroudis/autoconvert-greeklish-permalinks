@@ -55,7 +55,7 @@ $taxonomies[] = array( 'value' => 'no_options', 'name' => __( 'No taxonomies', '
 		multiple>
 	<?php foreach ( $taxonomies as $taxonomy ) { ?>
 		<option value="<?php echo esc_attr( $taxonomy['value'] ); ?>" <?php echo $taxonomy['selected'] ? 'selected' : ''; ?>>
-			<?php echo $taxonomy['name']; ?>
+			<?php echo esc_html( $taxonomy['name'] ); ?>
 		</option>
 	<?php } ?>
 </select>

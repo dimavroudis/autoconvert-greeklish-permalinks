@@ -116,25 +116,16 @@ class Agp_Converter
 		$posts_to_update = array();
 
 		if (!empty($post_types)) {
-			$sql_post_types = '';
-			$isFirst        = true;
-			foreach ($post_types as $post_type) {
-				if ($isFirst) {
-					$isFirst = false;
-				} else {
-					$sql_post_types .= 'OR ';
-				}
-				$sql_post_types .= "p.post_type =  '$post_type' ";
-			}
+			$post_types   = array_values(array_map('strval', $post_types));
+			$placeholders = implode(', ', array_fill(0, count($post_types), '%s'));
 
-			$sql = "SELECT ID, post_name
+			$sql = $wpdb->prepare(
+				"SELECT ID, post_name
 				FROM $wpdb->posts as p
-				WHERE 1=1 AND ($sql_post_types)
-				AND (p.post_status = 'publish'
-				OR p.post_status = 'future'
-				OR p.post_status = 'draft'
-				OR p.post_status = 'pending'
-				OR p.post_status = 'private')";
+				WHERE p.post_type IN ($placeholders)
+				AND p.post_status IN ('publish', 'future', 'draft', 'pending', 'private')",
+				$post_types
+			);
 
 			$query = $wpdb->get_results($sql);
 
@@ -182,22 +173,17 @@ class Agp_Converter
 		$terms_to_update = array();
 
 		if (!empty($taxonomies)) {
-			$sql_taxonomies = '';
-			$isFirst        = true;
-			foreach ($taxonomies as $index => $taxonomy) {
-				if ($isFirst) {
-					$isFirst = false;
-				} else {
-					$sql_taxonomies .= ', ';
-				}
-				$sql_taxonomies .= "'$taxonomy'";
-			}
+			$taxonomies   = array_values(array_map('strval', $taxonomies));
+			$placeholders = implode(', ', array_fill(0, count($taxonomies), '%s'));
 
-			$sql = "SELECT t.term_id, t.slug, tt.taxonomy
-				FROM $wpdb->terms AS t 
+			$sql = $wpdb->prepare(
+				"SELECT t.term_id, t.slug, tt.taxonomy
+				FROM $wpdb->terms AS t
 				INNER JOIN $wpdb->term_taxonomy AS tt
 				ON t.term_id = tt.term_id
-				WHERE tt.taxonomy IN ($sql_taxonomies)";
+				WHERE tt.taxonomy IN ($placeholders)",
+				$taxonomies
+			);
 
 			$query = $wpdb->get_results($sql);
 
