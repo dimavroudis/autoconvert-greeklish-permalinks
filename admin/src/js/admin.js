@@ -87,23 +87,23 @@
                                 $('#converterForm input, #converterForm select, #converterForm button').prop('disabled', false);
                             }
                         }).fail(function (err) {
-                            showMessage(err.responseJSON.message, 'error');
+                            showTextMessage(errorMessage(err), 'error');
                             $('#converterForm input, #converterForm select, #converterForm button').prop('disabled', false);
                         })
                     }
                     convertPermalinks()
                 } else {
-                    showMessage(checkResponse.message, 'success');
+                    showTextMessage(checkResponse.message, 'success');
                     $('#converterForm input, #converterForm select, #converterForm button').prop('disabled', false);
                 }
             }).fail(function (err) {
-                showMessage(err.responseJSON.message, 'error')
+                showTextMessage(errorMessage(err), 'error')
                 $('#converterForm input, #converterForm select, #converterForm button').prop('disabled', false);
             })
         })
 
 
-        function showMessage(message, type, ...args) {
+        function setMessageType(type) {
             if (type === 'error') {
                 messageOutput.attr("class", "error inline")
             } else if (type === 'success') {
@@ -111,9 +111,28 @@
             } else {
                 messageOutput.attr("class", "notice")
             }
+        }
+
+        // For the plugin's own localized message templates, which contain markup.
+        function showMessage(message, type, ...args) {
+            setMessageType(type);
             const output = cleanHTML('<p>' + formatString(message, ...args) + '</p>')
             messageOutput.html(output);
             messageOutput.show();
+        }
+
+        // For messages returned by the server, which are rendered as plain text.
+        function showTextMessage(message, type) {
+            setMessageType(type);
+            messageOutput.empty().append($('<p>').text(message));
+            messageOutput.show();
+        }
+
+        function errorMessage(err) {
+            if (err && err.responseJSON && err.responseJSON.message) {
+                return err.responseJSON.message;
+            }
+            return err && err.statusText ? err.statusText : 'Request failed';
         }
 
         function formatString(format) {

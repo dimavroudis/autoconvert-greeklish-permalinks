@@ -46,7 +46,7 @@ foreach ($tax as $taxonomy) {
 							<select title="<?php _e('Post types to convert', 'agp'); ?>" name="post-types" class="select2" <?php echo $disabled ?> id="selectPosts" data-placeholder="<?php _e('Select one or more post types', 'agp'); ?>" multiple>
 								<?php foreach ($post_types as $post_type) { ?>
 									<option value="<?php echo esc_attr($post_type['value']); ?>">
-										<?php echo $post_type['name']; ?>
+										<?php echo esc_html( $post_type['name'] ); ?>
 									</option>
 								<?php } ?>
 							</select>
@@ -63,7 +63,7 @@ foreach ($tax as $taxonomy) {
 							<select title="<?php _e('Taxonomies to convert', 'agp'); ?>" name="taxonomies" class="select2" <?php echo $disabled ?> id="selectTaxonomies" data-placeholder="<?php _e('Select one or more taxonomies', 'agp'); ?>" multiple>
 								<?php foreach ($taxonomies as $taxonomy) { ?>
 									<option value="<?php echo esc_attr($taxonomy['value']); ?>">
-										<?php echo $taxonomy['name']; ?>
+										<?php echo esc_html( $taxonomy['name'] ); ?>
 									</option>
 								<?php } ?>
 							</select>

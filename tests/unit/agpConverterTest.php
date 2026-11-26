@@ -18,9 +18,12 @@ class Agp_Converter_Test extends \WP_Mock\Tools\TestCase
             'Μεταγραφή Ελληνικών χαρακτήρων' => 'metagrafi ellinikon charaktiron',
             'Μαύρο πρόβατο' => 'mavro provato',
             'αυτό το καλοκαιρι' => 'afto to kalokairi',
+            'ΑΥΤΟ 2026!' => 'afto 2026!',
             'τελευταία ευκαιρία' => 'teleftaia efkairia',
             'ευεξία και χαλάρωση' => 'evexia kai chalarosi',
-            'Όλοι οι άνθρωποι γεννιούνται ελεύθεροι και ίσοι στην αξιοπρέπεια' => 'oloi oi anthropoi genniountai eleftheroi kai isoi stin axioprepeia'
+            'Όλοι οι άνθρωποι γεννιούνται ελεύθεροι και ίσοι στην αξιοπρέπεια' => 'oloi oi anthropoi genniountai eleftheroi kai isoi stin axioprepeia',
+            'ΚΑΛΗΜΈΡΑ, Αθήνα-42!' => 'kalimera, athina-42!',
+            'WordPress Αθήνα & HOME' => 'WordPress athina & HOME'
         );
 
         foreach ($conversion_array as $original => $transliteration) {
@@ -41,9 +44,12 @@ class Agp_Converter_Test extends \WP_Mock\Tools\TestCase
             'Μεταγραφή Ελληνικών χαρακτήρων' => 'metagrafi ellinikon charaktiron',
             'Μαύρο πρόβατο' => 'mayro provato',
             'αυτό το καλοκαιρι' => 'ayto to kalokairi',
+            'ΑΥΤΟ 2026!' => 'ayto 2026!',
             'τελευταία ευκαιρία' => 'teleytaia eykairia',
             'ευεξία και χαλάρωση' => 'eyexia kai chalarosi',
-            'Όλοι οι άνθρωποι γεννιούνται ελεύθεροι και ίσοι στην αξιοπρέπεια' => 'oloi oi anthropoi gennioyntai eleytheroi kai isoi stin axioprepeia'
+            'Όλοι οι άνθρωποι γεννιούνται ελεύθεροι και ίσοι στην αξιοπρέπεια' => 'oloi oi anthropoi gennioyntai eleytheroi kai isoi stin axioprepeia',
+            'ΚΑΛΗΜΈΡΑ, Αθήνα-42!' => 'kalimera, athina-42!',
+            'WordPress Αθήνα & HOME' => 'WordPress athina & HOME'
         );
 
         foreach ($conversion_array as $original => $transliteration) {

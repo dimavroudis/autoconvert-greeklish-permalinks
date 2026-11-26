@@ -37,17 +37,17 @@ The PHPUnit suite includes converter checks for diphthong modes and the `agp_con
 
 ### Playwright end-to-end tests
 
-The E2E suite requires Node.js 24.18.0, npm 11.16.0, and Docker Desktop. It uses the local wp-env site at `http://localhost:8888`; never point it at staging or production. Install the browser once, then start the disposable site and run the tests:
+The E2E suite requires Node.js 24.18.0, npm 11.16.0, and Docker Desktop. It uses the local wp-env site at `http://localhost:8888`; never point it at staging or production. Install the browser once, then run the tests:
 
 ```sh
 npm ci
 npx playwright install chromium
-npm run wp-env:start
 npm run test:e2e
-npm run wp-env:stop
 ```
 
-The suite covers the admin converter and settings UI, the authenticated `agp/v1` REST endpoints, and WP-CLI empty-selection validation, invalid-option handling, and successful conversion of marked post fixtures. E2E fixtures use a unique run marker, create legacy Greek slugs only in the disposable wp-env database, and remove only their own posts and terms after each test. The separate wp-env demo records are retained.
+Playwright's global setup starts the disposable wp-env site and its teardown stops it, including after test failures. Do not run `wp-env:start` or `wp-env:stop` around the normal E2E command.
+
+The suite covers the admin converter and settings UI, authenticated `agp/v1` REST endpoints, and WP-CLI selection validation, invalid-option handling, and conversion of marked post fixtures. Admin UI tests verify selected versus unselected post types and taxonomies, create and edit posts and terms, verify public post URLs and WordPress's old-post-slug redirect, and run the converter through multiple batches. The batch test also checks for browser errors and failed plugin REST requests. Unit tests cover uppercase and accented Greek, mixed Greek and Latin text, punctuation, numerals, and both diphthong modes. E2E fixtures use a unique run marker, create legacy Greek slugs only in the disposable wp-env database, and remove only their own posts and terms after each test. The separate wp-env demo records are retained.
 
 The Playwright config runs tests serially because each interface shares the same database. On failure, screenshots and traces are written under `tests/e2e/output/`; CI uploads these diagnostics and stops wp-env even if a test fails.
 
@@ -82,8 +82,10 @@ Keep a short inventory of each record's type, original slug, expected result, an
 - [ ] Plugin activates without a fatal error or unexpected PHP warning.
 - [ ] The plugin's admin page opens; settings and the old-permalink converter are available.
 - [ ] Save a new draft with a Greek title. Verify its generated slug is Latin/Greeklish, then edit and save it again to check the slug remains stable unless deliberately changed.
+- [ ] With automatic conversion enabled for that post type, deliberately change an existing post's slug to Greek and save it. Verify the updated slug is converted to Greeklish.
 - [ ] Repeat with a page and any relevant custom post type.
 - [ ] Create a category/tag and any relevant custom taxonomy term with a Greek name; verify its slug is converted.
+- [ ] With automatic conversion enabled for that taxonomy, edit an existing term's slug to Greek and save it. Verify the updated slug is converted to Greeklish.
 - [ ] Try uppercase and lowercase Greek, accented and polytonic characters where relevant, Latin text mixed with Greek, spaces, punctuation, and numerals. Confirm the result is readable and does not contain unexpected replacement characters.
 - [ ] Create a title whose converted slug conflicts with an existing slug. Verify WordPress/plugin uniqueness behavior produces a usable unique slug and neither record is overwritten.
 

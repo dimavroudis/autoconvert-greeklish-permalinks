@@ -52,7 +52,7 @@ $post_types[] = array( 'value' => 'no_options', 'name' => __( 'No post types', '
 		multiple>
 	<?php foreach ( $post_types as $post_type ) { ?>
 		<option value="<?php echo esc_attr( $post_type['value'] ); ?>" <?php echo $post_type['selected'] ? 'selected' : ''; ?>>
-			<?php echo $post_type['name']; ?>
+			<?php echo esc_html( $post_type['name'] ); ?>
 		</option>
 	<?php } ?>
 </select>
